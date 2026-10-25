@@ -1,4 +1,4 @@
-/* Shared behaviour for every HomeView page:
+/* Shared behaviour for every VYRA page:
    full-screen menu, header, scroll motion, swipe sliders and carousels, lightbox, toasts,
    the enquiry relay, and the on-device analytics tracker (feature 10). */
 (function () {
@@ -61,77 +61,50 @@
     if (typeof blobOrUrl !== 'string') setTimeout(() => URL.revokeObjectURL(url), 4000);
   };
 
-  // ---------- features menu (header dropdown) ----------
-  // One list, used by the header dropdown on every page.
+  // ---------- services (full-screen menu footer) ----------
+  // Every service links to its example on the home page.
   MZ.featureGroups = [
     { t: 'Show the home', items: [
-      { t: '3D house tour', d: 'Walk every room, jump between them', href: 'listing.html#tour' },
-      { t: 'Interactive floor plan', d: 'Room sizes and a tape measure', href: 'listing.html#plan' },
-      { t: 'Compare homes', d: 'Side by side on size and features', href: 'compare.html' },
-      { t: 'Viewing scheduler', d: 'Buyers book a time online', href: 'listing.html#book' }
-    ] },
-    { t: 'AI finishing', items: [
-      { t: 'Photo enhancement', d: 'Light, colour and sharpness', href: 'studio.html#photo' },
-      { t: 'Day to dusk', d: 'Twilight hero shot, labelled', href: 'studio.html#dusk' },
-      { t: 'Privacy protection', d: 'Blur faces, photos, plates', href: 'studio.html#privacy' },
-      { t: 'Edit transparency', d: 'Every change logged', href: 'studio.html#photo' }
+      { t: '3D walkthrough', href: 'index.html?view=tour#work', view: 'tour' },
+      { t: 'Floor plans', href: 'index.html?view=plan#work', view: 'plan' },
+      { t: 'Photo finishing', href: 'index.html?view=photo#work', view: 'photo' },
+      { t: 'Day to dusk', href: 'index.html?view=dusk#work', view: 'dusk' },
+      { t: 'Privacy check', href: 'index.html?view=privacy#work', view: 'privacy' }
     ] },
     { t: 'Market it', items: [
-      { t: 'Marketing pack', d: 'Posts, story, video, brochure', href: 'studio.html#marketing' },
-      { t: 'One-click listing page', d: 'Branded page and portal copy', href: 'studio.html#publish' }
+      { t: 'Launch pack', href: 'index.html#launch' },
+      { t: 'Listing page', href: 'listing.html' }
     ] },
-    { t: 'Track it', items: [
-      { t: 'Buyer analytics', d: 'Views, rooms, enquiries', href: 'studio.html#analytics' },
-      { t: 'Portfolio dashboard', d: 'Every listing in one place', href: 'studio.html#portfolio' }
+    { t: 'Bring buyers in', items: [
+      { t: 'Viewing bookings', href: 'listing.html#book' },
+      { t: 'AI assistant', href: 'index.html#ai' },
+      { t: 'Vendor report', href: 'index.html#report' }
     ] }
   ];
   function initMenus() {
-    MZ.$$('[data-menu="features"]').forEach((panel) => {
-      const homes = (MZ.data && MZ.data.homes) || [];
-      panel.innerHTML = MZ.featureGroups.map((g) => `<div class="dd-col"><h6>${MZ.esc(g.t)}</h6>${g.items.map((it) =>
-        `<a href="${it.href}"><b>${MZ.esc(it.t)}</b><small>${MZ.esc(it.d)}</small></a>`).join('')}</div>`).join('') +
-        (homes.length ? `<div class="dd-col dd-homes"><h6>Sample homes</h6>${homes.map((h) =>
-          `<a href="listing.html?home=${h.id}"><span class="dd-th" style="background-image:url('${h.photos[0].src.replace('.jpg', '-t.jpg')}')"></span><b>${MZ.esc(h.short)}</b><small>${MZ.esc(h.suburb)} · 3D tour</small></a>`).join('')}</div>` : '');
-    });
     const fh = MZ.$('#footHomes');
     if (fh && MZ.data) fh.innerHTML = MZ.data.homes.map((h) => `<li><a href="listing.html?home=${h.id}">${MZ.esc(h.short)}</a></li>`).join('');
     const cl = MZ.$('#creditList');
     if (cl && MZ.data && MZ.data.credits) {
       cl.innerHTML = MZ.data.credits.map((c) => `<li><b>${MZ.esc(c.what)}:</b> <a href="${c.url}" target="_blank" rel="noopener">“${MZ.esc(c.title)}”</a> by ${MZ.esc(c.author)}, <a href="${c.licenseUrl}" target="_blank" rel="noopener">${MZ.esc(c.license)}</a>. ${MZ.esc(c.changes)}</li>`).join('');
     }
-    MZ.$$('.dd').forEach((dd) => {
-      const btn = MZ.$('.dd-btn', dd);
-      if (!btn) return;
-      const set = (open) => { dd.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open)); };
-      btn.addEventListener('click', (e) => { e.preventDefault(); set(!dd.classList.contains('open')); });
-      // hover opens on desktop pointers; keyboard and touch use the click
-      if (window.matchMedia('(hover: hover) and (min-width: 1181px)').matches) {
-        let t;
-        dd.addEventListener('mouseenter', () => { clearTimeout(t); set(true); });
-        dd.addEventListener('mouseleave', () => { t = setTimeout(() => set(false), 160); });
-      }
-      document.addEventListener('click', (e) => { if (!dd.contains(e.target)) set(false); });
-      dd.addEventListener('keydown', (e) => { if (e.key === 'Escape') { set(false); btn.focus(); } });
-      dd.addEventListener('click', (e) => { if (e.target.closest('.dd-panel a')) set(false); });
-    });
   }
 
   // ---------- full-screen menu ----------
   // Same menu on every page, built here so the pages only carry the button.
   const MENU_LINKS = [
-    ['index.html#work', 'See the difference'],
-    ['index.html#how', 'How it works'],
-    ['index.html#included', 'What you get'],
-    ['listing.html', 'Sample listing'],
-    ['compare.html', 'Compare homes'],
-    ['studio.html', 'Agent studio'],
-    ['index.html#quote', 'Book a free chat']
+    ['index.html#work', 'Our work'],
+    ['index.html#launch', 'Launch pack'],
+    ['index.html#services', 'Services'],
+    ['index.html#why', 'Why VYRA'],
+    ['listing.html', 'Example listing page'],
+    ['index.html#quote', 'Send us your next listing']
   ];
   function initMenu() {
     const btn = MZ.$('#menuBtn');
     if (!btn) return;
     const homes = (MZ.data && MZ.data.homes) || [];
-    const feats = MZ.featureGroups.flatMap((g) => g.items).slice(0, 6);
+    const feats = MZ.featureGroups.flatMap((g) => g.items);
     const menu = document.createElement('div');
     menu.className = 'fsm';
     menu.id = 'fsm';
@@ -143,7 +116,7 @@
         `<li><a href="${href}" style="--i:${i}"><small>${String(i + 1).padStart(2, '0')}</small>${MZ.esc(t)}</a></li>`).join('')}</ul>
       <div class="fsm-media"><img src="assets/img/homes/villa/exterior.jpg" alt="" loading="lazy"><span class="badge">Sample home</span></div>
       <div class="fsm-foot">
-        <div><h6>Features</h6><ul>${feats.map((f) => `<li><a href="${f.href}">${MZ.esc(f.t)}</a></li>`).join('')}</ul></div>
+        <div><h6>Services</h6><ul>${feats.map((f) => `<li><a href="${f.href}"${f.view ? ` data-show-view="${f.view}"` : ''}>${MZ.esc(f.t)}</a></li>`).join('')}</ul></div>
         ${homes.length ? `<div><h6>Sample homes</h6><ul>${homes.map((h) => `<li><a href="listing.html?home=${h.id}">${MZ.esc(h.short)}</a></li>`).join('')}</ul></div>` : ''}
       </div>
     </div>`;
@@ -188,7 +161,7 @@
 
   // ---------- rotating word in the hero headline ----------
   // <span class="ticker" data-words="buyers|viewings|enquiries">buyers</span>
-  // Holds each word 1.5s, then swings the next one up (Wilsons "Text Toggle").
+  // Holds each word 1.5s, then swings the next one up.
   function initTicker() {
     MZ.$$('.ticker[data-words]').forEach((tk) => {
       const words = tk.dataset.words.split('|');

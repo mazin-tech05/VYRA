@@ -1,5 +1,5 @@
-/* HomeView — cream, white and gold.
-   Motion follows wilsonsltd.co.nz: pill buttons whose fill rises from below,
+/* VYRA — cream, white and gold.
+   Motion: pill buttons whose fill rises from below,
    headings that slide up out of a mask, content that slides in from the bottom,
    a full-screen menu with staggered links, and a slow marquee. */
 
@@ -28,7 +28,7 @@
   --gut: clamp(1.25rem, 5vw, 5rem);
   --display: "Satoshi", "Helvetica Neue", Arial, sans-serif;
   --ease: cubic-bezier(.2, .7, .2, 1);
-  --out-quart: cubic-bezier(.25, 1, .5, 1);   /* Webflow "outQuart" */
+  --out-quart: cubic-bezier(.25, 1, .5, 1);   /* ease-out-quart */
   --header-h: 76px;
 }
 
@@ -74,7 +74,7 @@ h3 { font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
 
 /* ---------- buttons ----------
    A wide ellipse waits just below the pill and rises to fill it on hover
-   (Wilsons "Button Hover": translateY 101% -> 0 over 1.1s outQuart). */
+   (translateY 101% -> 0 over 1.1s, ease-out-quart). */
 .btn {
   position: relative; isolation: isolate; overflow: hidden;
   display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
@@ -244,14 +244,14 @@ body.menu-open .fsm-foot { opacity: 1; transition: opacity 1.2s var(--out-quart)
   padding: calc(var(--header-h) + 3rem) 0 6rem;
 }
 .hero .wrap { position: relative; z-index: 2; max-width: 1200px; }
-.hero h1 { font-size: clamp(2.6rem, 7.2vw, 6.6rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.02; }
+.hero h1 { font-size: clamp(2.5rem, 6.4vw, 5.8rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.02; }
 .hero .lede { margin: 1.6rem auto 0; color: rgba(247, 242, 232, .86); font-size: clamp(1rem, 1.4vw, 1.15rem); }
 .hero .eyebrow { color: var(--gold-hi); }
 .hero .btn-row { justify-content: center; margin-top: 2.4rem; }
 .hero .btn-row .btn { padding: 1rem 1.9rem; }
 @media (max-width: 560px) { .hero .btn-row .btn { width: 100%; } }
 
-/* rotating word in the headline (Wilsons "Text Toggle": hold 1.5s, swing 0.6s) */
+/* rotating word in the headline: hold 1.5s, swing 0.6s */
 .ticker { display: inline-block; vertical-align: bottom; height: 1.36em; margin-bottom: -.28em; overflow: hidden; color: var(--gold-hi); transition: width .6s var(--out-quart); }
 .ticker-track { display: flex; flex-direction: column; transition: transform .6s cubic-bezier(.65, 0, .35, 1); }
 .ticker-track > span { display: block; width: max-content; height: 1.36em; line-height: 1.08; white-space: nowrap; text-align: left; }
@@ -274,7 +274,7 @@ body.menu-open .fsm-foot { opacity: 1; transition: opacity 1.2s var(--out-quart)
 .hero-chips span b { color: var(--gold-hi); font-weight: 700; }
 @media (max-width: 760px) { .hero-chips { display: none; } .scroll-cue { left: 50%; right: auto; transform: translateX(-50%); } }
 
-/* ---------- marquee band (Wilsons "Infinite Loop": a slow linear slide) ---------- */
+/* ---------- marquee band: a slow linear slide ---------- */
 .marquee { overflow: hidden; border-block: 1px solid var(--line); background: var(--bg); padding: 1.3rem 0; }
 .marquee-track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
@@ -291,9 +291,9 @@ body.menu-open .fsm-foot { opacity: 1; transition: opacity 1.2s var(--out-quart)
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- scroll motion (only once JS has confirmed the page is visible) ----------
-   .reveal       slides in from the bottom (Webflow slideInBottom)
-   .reveal-left  slides in from the left   (Webflow slideInLeft)
-   .mask-line    heading text rises out of a mask (Wilsons "Display Slide From Bottom") */
+   .reveal       slides in from the bottom
+   .reveal-left  slides in from the left
+   .mask-line    heading text rises out of a mask */
 .reveal-on .reveal { opacity: 0; transform: translateY(70px); transition: opacity 1s var(--out-quart), transform 1.2s var(--out-quart); }
 .reveal-on .reveal-left { opacity: 0; transform: translateX(-80px); transition: opacity 1s var(--out-quart), transform 1.2s var(--out-quart); }
 .reveal-on .reveal.in, .reveal-on .reveal-left.in { opacity: 1; transform: none; }
@@ -453,7 +453,7 @@ details.faq { border-top: 1px solid var(--line); padding: 1.45rem 0; }
 details.faq:last-of-type { border-bottom: 1px solid var(--line); }
 details.faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; font-size: clamp(1.05rem, 1.7vw, 1.3rem); font-weight: 500; }
 details.faq summary::-webkit-details-marker { display: none; }
-/* a circle that scales in behind the plus on hover (Wilsons "FAQ Circle Scale In") */
+/* a circle that scales in behind the plus on hover */
 details.faq summary::after {
   content: "+"; flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
   color: var(--gold-ink); font-size: 1.3rem; line-height: 1; border: 1px solid var(--gold-line);

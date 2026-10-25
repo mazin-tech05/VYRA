@@ -47,7 +47,7 @@
                 Object.defineProperty(window, 'devicePixelRatio', { get: () => dprCap, configurable: true });
             }
 
-            // HomeView gold for the loading bar (the bundle paints it orange inline).
+            // VYRA gold for the loading bar (the bundle paints it orange inline).
             const themeStyle = document.createElement('style');
             themeStyle.textContent = '#loadingWrap > #loadingBar { filter: hue-rotate(14deg) saturate(.6); height: 6px; } #loadingWrap > #loadingText { font-family: "Helvetica Neue", Arial, sans-serif; font-size: 15px; letter-spacing: .08em; }';
             document.head.appendChild(themeStyle);

@@ -1,5 +1,6 @@
-/* Marketing pack (feature 5): everything is drawn in the browser from the
-   listing's own photos and details, in HomeView's cream-and-gold style. */
+/* Launch pack: everything is drawn in the browser from the listing's own
+   photos and details. It goes out under the agency's brand, so the examples
+   carry a "Your agency" placeholder rather than the VYRA name. */
 (function () {
   'use strict';
   const MZ = window.MZ = window.MZ || {};
@@ -71,21 +72,21 @@
     ctx.fillText(text, ax + padX, y + h / 2 + 1);
     return w;
   }
-  async function brandMark() {
-    if (!M._mark) M._mark = await MZ.photo.loadImage('assets/brand-mark.svg');
-    return M._mark;
+  // stand-in for the agency's own logo
+  function agencyBadge(ctx, x, y, size) {
+    ctx.beginPath(); ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+    ctx.fillStyle = GOLD; ctx.fill();
+    ctx.font = `700 ${size * 0.38}px ${FONT}`; ctx.fillStyle = INK;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('YA', x + size / 2, y + size / 2 + 1);
+    ctx.textAlign = 'left';
   }
   async function brand(ctx, x, y, size) {
-    const mark = await brandMark();
-    ctx.drawImage(mark, x, y, size, size);
+    agencyBadge(ctx, x, y, size);
     ctx.font = `600 ${size * 0.62}px ${FONT}`;
     ctx.fillStyle = '#fff';
     ctx.textBaseline = 'middle';
-    ctx.fillText('HomeView', x + size * 1.25, y + size / 2);
-    const w = ctx.measureText('HomeView').width;
-    ctx.font = `600 ${size * 0.3}px ${FONT}`;
-    ctx.fillStyle = GOLD;
-    ctx.fillText('REAL ESTATE', x + size * 1.25 + w + size * 0.35, y + size / 2 + 1);
+    ctx.fillText('Your agency', x + size * 1.25, y + size / 2);
   }
 
   // ---------- square post 1080x1080 ----------
@@ -189,7 +190,6 @@
     const W = 720, H = 1280, FPS = 30;
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const ctx = c.getContext('2d');
-    const mark = await brandMark();
     const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
     const mime = types.find((t) => MediaRecorder.isTypeSupported(t)) || '';
     const stream = c.captureStream(FPS);
@@ -226,9 +226,9 @@
         const g = ctx.createLinearGradient(0, H * 0.45, 0, H);
         g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.85)');
         ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-        ctx.drawImage(mark, 40, 52, 48, 48);
+        agencyBadge(ctx, 40, 52, 48);
         ctx.font = `600 30px ${FONT}`; ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle';
-        ctx.fillText('HomeView', 100, 77);
+        ctx.fillText('Your agency', 100, 77);
         const cap = captions[i % captions.length];
         const a = Math.min(1, local / 0.5) * Math.min(1, (per - local) / 0.4);
         ctx.globalAlpha = Math.max(0, a);
@@ -241,7 +241,7 @@
       } else {
         const e = Math.min(1, (t - slides.length * per) / 0.5);
         ctx.globalAlpha = e;
-        ctx.drawImage(mark, W / 2 - 60, H / 2 - 230, 120, 120);
+        agencyBadge(ctx, W / 2 - 60, H / 2 - 230, 120);
         ctx.textAlign = 'center';
         ctx.font = `600 48px ${FONT}`; ctx.fillStyle = '#fff';
         wrap(ctx, L.title, W - 120, 2).forEach((ln, k) => ctx.fillText(ln, W / 2, H / 2 - 30 + k * 56));
@@ -303,7 +303,7 @@ body { font-family: "Satoshi", "Helvetica Neue", Arial, sans-serif; color: #1f1b
 .page { width: 210mm; min-height: 297mm; padding: 14mm; position: relative; }
 .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8mm; }
 .brand { display: flex; align-items: center; gap: 3mm; font-weight: 600; font-size: 14pt; }
-.brand img { width: 9mm; height: 9mm; }
+.brand .ya { width: 9mm; height: 9mm; border-radius: 50%; background: #c29b45; color: #1f1b16; display: grid; place-items: center; font-size: 9pt; font-weight: 700; }
 .brand small { color: #7d5f17; font-size: 7pt; letter-spacing: .18em; }
 .tag { background: #c29b45; color: #1f1b16; font-weight: 600; font-size: 8pt; letter-spacing: .16em; padding: 2mm 4mm; border-radius: 99px; }
 .hero { width: 100%; height: 95mm; object-fit: cover; border-radius: 4mm; display: block; }
@@ -330,7 +330,7 @@ td:last-child { text-align: right; color: #555; }
 </style></head><body>
 <div class="noprint"><button onclick="window.print()">Print or save as PDF</button></div>
 <div class="page">
-  <div class="top"><div class="brand"><img src="${esc(markUrl)}" alt="">HomeView</div><span class="tag">${L.sample ? 'SAMPLE LISTING' : 'FOR SALE'}</span></div>
+  <div class="top"><div class="brand"><span class="ya">YA</span>Your agency</div><span class="tag">${L.sample ? 'SAMPLE LISTING' : 'FOR SALE'}</span></div>
   ${photos[0] ? `<img class="hero" src="${esc(photos[0])}" alt="">` : ''}
   <div class="thumbs">${photos.slice(1).map((p) => `<img src="${esc(p)}" alt="">`).join('')}</div>
   <h1>${esc(L.title)}</h1>
@@ -344,7 +344,7 @@ td:last-child { text-align: right; color: #555; }
       ${qrDataUrl ? `<div class="qr"><img src="${qrDataUrl}" alt="QR code"><div><b>${MZ.data.isSample(L.id) ? 'Take the 3D tour' : 'See the listing'}</b><small>Scan with your phone camera</small></div></div>` : ''}
     </div>
   </div>
-  <div class="foot"><span>HomeView (concept demo)</span><span>${L.sample ? 'Sample content for illustration only.' : esc(M.listingUrl(L))}</span></div>
+  <div class="foot"><span>Example made by VYRA</span><span>${L.sample ? 'Sample content for illustration only.' : esc(M.listingUrl(L))}</span></div>
 </div>
 <script>window.addEventListener('load', function () { setTimeout(function () { window.print(); }, 400); });<\/script>
 </body></html>`;

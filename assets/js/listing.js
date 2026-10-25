@@ -1,6 +1,6 @@
 /* Listing page: gallery + lightbox (with edit transparency), 3D tour with
    room jumps and a live mini-map, interactive floor plan + tape measure,
-   viewing scheduler, compare, share, enquiries and on-device analytics. */
+   viewing scheduler, share, enquiries and on-device analytics. */
 (function () {
   'use strict';
   const MZ = window.MZ;
@@ -22,7 +22,7 @@
 
   // ---------- header / facts ----------
   function renderHead() {
-    document.title = `${L.title} | HomeView`;
+    document.title = `${L.title} | Example listing page | VYRA`;
     $('#lTitle').textContent = L.title;
     $('#lLoc').textContent = isDemo ? `${L.suburb} · licensed sample scan, not for sale` : (L.suburb || '');
     $('#lEyebrow').textContent = isDemo ? 'Sample listing' : 'Published from the agent studio';
@@ -116,7 +116,7 @@
   function captionFor(p) {
     let html = esc(p.caption || '');
     if (p.changes) {
-      html += `<br><span class="small">Enhanced by HomeView: ${p.changes.map((c) => esc(c.k + ' ' + c.v)).join(' · ')}. Nothing added or removed.</span>
+      html += `<br><span class="small">Finished by VYRA: ${p.changes.map((c) => esc(c.k + ' ' + c.v)).join(' · ')}. Nothing added or removed.</span>
         <br><button class="btn btn-ghost btn-xs mt1" type="button" data-toggle-orig>Show original</button>`;
     }
     return html;
@@ -441,15 +441,15 @@
     const pad = (n) => String(n).padStart(2, '0');
     const stamp = (d, hh, mm) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hh)}${pad(mm)}00`;
     const now = new Date();
-    const uid = 'mz-' + now.getTime() + '@homeview-demo';
+    const uid = 'mz-' + now.getTime() + '@vyra-example';
     return [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//HomeView//Demo//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//VYRA//Example//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
       'BEGIN:VEVENT', 'UID:' + uid,
       'DTSTAMP:' + now.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z',
       'DTSTART;TZID=Pacific/Auckland:' + stamp(day, h, m),
       'DTEND;TZID=Pacific/Auckland:' + stamp(day, eh, em),
       'SUMMARY:' + slot.kind + ': ' + L.title + ' (sample listing)',
-      'DESCRIPTION:Booked by ' + who + ' via HomeView (demo). The agent will confirm the address.',
+      'DESCRIPTION:Example booking by ' + who + ' on a VYRA example listing page. Nothing was sent to an agent.',
       'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', 'DESCRIPTION:Viewing tomorrow', 'END:VALARM',
       'BEGIN:VALARM', 'TRIGGER:-PT1H', 'ACTION:DISPLAY', 'DESCRIPTION:Viewing in one hour', 'END:VALARM',
       'END:VEVENT', 'END:VCALENDAR'
@@ -467,33 +467,23 @@
     if (errEmail) { email.focus(); return; }
     const slot = slotsFor(selDay)[selSlot];
     const when = `${fmtDate(selDay)}, ${fmtTime(slot.start)}–${fmtTime(slot.end)}`;
-    const fields = {
-      _subject: `${slot.kind} booked: ${when} (${nm})`,
-      listing: `${L.title}, ${L.suburb} (demo)`,
-      viewing: slot.kind, when, name: nm, email: em, phone: $('#bPhone').value.trim(),
-      wants_updates: $('#bUpdates').checked ? 'Yes' : 'No',
-      _replyto: em,
-      _autoresponse: `Thanks ${nm.split(' ')[0]}, your ${slot.kind.toLowerCase()} for "${L.title}" is booked for ${when}. The agent will confirm the address before the day. This is a HomeView demo.`
-    };
-    const btn = $('#bSubmit'), msg = $('#bMsg');
+    // Example page: nothing is sent. On a live listing this goes to the agent
+    // and the buyer gets a confirmation email.
     if (document.querySelector('#bookForm [name=_honey]').value) return;
-    btn.disabled = true; btn.textContent = 'Booking…';
-    const res = await MZ.send(fields);
-    btn.disabled = false; btn.textContent = 'Confirm booking';
     const bookings = MZ.store.get('mz-bookings', []);
-    bookings.unshift({ id: Date.now(), listing: LID, title: L.title, kind: slot.kind, when, name: nm, sent: res.ok });
+    bookings.unshift({ id: Date.now(), listing: LID, title: L.title, kind: slot.kind, when, name: nm, sent: false });
     MZ.store.set('mz-bookings', bookings.slice(0, 50));
     track('booking', { kind: slot.kind, when });
     const ics = icsFor(slot, selDay, nm);
     const gStart = new Date(selDay); const [h, m] = slot.start.split(':').map(Number); gStart.setHours(h, m);
     const gEnd = new Date(gStart.getTime() + (slot.kind === 'Open home' ? 45 : 30) * 60000);
     const gfmt = (d) => d.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
-    const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(slot.kind + ': ' + L.title)}&dates=${gfmt(gStart)}/${gfmt(gEnd)}&details=${encodeURIComponent('Booked via HomeView (demo).')}`;
+    const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(slot.kind + ': ' + L.title)}&dates=${gfmt(gStart)}/${gfmt(gEnd)}&details=${encodeURIComponent('Example booking on a VYRA example listing page.')}`;
     $('#slotPane').innerHTML = `<div class="booked">
       <div class="tickmark">✓</div>
-      <h3 style="font-weight:500">${res.ok ? 'You are booked in' : 'Almost done'}</h3>
+      <h3 style="font-weight:500">This is how booking works</h3>
       <p class="dim mt1">${esc(slot.kind)} · ${esc(when)}</p>
-      <p class="muted small mt1">${res.ok ? 'A confirmation is on its way to ' + esc(em) + '.' : 'Your email app should have opened with the booking. Send it to confirm.'}</p>
+      <p class="muted small mt1">This is an example page, so nothing was sent. On a live listing the agent gets the booking straight away and ${esc(em)} gets a confirmation email.</p>
       <div class="btn-row" style="justify-content:center"><button class="btn btn-gold btn-sm" type="button" id="icsBtn">Add to calendar (.ics)</button><a class="btn btn-ghost btn-sm" href="${gcal}" target="_blank" rel="noopener">Google Calendar</a></div>
       <p class="muted small mt1">Reminders are set for the day before and one hour before.</p>
       <button class="btn btn-ghost btn-xs mt2" type="button" id="bookAnother">Book another time</button>
@@ -501,9 +491,6 @@
     </div>`;
     $('#icsBtn').addEventListener('click', () => MZ.download(new Blob([ics], { type: 'text/calendar' }), 'viewing.ics'));
     $('#bookAnother').addEventListener('click', () => { selSlot = null; renderSlots(); });
-    if (!res.ok) {
-      MZ.fallback($('#bMsg2'), fields._subject, ['Listing: ' + fields.listing, 'Viewing: ' + slot.kind, 'When: ' + when, 'Name: ' + nm, 'Email: ' + em, 'Phone: ' + fields.phone, 'Email me if the time changes: ' + fields.wants_updates]);
-    }
   }
 
   // ---------- ask a question ----------
@@ -531,36 +518,16 @@
       if (eN) { n.focus(); return; }
       if (eC) { c.focus(); return; }
       if (form.elements._honey.value) return;
-      const fields = { _subject: `Question about ${L.title} from ${nm} (demo listing)`, listing: `${L.title}, ${L.suburb}`, name: nm, contact: ct, message: $('#aMsg', m.el).value.trim() };
-      if (MZ.EMAIL_RE.test(ct)) fields._replyto = ct;
-      const btn = $('#aSubmit', m.el); btn.disabled = true; btn.textContent = 'Sending…';
-      const res = await MZ.send(fields);
-      btn.disabled = false; btn.textContent = 'Send';
+      // Example page: nothing is sent. On a live listing this goes straight to the agent.
       track('enquiry');
       const box = $('#aBox', m.el);
-      if (res.ok) { box.hidden = false; box.className = 'formmsg ok'; box.textContent = `Thanks ${nm.split(' ')[0]}, your question has been sent. The agent will be in touch soon.`; form.reset(); }
-      else MZ.fallback(box, fields._subject, ['Listing: ' + fields.listing, 'Name: ' + nm, 'Phone or email: ' + ct, '', fields.message]);
+      box.hidden = false; box.className = 'formmsg ok';
+      box.textContent = `Thanks ${nm.split(' ')[0]}. This is an example page, so nothing was sent. On a live listing your question goes straight to the agent.`;
+      form.reset();
     });
   }
 
-  // ---------- compare + share ----------
-  function initCompare() {
-    const btns = [$('#btnCompare'), $('#btnCompare2')];
-    const sync = () => {
-      const on = (MZ.store.get('mz-compare', []) || []).includes(LID);
-      btns.forEach((b) => { b.textContent = on ? '✓ In compare' : '＋ Compare'; b.setAttribute('aria-pressed', String(on)); });
-    };
-    btns.forEach((b) => b.addEventListener('click', () => {
-      let list = MZ.store.get('mz-compare', []) || [];
-      if (list.includes(LID)) list = list.filter((x) => x !== LID);
-      else { list = [LID].concat(list).slice(0, 4); track('compare'); }
-      MZ.store.set('mz-compare', list);
-      sync();
-      MZ.toast(list.includes(LID) ? 'Added to compare' : 'Removed from compare');
-    }));
-    sync();
-  }
-
+  // ---------- share ----------
   function initShare() {
     $('#btnShare').addEventListener('click', async () => {
       track('share');
@@ -593,7 +560,7 @@
       idle(prepareEnhanced);
     }
     renderCal(); renderSlots();
-    initCompare(); initShare(); initSubnav();
+    initShare(); initSubnav();
     $('#btnAsk').addEventListener('click', openAsk);
     $('#btnAsk2').addEventListener('click', openAsk);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !document.querySelector('.modal')) onEscape(); });

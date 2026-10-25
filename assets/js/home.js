@@ -1,5 +1,5 @@
-/* Landing page: hero slideshow, the "See the difference" stage (three sample
-   homes x four live demos), and the chat form. */
+/* Landing page: hero slideshow, the "Our work" stage (three sample homes x
+   five live demos), the launch pack made live in the browser, and the chat form. */
 (function () {
   'use strict';
   const MZ = window.MZ;
@@ -45,6 +45,11 @@
       title: 'A floor plan buyers can click',
       lede: 'Tap a room to see its size, then step straight into it in the 3D tour.',
       note: () => 'Plan traced from the 3D scan. Sizes are approximate.'
+    },
+    privacy: {
+      title: 'Personal things stay personal',
+      lede: 'Before anything goes public we blur family photos, faces, mail and number plates. Your vendors will notice.',
+      note: () => 'Example from the family room of Sample home 2. Drag across the photo to blur anything else.'
     }
   };
   let home = D.homes[0];
@@ -70,6 +75,7 @@
     $('#openListing').href = 'listing.html?home=' + id;
     stopTour();
     showView(view);
+    if (launch.shown) renderLaunch();
   }
 
   function showView(v) {
@@ -84,6 +90,7 @@
     if (v === 'photo') renderPhoto();
     if (v === 'dusk') renderDusk();
     if (v === 'plan') renderPlan();
+    if (v === 'privacy') renderPrivacy();
   }
 
   function side(html) { $('#stageSide').innerHTML = html; }
@@ -227,11 +234,186 @@
     $('#sideBack').addEventListener('click', renderPlan);
   }
 
+  // ---- privacy check ----
+  // Personal items in the sample family room, as fractions of the photo.
+  const PRIVACY = {
+    src: 'assets/img/homes/ranch/family.jpg',
+    marks: [
+      { x: 0.316, y: 0.280, w: 0.032, h: 0.056, kind: 'Family photo' },
+      { x: 0.651, y: 0.262, w: 0.026, h: 0.110, kind: 'Family photos' },
+      { x: 0.703, y: 0.376, w: 0.033, h: 0.057, kind: 'Framed photo' },
+      { x: 0.762, y: 0.461, w: 0.029, h: 0.057, kind: 'Framed photo' },
+      { x: 0.779, y: 0.231, w: 0.034, h: 0.128, kind: 'Personal photos' }
+    ]
+  };
+  const pv = { src: null, boxes: PRIVACY.marks.slice(), blur: true, wired: false };
+  function fitPrivacy() {
+    const wrap = $('#pvWrap'), st = $('#pvStage');
+    if (!pv.src || !wrap.clientWidth) return;
+    const r = pv.src.width / pv.src.height;
+    let w = wrap.clientWidth, h = w / r;
+    if (h > wrap.clientHeight) { h = wrap.clientHeight; w = h * r; }
+    st.style.width = w + 'px'; st.style.height = h + 'px';
+  }
+  function placeBox(el, b) { Object.assign(el.style, { left: b.x * 100 + '%', top: b.y * 100 + '%', width: b.w * 100 + '%', height: b.h * 100 + '%' }); }
+  function wirePrivacy() {
+    if (pv.wired) return;
+    pv.wired = true;
+    const st = $('#pvStage');
+    let drag = null;
+    const rel = (e) => { const r = st.getBoundingClientRect(); return { x: MZ.clamp((e.clientX - r.left) / r.width, 0, 1), y: MZ.clamp((e.clientY - r.top) / r.height, 0, 1) }; };
+    st.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.pbox button')) return;
+      try { st.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+      const p = rel(e);
+      drag = { x0: p.x, y0: p.y, el: document.createElement('div') };
+      drag.el.className = 'pbox';
+      st.appendChild(drag.el);
+      placeBox(drag.el, { x: p.x, y: p.y, w: 0, h: 0 });
+    });
+    st.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const p = rel(e);
+      placeBox(drag.el, { x: Math.min(drag.x0, p.x), y: Math.min(drag.y0, p.y), w: Math.abs(p.x - drag.x0), h: Math.abs(p.y - drag.y0) });
+    });
+    st.addEventListener('pointerup', (e) => {
+      if (!drag) return;
+      const p = rel(e);
+      const b = { x: Math.min(drag.x0, p.x), y: Math.min(drag.y0, p.y), w: Math.abs(p.x - drag.x0), h: Math.abs(p.y - drag.y0), kind: 'Marked by you' };
+      drag.el.remove(); drag = null;
+      if (b.w > 0.015 && b.h > 0.015) { pv.boxes.push(b); paintPrivacy(); }
+    });
+    st.addEventListener('pointercancel', () => { if (drag) { drag.el.remove(); drag = null; } });
+    if ('ResizeObserver' in window) new ResizeObserver(fitPrivacy).observe($('#pvWrap'));
+  }
+  async function renderPrivacy() {
+    wirePrivacy();
+    if (!pv.src) {
+      try { pv.src = MZ.photo.toCanvas(await MZ.photo.loadImage(PRIVACY.src), 1600); } catch (e) { console.warn(e); return; }
+    }
+    if (view !== 'privacy') return;
+    fitPrivacy();
+    paintPrivacy();
+  }
+  function paintPrivacy() {
+    const c = $('#pvCanvas');
+    c.width = pv.src.width; c.height = pv.src.height;
+    c.getContext('2d').drawImage(pv.src, 0, 0);
+    if (pv.blur) pv.boxes.forEach((b) => MZ.photo.blurRect(c, { x: b.x * c.width, y: b.y * c.height, w: b.w * c.width, h: b.h * c.height }));
+    $$('#pvStage .pbox').forEach((el) => el.remove());
+    pv.boxes.forEach((b, i) => {
+      const el = document.createElement('div');
+      el.className = 'pbox';
+      el.innerHTML = `<button type="button" aria-label="Remove the ${esc(b.kind.toLowerCase())} box">✕</button>`;
+      placeBox(el, b);
+      $('button', el).addEventListener('click', (e) => { e.stopPropagation(); pv.boxes.splice(i, 1); paintPrivacy(); });
+      $('#pvStage').appendChild(el);
+    });
+    side(`<h4>Blurred before publishing</h4><p class="small muted">Family room, Sample home 2</p>
+      <ul class="chg">${pv.boxes.length ? pv.boxes.map((b) => `<li><span>${esc(b.kind)}</span><b>blurred</b></li>`).join('') : '<li><span>Nothing marked</span><b>—</b></li>'}</ul>
+      <label class="check mt1"><input type="checkbox" id="pvShow" ${pv.blur ? 'checked' : ''}> Show the blur</label>
+      <button class="btn btn-ghost btn-sm mt1" type="button" id="pvReset">Reset the example</button>`);
+    $('#pvShow').addEventListener('change', (e) => { pv.blur = e.target.checked; paintPrivacy(); });
+    $('#pvReset').addEventListener('click', () => { pv.boxes = PRIVACY.marks.slice(); pv.blur = true; paintPrivacy(); });
+  }
+
+  // ---------- launch pack: made live from the selected home ----------
+  const launch = { shown: false, run: 0 };
+  function initLaunch() {
+    const sec = $('#launch');
+    if (!sec) return;
+    const go = () => { if (!launch.shown) { launch.shown = true; renderLaunch(); } };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((en) => { if (en[0].isIntersecting) { io.disconnect(); go(); } }, { rootMargin: '400px 0px' });
+      io.observe(sec);
+    } else go();
+  }
+  async function renderLaunch() {
+    const run = ++launch.run;
+    const L = home;
+    const photos = L.photos.map((p) => p.src);
+    const copy = MZ.mk.copy(L);
+    const url = MZ.mk.listingUrl(L);
+    $('#launchHome').textContent = L.short.toLowerCase();
+    $('#launchGrid').innerHTML = `
+      <div class="mk-card reveal-in"><div class="mk-prev" id="lpSq"><span class="spinner"></span></div><div class="mk-body"><h3>Square post</h3><p>1080 × 1080 for Instagram and Facebook feeds.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpSqDl" disabled>Download</button></div></div></div>
+      <div class="mk-card reveal-in"><div class="mk-prev" id="lpSt"><span class="spinner"></span></div><div class="mk-body"><h3>Story</h3><p>1080 × 1920 with a QR code to the listing.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpStDl" disabled>Download</button></div></div></div>
+      <div class="mk-card reveal-in"><div class="mk-prev" id="lpVid"><button class="btn btn-pill btn-sm" type="button" id="lpVidGo">▶ Make the video</button></div><div class="mk-body"><h3>Listing video</h3><p>About 15 seconds, vertical, with captions. Recorded live in your browser.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpVidDl" hidden>Download</button><span class="muted small" id="lpVidNote"></span></div></div></div>
+      <div class="mk-card reveal-in"><div class="mk-prev"><div class="bro-mini"><div style="background-image:url('${esc(photos[0])}')"></div><i></i><i></i><i></i><i></i><i></i><b></b></div></div><div class="mk-body"><h3>Printable brochure</h3><p>A4, with photos, room sizes and a QR code. Save it as a PDF from the print window.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpBro">Open brochure</button></div></div></div>
+      <div class="mk-card reveal-in"><div class="mk-prev" id="lpQr"><span class="spinner"></span></div><div class="mk-body"><h3>QR code</h3><p>For window cards, signboards and flyers. Scan it to open the example listing.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpQrDl" disabled>Download</button></div></div></div>
+      <div class="mk-card reveal-in mk-copy"><div class="mk-body"><h3>Listing copy</h3><p>Ready to paste into the portals and your socials.</p>
+        ${[['Portal headline', copy.portalTitle], ['Instagram caption', copy.instagram], ['Text to your buyer list', copy.sms]].map(([k, v], i) => `<div class="mt1"><div class="row between" style="margin-bottom:.35rem"><b class="small">${esc(k)}</b><button class="btn btn-ghost btn-xs" type="button" data-copy="${i}">Copy</button></div><div class="copybox">${esc(v)}</div></div>`).join('')}
+      </div></div>`;
+    requestAnimationFrame(() => $$('#launchGrid .reveal-in').forEach((el, i) => setTimeout(() => el.classList.add('in'), i * 90)));
+    const copies = [copy.portalTitle, copy.instagram, copy.sms];
+    $$('#launchGrid [data-copy]').forEach((b) => b.addEventListener('click', () => MZ.copy(copies[Number(b.dataset.copy)], 'Copy')));
+
+    const imgs = await Promise.all(photos.slice(0, 5).map((p) => MZ.photo.loadImage(p).catch(() => null))).then((a) => a.filter(Boolean));
+    if (run !== launch.run || !imgs.length) return;
+    let qr = null;
+    try { qr = await MZ.mk.qr(url, 360); } catch (e) { $('#lpQr').innerHTML = '<p class="muted small">The QR code could not load. Check your connection.</p>'; }
+    if (run !== launch.run) return;
+    if (qr) {
+      const qc = MZ.photo.clone(qr); qc.style.maxHeight = '180px'; qc.style.imageRendering = 'pixelated';
+      $('#lpQr').innerHTML = ''; $('#lpQr').appendChild(qc);
+      $('#lpQrDl').disabled = false;
+      $('#lpQrDl').addEventListener('click', async () => MZ.download(await MZ.photo.toBlob(qr, 'image/png'), 'listing-qr.png'));
+    }
+    const sq = await MZ.mk.square(L, imgs[0]);
+    if (run !== launch.run) return;
+    $('#lpSq').innerHTML = ''; $('#lpSq').appendChild(sq);
+    $('#lpSqDl').disabled = false;
+    $('#lpSqDl').addEventListener('click', async () => MZ.download(await MZ.photo.toBlob(sq, 'image/png'), 'post-square.png'));
+    const st = await MZ.mk.story(L, imgs[1] || imgs[0], qr);
+    if (run !== launch.run) return;
+    $('#lpSt').innerHTML = ''; $('#lpSt').appendChild(st);
+    $('#lpStDl').disabled = false;
+    $('#lpStDl').addEventListener('click', async () => MZ.download(await MZ.photo.toBlob(st, 'image/png'), 'post-story.png'));
+
+    $('#lpVidGo').addEventListener('click', async () => {
+      if (!MZ.mk.videoSupported()) { $('#lpVidNote').textContent = 'This browser cannot record video. Try Chrome, Edge, Firefox or Safari 17+.'; return; }
+      const box = $('#lpVid');
+      box.innerHTML = '<div style="width:70%"><div class="hbar" style="grid-template-columns:1fr"><span class="tr"><i id="lpVidBar" style="width:0;transition:none"></i></span></div><p class="muted small mt1" style="text-align:center">Recording… keep this tab open</p></div>';
+      try {
+        const res = await MZ.mk.video(L, imgs, (p) => { const bar = $('#lpVidBar'); if (bar) bar.style.width = Math.round(p * 100) + '%'; });
+        const v = document.createElement('video');
+        v.src = URL.createObjectURL(res.blob); v.controls = true; v.loop = true; v.muted = true; v.playsInline = true; v.autoplay = true;
+        box.innerHTML = ''; box.appendChild(v);
+        $('#lpVidDl').hidden = false;
+        $('#lpVidDl').onclick = () => MZ.download(res.blob, 'listing-video.' + res.ext);
+      } catch (e) {
+        box.innerHTML = '<p class="muted small">Recording failed in this browser.</p>';
+        console.warn(e);
+      }
+    });
+    $('#lpBro').addEventListener('click', () => {
+      const abs = (p) => new URL(p, location.href).href;
+      const html = MZ.mk.brochureHtml(L, qr ? qr.toDataURL('image/png') : null, photos.map(abs), abs('assets/brand-mark.svg'));
+      const w = window.open('', '_blank');
+      if (!w) { MZ.download(new Blob([html], { type: 'text/html' }), 'brochure.html'); MZ.toast('Pop-up blocked, so the brochure was downloaded instead'); return; }
+      w.document.open(); w.document.write(html); w.document.close();
+    });
+  }
+
+  // Service links (menu, services grid) open the matching demo tab.
+  function initViewLinks() {
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-show-view]');
+      if (!a || !picker) return;
+      e.preventDefault();
+      picker.select(a.dataset.showView);
+      document.getElementById('work').scrollIntoView({ behavior: 'smooth' });
+    });
+    const v = new URLSearchParams(location.search).get('view');
+    if (v && views[v]) picker.select(v);
+  }
+
   function initStage() {
     initHomePick();
     $('#tourStart').addEventListener('click', () => startTour());
     picker = MZ.initPicker($('#picker'), (v) => showView(v));
     showView('tour');
+    initViewLinks();
     // warm up the photo demos when the browser is idle
     const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1500));
     idle(() => {
@@ -242,14 +424,18 @@
   // ---------- chat form ----------
   const tickItems = [
     ['Free sample', 'Try it on one of your listings'],
-    ['3D tour', 'A walk-through for each listing'],
-    ['Photo finishing', 'AI light and colour, labelled'],
+    ['3D walkthrough', 'Every room, on any phone'],
+    ['Photo finishing', 'Light and colour, labelled'],
     ['Day to dusk', 'Twilight hero shot'],
     ['Floor plan', 'Clickable, with room sizes'],
-    ['Listing page', 'Branded page with the tour'],
-    ['Marketing pack', 'Posts, brochure, video, copy'],
+    ['Privacy check', 'Personal items blurred'],
+    ['Virtual staging', 'Empty rooms furnished'],
+    ['Drone photos', 'Aerial shots'],
+    ['Listing page', 'Your brand, with the tour'],
+    ['Launch pack', 'Posts, video, brochure, QR, copy'],
     ['Viewing bookings', 'Buyers book a time online'],
-    ['AI for my agency', 'Calls, enquiries, reminders']
+    ['AI assistant', 'After-hours replies'],
+    ['Vendor report', 'Views, rooms and bookings']
   ];
   function initQuote() {
     const form = $('#quoteForm');
@@ -285,7 +471,7 @@
       if (form.elements._honey.value) { box.hidden = false; box.className = 'formmsg ok'; box.textContent = 'Thanks, that has come through.'; return; }
 
       const fields = {
-        _subject: 'Real estate enquiry from ' + nm + ' (HomeView demo)',
+        _subject: 'VYRA enquiry from ' + nm,
         name: nm, agency: $('#qAgency').value.trim(), phone: ph, email: em,
         listings_per_month: $('#qListings').value, area: $('#qArea').value.trim(),
         interested_in: on.length ? on.join(', ') : 'Nothing ticked',
@@ -309,6 +495,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initHero();
     initStage();
+    initLaunch();
     initQuote();
   });
 })();
