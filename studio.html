@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Agent studio | HomeView</title>
+  <meta name="description" content="Portfolio, buyer analytics, photo tools, marketing pack and listing publishing for agents. HomeView demo.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f7f2e8">
+  <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20261025a">
+  <link rel="stylesheet" href="pages.css?v=20261025a">
+</head>
+<body>
+
+<div class="demo-strip"><b>Demo</b>Everything here runs in your browser and is saved on this device only. Nothing is uploaded.</div>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="HomeView home"><img src="assets/brand-mark.svg" alt=""> HomeView</a>
+    <nav class="links" id="navlinks" aria-label="Main">
+      <a href="index.html#work">See the difference</a>
+      <div class="dd">
+        <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">Features <span class="caret" aria-hidden="true">▾</span></button>
+        <div class="dd-panel" data-menu="features"></div>
+      </div>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#included">What you get</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="bar-right">
+      <a class="btn btn-gold" href="index.html#quote">Book a chat</a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="fsm"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap studio-head">
+    <span class="eyebrow">Agent studio</span>
+    <h1 style="font-size:clamp(2rem,4.4vw,3.2rem);font-weight:500">Everything for your listings, in one place</h1>
+  </div>
+
+  <div class="studio-tabs">
+    <div class="wrap">
+      <div class="picker" id="tabs">
+        <button type="button" data-view="portfolio" aria-selected="true">Portfolio</button>
+        <button type="button" data-view="analytics" aria-selected="false">Buyer analytics</button>
+        <button type="button" data-view="photo" aria-selected="false">Photo enhance</button>
+        <button type="button" data-view="dusk" aria-selected="false">Day to dusk</button>
+        <button type="button" data-view="privacy" aria-selected="false">Privacy blur</button>
+        <button type="button" data-view="marketing" aria-selected="false">Marketing pack</button>
+        <button type="button" data-view="publish" aria-selected="false">Publish a listing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO (20) -->
+  <section class="panel" data-panel="portfolio">
+    <div class="wrap">
+      <div class="sec-head"><h2>Portfolio</h2><p class="lede">Every listing with its status and numbers. Change a status, open a listing, or see how buyers use it.</p></div>
+      <div class="kpis" id="pfKpis"></div>
+      <div class="port-tools mt2">
+        <div class="chips" id="pfFilter" role="group" aria-label="Filter by status"></div>
+        <button class="btn btn-gold btn-sm" type="button" data-goto="publish">＋ New listing</button>
+      </div>
+      <div class="tbl-wrap"><table class="tbl" id="pfTable"></table></div>
+      <p class="note">The sample listing has real numbers from this browser. The made-up listings are examples only.</p>
+    </div>
+  </section>
+
+  <!-- ANALYTICS (10) -->
+  <section class="panel" data-panel="analytics" hidden>
+    <div class="wrap">
+      <div class="sec-head row between" style="align-items:flex-end">
+        <div><h2>Buyer analytics</h2><p class="lede">How buyers use the listing: views, time in the 3D tour, the rooms they linger in, and what they do next.</p></div>
+        <div class="row"><select class="in" id="anListing" style="width:auto" aria-label="Listing"></select><button class="btn btn-ghost btn-sm" type="button" id="anReset">Reset data</button></div>
+      </div>
+      <div id="anBody"></div>
+    </div>
+  </section>
+
+  <!-- PHOTO (1 + 12) -->
+  <section class="panel" data-panel="photo" hidden>
+    <div class="wrap">
+      <div class="sec-head"><h2>Photo enhance</h2><p class="lede">Automatic light, colour and sharpness fixes, with sliders to fine-tune. Every change is logged, and exports are labelled as edited.</p></div>
+      <div class="tool">
+        <div class="tool-stage">
+          <div class="compare" id="phCompare" aria-label="Drag to compare original and edited photo">
+            <canvas id="phAfter"></canvas>
+            <div class="c-before"><canvas id="phBefore"></canvas></div>
+            <span class="c-tag l">Original</span><span class="c-tag r">Edited</span>
+          </div>
+        </div>
+        <div class="tool-side">
+          <div class="box"><h4>Photo</h4><div class="thumbs" id="phThumbs"></div></div>
+          <div class="box">
+            <div class="row between" style="margin-bottom:.8rem"><h4 style="margin:0">Adjustments</h4><div class="row" style="gap:.4rem"><button class="btn btn-pill btn-xs" type="button" id="phAuto">✦ Auto</button><button class="btn btn-ghost btn-xs" type="button" id="phResetBtn">Reset</button></div></div>
+            <div class="sliders" id="phSliders"></div>
+          </div>
+          <div class="box"><h4>Change log</h4><ul class="log" id="phLog"></ul></div>
+          <div class="box">
+            <label class="check"><input type="checkbox" id="phLabel" checked> Label the export as "Edited"</label>
+            <div class="btn-row" style="margin-top:.9rem"><button class="btn btn-gold btn-sm" type="button" id="phExport">Download edited photo</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DUSK (13) -->
+  <section class="panel" data-panel="dusk" hidden>
+    <div class="wrap">
+      <div class="sec-head"><h2>Day to dusk</h2><p class="lede">A twilight hero shot from a daytime exterior: a sunset sky that keeps the real clouds, an evening grade, and warm light in the windows you mark. Exports are always labelled "Simulated twilight".</p></div>
+      <div class="tool">
+        <div class="tool-stage">
+          <div class="compare" id="duCompare" aria-label="Drag to compare day and simulated dusk">
+            <canvas id="duAfter"></canvas>
+            <div class="c-before"><canvas id="duBefore"></canvas></div>
+            <span class="c-tag l">Day</span><span class="c-tag r">Simulated twilight</span>
+          </div>
+          <div class="privacy-stage" id="duMark" hidden><canvas id="duMarkCanvas"></canvas><span class="mark-hint">Drag a box over each window (and any outdoor light). Click Done when finished.</span></div>
+        </div>
+        <div class="tool-side">
+          <div class="box"><h4>Photo</h4><div class="thumbs" id="duThumbs"></div><p class="formnote mt1">Works best on exteriors with open sky.</p></div>
+          <div class="box"><h4>Look</h4><div class="sliders">
+            <label>Strength <input class="rng" type="range" id="duStrength" min="30" max="100" value="100"><output id="duStrengthO">100</output></label>
+            <label>Window light <input class="rng" type="range" id="duGlow" min="0" max="100" value="80"><output id="duGlowO">80</output></label>
+            <label>Sunset warmth <input class="rng" type="range" id="duSky" min="0" max="100" value="80"><output id="duSkyO">80</output></label>
+          </div></div>
+          <div class="box"><h4>Windows and lights</h4><p class="formnote" id="duMarkInfo">Marked windows glow warm, with light spilling onto the walls.</p>
+            <div class="row mt1" style="gap:.45rem"><button class="chip" type="button" id="duMarkBtn" aria-pressed="false">Mark windows</button><button class="chip" type="button" id="duLightBtn" aria-pressed="false">Mark a light</button><button class="chip" type="button" id="duMarkClear">Clear</button></div></div>
+          <div class="box"><h4>Change log</h4><ul class="log" id="duLog"></ul></div>
+          <div class="box"><button class="btn btn-gold btn-sm" type="button" id="duExport">Download (labelled)</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY (11) -->
+  <section class="panel" data-panel="privacy" hidden>
+    <div class="wrap">
+      <div class="sec-head"><h2>Privacy blur</h2><p class="lede">Blur faces, family photos, documents, number plates and house numbers before anything is published. Drag a box over anything sensitive.</p></div>
+      <div class="tool">
+        <div class="tool-stage">
+          <div class="privacy-stage" id="pvStage"><canvas id="pvCanvas"></canvas></div>
+        </div>
+        <div class="tool-side">
+          <div class="box"><h4>Photo</h4><div class="thumbs" id="pvThumbs"></div></div>
+          <div class="box">
+            <h4>Mark what to blur</h4>
+            <label class="lbl" for="pvKind">Next box is a…</label>
+            <select class="in" id="pvKind"><option>Face</option><option>Family photo</option><option>Document or mail</option><option>Number plate</option><option>House number</option><option>Screen</option><option>Other personal item</option></select>
+            <div class="btn-row" style="margin-top:.9rem">
+              <button class="btn btn-pill btn-xs" type="button" id="pvDetect">✦ Find faces automatically</button>
+              <button class="btn btn-ghost btn-xs" type="button" id="pvClear">Clear boxes</button>
+            </div>
+            <p class="formnote mt1" id="pvDetectNote"></p>
+          </div>
+          <div class="box"><h4>Blurred items</h4><ul class="log" id="pvLog"></ul>
+            <label class="check mt1"><input type="checkbox" id="pvPreview" checked> Preview blur</label></div>
+          <div class="box"><button class="btn btn-gold btn-sm" type="button" id="pvExport">Download blurred photo</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKETING (5) -->
+  <section class="panel" data-panel="marketing" hidden>
+    <div class="wrap">
+      <div class="sec-head row between" style="align-items:flex-end">
+        <div><h2>Marketing pack</h2><p class="lede">Posts, a story, a printable brochure, a short video, listing copy and a QR code, all made from the listing you pick.</p></div>
+        <select class="in" id="mkListing" style="width:auto" aria-label="Listing"></select>
+      </div>
+      <div class="mk-grid" id="mkGrid"></div>
+    </div>
+  </section>
+
+  <!-- PUBLISH (15) -->
+  <section class="panel" data-panel="publish" hidden>
+    <div class="wrap">
+      <div class="sec-head"><h2>Publish a listing</h2><p class="lede">Fill in the details once. You get a branded listing page, share links, an embed for your website and copy ready for the portals.</p></div>
+      <div class="pub">
+        <form class="mz" id="pubForm" novalidate style="margin-top:0">
+          <div class="field"><label for="pTitle">Headline</label><input class="in" id="pTitle" maxlength="70" required placeholder="e.g. Sunny family home close to schools"><span class="field-error" hidden>Please add a headline.</span></div>
+          <div class="f2">
+            <div class="field"><label for="pSuburb">Suburb and city</label><input class="in" id="pSuburb" maxlength="80" placeholder="e.g. Howick, Auckland"></div>
+            <div class="field"><label for="pPrice">Price</label><input class="in" id="pPrice" maxlength="40" placeholder="e.g. Asking $1,150,000 or Auction"></div>
+          </div>
+          <div class="f2" style="grid-template-columns:repeat(3,1fr)">
+            <div class="field"><label for="pBeds">Bedrooms</label><input class="in" id="pBeds" type="number" min="0" max="20" value="3"></div>
+            <div class="field"><label for="pBaths">Bathrooms</label><input class="in" id="pBaths" type="number" min="0" max="20" value="2"></div>
+            <div class="field"><label for="pLiving">Living areas</label><input class="in" id="pLiving" type="number" min="0" max="20" value="1"></div>
+            <div class="field"><label for="pGarage">Parking</label><input class="in" id="pGarage" type="number" min="0" max="20" value="1"></div>
+            <div class="field"><label for="pLand">Land (m²)</label><input class="in" id="pLand" type="number" min="0" max="100000"></div>
+            <div class="field"><label for="pFloor">Floor (m²)</label><input class="in" id="pFloor" type="number" min="0" max="10000"></div>
+          </div>
+          <div class="field"><label for="pDesc">Description</label><textarea class="in" id="pDesc" maxlength="4000" placeholder="A few short paragraphs about the home."></textarea></div>
+          <div class="field"><label for="pFeat">Features (comma separated)</label><input class="in" id="pFeat" maxlength="300" placeholder="Heat pump, double glazing, north-facing deck"></div>
+          <div class="field"><label for="pPhotos">Photos (up to 6, resized in your browser)</label><input class="in" id="pPhotos" type="file" accept="image/*" multiple><p class="formnote">No photos? We'll use the sample photos.</p></div>
+          <div class="row"><button class="btn btn-gold" type="submit" id="pubBtn">Publish listing</button><span class="muted small" id="pubNote"></span></div>
+        </form>
+        <div class="pub-preview">
+          <div class="pv-card" id="pubPreview"></div>
+          <div class="box mt1" id="pubResult" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fgrid">
+      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> HomeView</a><p class="mt1">3D tours, AI-finished photos and listing pages for New Zealand agents.</p></div>
+      <div><h4>Website</h4><ul><li><a href="index.html#work">See the difference</a></li><li><a href="index.html#how">How it works</a></li><li><a href="index.html#included">What you get</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+      <div><h4>Sample homes</h4><ul id="footHomes"></ul></div>
+      <div><h4>HomeView</h4><ul><li><a href="studio.html">Agent studio</a></li><li><a href="compare.html">Compare homes</a></li><li><a href="index.html#quote">Book a free chat</a></li></ul></div>
+    </div>
+    <details class="credits"><summary>Scan and image credits</summary><ul id="creditList"></ul></details>
+    <p class="fbig" aria-hidden="true">HomeView<span>.</span></p>
+    <div class="fbottom"><span>© 2026 HomeView (concept demo)</span><span>Sample homes for illustration only.</span></div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js?v=20261025a"></script>
+<script src="assets/js/data.js?v=20261025a"></script>
+<script src="assets/js/photo-tools.js?v=20261025a"></script>
+<script src="assets/js/floorplan.js?v=20261025a"></script>
+<script src="assets/js/marketing.js?v=20261025a"></script>
+<script src="assets/js/studio.js?v=20261025a"></script>
+</body>
+</html>

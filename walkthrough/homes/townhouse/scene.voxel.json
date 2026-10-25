@@ -1,0 +1,37 @@
+{
+  "version": "1.1",
+  "asset": {
+    "generator": "splat-transform v3.10.1"
+  },
+  "gridBounds": {
+    "min": [
+      -4.4,
+      -0.6000000000000001,
+      -2.4000000000000004
+    ],
+    "max": [
+      3.4000000000000004,
+      3.2,
+      2.8
+    ]
+  },
+  "sceneBounds": {
+    "min": [
+      -4.7710231814287845,
+      -1.504803953785892,
+      -2.6850837094439224
+    ],
+    "max": [
+      3.525681719015039,
+      3.6585123544617835,
+      3.0472759532911935
+    ]
+  },
+  "voxelResolution": 0.05,
+  "leafSize": 4,
+  "treeDepth": 6,
+  "numInteriorNodes": 1184,
+  "numMixedLeaves": 4583,
+  "nodeCount": 5924,
+  "leafDataCount": 9166
+}

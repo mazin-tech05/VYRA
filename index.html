@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HomeView | You list the homes. We bring the buyers.</title>
+  <meta name="description" content="3D walkthroughs, AI-finished photos, twilight hero shots, floor plans and a listing page that books viewings. HomeView, for New Zealand real estate agents.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f7f2e8">
+  <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20261025a">
+  <link rel="stylesheet" href="pages.css?v=20261025a">
+</head>
+<body>
+
+<div class="demo-strip"><b>Demo</b>A concept site for HomeView. The three homes are licensed sample scans, not listings for sale.</div>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="HomeView home"><img src="assets/brand-mark.svg" alt=""> HomeView</a>
+    <nav class="links" id="navlinks" aria-label="Main">
+      <a href="#work">See the difference</a>
+      <div class="dd">
+        <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">Features <span class="caret" aria-hidden="true">▾</span></button>
+        <div class="dd-panel" data-menu="features"></div>
+      </div>
+      <a href="#how">How it works</a>
+      <a href="#included">What you get</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="bar-right">
+      <a class="btn btn-gold" href="#quote">Book a chat</a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="fsm"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-media" id="heroMedia" aria-hidden="true">
+      <img src="assets/img/homes/villa/living.jpg" alt="" class="on">
+      <img data-src="assets/img/homes/ranch/kitchen.jpg" alt="">
+      <img data-src="assets/img/homes/villa/terrace.jpg" alt="">
+      <img data-src="assets/img/homes/townhouse/overview.jpg" alt="">
+      <img data-src="assets/img/homes/ranch/master.jpg" alt="">
+    </div>
+    <div class="wrap">
+      <span class="eyebrow reveal">New Zealand real estate</span>
+      <h1>You list the homes.<br>We bring the <span class="ticker" data-words="buyers|viewings|enquiries">buyers</span>.</h1>
+      <p class="lede reveal d2">3D walkthroughs, AI-finished photos, twilight hero shots and a listing page that books viewings. One team, from the first visit to the day it goes live.</p>
+      <div class="btn-row reveal d3">
+        <a class="btn btn-cream" href="#quote">Book a free chat</a>
+        <a class="btn btn-line" href="#work">See the difference</a>
+      </div>
+    </div>
+    <div class="hero-chips" aria-hidden="true">
+      <span><b>3D</b> walkthrough</span>
+      <span><b>AI</b> photo finishing</span>
+      <span><b>Twilight</b> hero shot</span>
+      <span><b>Viewing</b> bookings</span>
+    </div>
+    <a class="scroll-cue" href="#work">Scroll down<i></i></a>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true"><div class="marquee-track">
+    <span>3D walkthroughs</span><span>AI photo finishing</span><span>Twilight hero shots</span><span>Clickable floor plans</span><span>Viewing bookings</span><span>Launch packs</span>
+    <span>3D walkthroughs</span><span>AI photo finishing</span><span>Twilight hero shots</span><span>Clickable floor plans</span><span>Viewing bookings</span><span>Launch packs</span>
+  </div></div>
+
+  <!-- SEE THE DIFFERENCE -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">See the difference</span>
+        <h2 id="work-title">Your listings in front of the right buyers</h2>
+        <p class="lede" id="work-lede">Pick a home, then try each tool on it. Everything below runs live in your browser.</p>
+      </div>
+      <div class="homepick" id="homePick" role="radiogroup" aria-label="Sample home"></div>
+      <div class="picker" id="picker">
+        <button type="button" data-view="tour" aria-selected="true">3D walkthrough</button>
+        <button type="button" data-view="photo" aria-selected="false">Photo finishing</button>
+        <button type="button" data-view="dusk" aria-selected="false">Day to dusk</button>
+        <button type="button" data-view="plan" aria-selected="false">Floor plan</button>
+      </div>
+      <div class="stage-wrap">
+        <div class="stage reveal" id="stage">
+          <div class="view on" data-view="tour">
+            <div class="tourdemo" id="tourDemo">
+              <img id="tourPosterImg" src="assets/img/homes/villa/poster.jpg" alt="" class="zoomy">
+              <button class="tourdemo-ui" id="tourStart" type="button" aria-label="Start the 3D tour">
+                <span class="badge">Live 3D scan</span>
+                <span class="tour-play" aria-hidden="true"><span>▶</span></span>
+                <span class="tourdemo-cta">Walk through it</span>
+              </button>
+              <iframe id="tourFrameHome" title="3D tour of the sample home" allow="fullscreen; xr-spatial-tracking" hidden></iframe>
+              <div class="tour-loading" id="tourLoadingHome" hidden><span class="spinner"></span><span>Loading the 3D tour…</span></div>
+            </div>
+          </div>
+          <div class="view" data-view="photo">
+            <div class="compare" id="photoCompare" aria-label="Drag to compare the original and finished photo">
+              <canvas id="photoAfter"></canvas>
+              <div class="c-before"><img id="photoBefore" src="" alt="Original photo"></div>
+              <span class="c-tag l">Original</span><span class="c-tag r">Finished</span>
+            </div>
+          </div>
+          <div class="view" data-view="dusk">
+            <div class="compare" id="duskCompare" aria-label="Drag to compare the daytime photo and the simulated dusk">
+              <canvas id="duskAfter"></canvas>
+              <div class="c-before"><img id="duskBefore" src="" alt="Daytime photo"></div>
+              <span class="c-tag l">Day</span><span class="c-tag r">Twilight</span>
+            </div>
+          </div>
+          <div class="view" data-view="plan">
+            <div class="plandemo" id="planDemo"></div>
+          </div>
+        </div>
+        <aside class="stage-side" id="stageSide" aria-live="polite"></aside>
+      </div>
+      <div class="tour-roombar" id="tourRoomsHome" role="group" aria-label="Jump to a room"></div>
+      <p class="note" id="work-note"></p>
+      <div class="btn-row"><a class="btn btn-gold" href="#quote">Book a free chat</a><a class="btn btn-ghost" id="openListing" href="listing.html">Open the full listing page</a></div>
+    </div>
+  </section>
+
+  <!-- WHAT BUYERS SEE -->
+  <section id="buyers" class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">What your buyers will see</span>
+        <h2>Your listing, everywhere buyers scroll</h2>
+        <p class="lede">A listing page with the tour built in, posts made from the same visit, and a booking button that fills your open homes.</p>
+      </div>
+      <div class="phones swipe-sm">
+        <figure class="reveal">
+          <div class="bwp"><div class="bws">
+            <div class="ps-top"><b>Your agency</b><span class="muted">Sample listing</span></div>
+            <div class="ps-hero"><img class="zoom" src="assets/img/homes/villa/living-t.jpg" alt=""><span class="ps-badge">3D tour</span></div>
+            <div class="ps-body">
+              <h5>Villa with pool and covered terrace</h5>
+              <div class="ps-facts"><span>3 bed</span><span>Indoor pool</span><span>Terrace</span></div>
+              <div class="ps-rooms"><i>Living</i><i class="on">Kitchen</i><i>Terrace</i><i>Pool</i></div>
+            </div>
+            <div class="ps-cta">Book a viewing</div>
+          </div></div>
+          <figcaption><b>The listing</b><span>A page with the 3D tour built in</span></figcaption>
+        </figure>
+        <figure class="reveal d1">
+          <div class="bwp"><div class="bws ps-post">
+            <div class="ps-top"><div class="who"><span class="fav"><img src="assets/brand-mark.svg" alt=""></span><b>youragency<span>Sponsored</span></b></div><span>•••</span></div>
+            <div class="sq"><img class="zoom" id="postImg" src="assets/img/homes/villa/exterior.jpg" alt=""><div class="ov"><em>Just listed</em><b>Villa with pool and terrace</b>Walk through it in 3D</div></div>
+            <div class="cta2"><span>Book a viewing</span><span>›</span></div>
+            <p class="cap"><b>youragency</b> Three bedrooms, an indoor pool and a long covered terrace. Take the 3D tour, then book a time to see it.</p>
+          </div></div>
+          <figcaption><b>Marketing pack</b><span>Posts made from the same visit</span></figcaption>
+        </figure>
+        <figure class="reveal d2">
+          <div class="bwp"><div class="bws">
+            <div class="ps-top"><b>Book a viewing</b><span class="live"><i></i>Live</span></div>
+            <div class="ps-cal" aria-hidden="true">
+              <i>M</i><i>T</i><i>W</i><i>T</i><i>F</i><i>S</i><i>S</i>
+              <i>13</i><i class="av">14</i><i>15</i><i class="av">16</i><i>17</i><i class="sel">18</i><i class="av">19</i>
+              <i>20</i><i class="av">21</i><i>22</i><i class="av">23</i><i>24</i><i class="av">25</i><i class="av">26</i>
+            </div>
+            <div class="ps-slots"><span>Open home<b>11:00</b></span><span class="sel">Private viewing<b>12:30</b></span><span>Private viewing<b>14:00</b></span></div>
+            <div class="ps-ok">Booked · added to your calendar</div>
+          </div></div>
+          <figcaption><b>Bookings</b><span>Buyers pick a time, you get the details</span></figcaption>
+        </figure>
+      </div>
+      <p class="note">Examples for illustration. Posts and pages go out under your agency's name and logo.</p>
+    </div>
+  </section>
+
+  <!-- AI FOR YOUR AGENCY -->
+  <section id="ai">
+    <div class="wrap">
+      <div class="split">
+        <div>
+          <span class="eyebrow">AI for your agency</span>
+          <h2>Never miss a buyer</h2>
+          <ul class="ticks">
+            <li><b>A receptionist that never misses a call</b>Buyers who call after hours get a text straight back, with answers about the home and a viewing time.</li>
+            <li><b>An instant reply to every enquiry</b>Questions about rooms, sizes and open homes are answered from the listing itself, any time of day.</li>
+            <li><b>Less admin for your team</b>Viewing confirmations, reminders and buyer notes are sent and logged for you.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-gold" href="#quote">Ask about AI</a></div>
+        </div>
+        <div class="chatdemo reveal-left" aria-label="Example conversation">
+          <div class="cd-head"><span class="cd-av">H</span><div><b>Your agency</b><small>AI assistant · replies in seconds</small></div></div>
+          <div class="cd-body">
+            <p class="cd-sys">Missed call · 8:42 pm</p>
+            <p class="cd-msg in">Hi, sorry we missed your call about the villa with the pool. I can help with questions or book you a viewing.</p>
+            <p class="cd-msg out">Is the terrace covered? And can we see it Saturday?</p>
+            <p class="cd-msg in">Yes, the terrace is fully covered and runs the length of the living room. The pool is indoors, so it's usable all year. Saturday has an open home at 11:00, or a private viewing at 12:30.</p>
+            <p class="cd-msg out">12:30 please</p>
+            <p class="cd-msg in">Booked for Saturday at 12:30. I've sent a calendar invite and the 3D tour link so you can look around before you come.</p>
+          </div>
+          <p class="cd-note">Example conversation for illustration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How it works</span>
+        <h2>Three steps, and you are out of it</h2>
+      </div>
+      <div class="grid3">
+        <div class="card reveal"><div class="imgbox"><img class="stepimg" src="assets/img/homes/ranch/plan-t.jpg" alt="Top-down view of a 3D scan" loading="lazy"></div><div class="step-n">1</div><h3>We scan the home</h3><p>One visit to capture the whole home in 3D. Nothing to set up and no gear for your team to buy.</p></div>
+        <div class="card reveal d1"><div class="imgbox"><img class="stepimg" src="assets/img/homes/villa/kitchen-t.jpg" alt="Kitchen rendered from a 3D scan" loading="lazy"></div><div class="step-n">2</div><h3>We finish it</h3><p>The 3D tour, AI-finished photos, a twilight hero shot, the floor plan and a privacy check, with every edit logged.</p></div>
+        <div class="card reveal d2"><div class="imgbox"><img class="stepimg" src="assets/img/homes/townhouse/living-t.jpg" alt="Living room rendered from a 3D scan" loading="lazy"></div><div class="step-n">3</div><h3>It goes live</h3><p>Your listing page, marketing pack and viewing bookings, ready to share the same way you share listings today.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT YOU GET -->
+  <section id="included">
+    <div class="wrap">
+      <div class="split">
+        <div>
+          <span class="eyebrow">What you get</span>
+          <h2>Everything included</h2>
+          <ul class="ticks">
+            <li><b>A 3D tour on every listing</b>Rooms buyers can jump between, on any phone or laptop.</li>
+            <li><b>Photos finished, never faked</b>AI corrects light and colour only. Every edit is logged and labelled.</li>
+            <li><b>A launch pack</b>Square and story posts, a brochure, a short video and listing copy.</li>
+            <li><b>A real person on the phone</b>One contact who knows your listings, backed by an assistant that never sleeps.</li>
+          </ul>
+          <div class="btn-row"><a class="btn btn-gold" href="#quote">Book a free chat</a><a class="btn btn-ghost" href="studio.html">Open the agent studio</a></div>
+        </div>
+        <div class="dash-peek reveal-left" aria-hidden="true">
+          <div class="dp-head"><b>Your listings</b><span class="live"><i></i>Live</span></div>
+          <div class="dp-row"><span class="dp-th" style="background-image:url(assets/img/homes/ranch/living-t.jpg)"></span><span><b>Single-level family home</b><small>Sample home 2</small></span><span class="pill ok">Active</span></div>
+          <div class="dp-row"><span class="dp-th" style="background-image:url(assets/img/homes/villa/pool-t.jpg)"></span><span><b>Villa with pool</b><small>Sample home 1</small></span><span class="pill warn">Viewings</span></div>
+          <div class="dp-row"><span class="dp-th" style="background-image:url(assets/img/homes/townhouse/living-t.jpg)"></span><span><b>Modern home</b><small>Sample home 3</small></span><span class="pill busy">Finishing<em></em></span></div>
+          <div class="dp-bars"><i style="height:38%"></i><i style="height:52%"></i><i style="height:47%"></i><i style="height:66%"></i><i style="height:58%"></i><i style="height:81%"></i><i style="height:92%"></i></div>
+          <div class="dp-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+          <p class="dp-note">Illustration. The live dashboard shows real numbers from your listings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="alt">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Questions agents ask us</h2></div>
+      <details class="faq reveal"><summary>Do you change what the home actually looks like?</summary><p>No. Photo finishing corrects light, colour and sharpness only. Nothing is added, moved or removed, every edited photo carries a label, and buyers can switch back to the original. Twilight images are always marked as simulated.</p></details>
+      <details class="faq reveal"><summary>Do we have to take the photos or do the scan ourselves?</summary><p>No. We visit the home once and capture everything: the 3D scan and the photos. You just let us know when the home is ready.</p></details>
+      <details class="faq reveal"><summary>Does the 3D tour work on phones?</summary><p>Yes. It runs in the web browser on phones, tablets and laptops with nothing to install. A light version appears first and full detail streams in as buyers move around.</p></details>
+      <details class="faq reveal"><summary>Do we have to learn any software?</summary><p>No. You get a link to the listing page and the files in the launch pack. The agent studio is there if you want to look at the numbers.</p></details>
+      <details class="faq reveal"><summary>Can it go on Trade Me and realestate.co.nz?</summary><p>We prepare the photos, listing copy and floor plan ready to upload, and a tour link you can share anywhere. Publishing straight into a portal depends on your agency's account access, so we set that up with you.</p></details>
+      <details class="faq reveal"><summary>What does it cost?</summary><p>We quote a fixed price per listing after a short chat, so you know the full cost before anything starts.</p></details>
+      <details class="faq reveal"><summary>Are the homes on this page real listings?</summary><p>No. They are published 3D scans licensed for reuse (credited at the bottom of the page), shown so you can try every tool. For your listings we scan your homes.</p></details>
+    </div>
+  </section>
+
+  <!-- PROMISES -->
+  <section id="promises">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Our promise</span><h2>No risk on your side</h2></div>
+      <div class="grid4">
+        <div class="card lead reveal"><span class="pi">Flexible</span><h3 class="mt1">No lock-in contract</h3><p>Use us listing by listing. Stay because it works.</p></div>
+        <div class="card reveal d1"><span class="pi">Try it</span><h3 class="mt1">A free sample, nothing to sign</h3><p>See the result on one of your own listings first.</p></div>
+        <div class="card reveal d2"><span class="pi">Fast</span><h3 class="mt1">Live before the open home</h3><p>Tour, photos and page ready for the first weekend.</p></div>
+        <div class="card reveal d3"><span class="pi">Results</span><h3 class="mt1">Numbers after every campaign</h3><p>Views, tour time, enquiries and bookings for each listing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section id="quote" class="alt">
+    <div class="wrap">
+      <div class="quote reveal">
+        <span class="eyebrow">Book a free chat</span>
+        <h2>Let's talk about your next listing.</h2>
+        <p class="lede mt1">Tick what you are interested in, add your details, and we will get back to you to find a time that suits. No obligation.</p>
+        <form class="mz" id="quoteForm" novalidate>
+          <fieldset class="tickset">
+            <legend>What are you interested in? <span>Tick as many as you like.</span></legend>
+            <div class="tgrid" id="ticks"></div>
+          </fieldset>
+          <p class="tsum" id="tsum">Nothing ticked yet.</p>
+          <div class="f2">
+            <div class="field"><label for="qName">Your name</label><input class="in" id="qName" name="name" autocomplete="name" required maxlength="100"><span class="field-error" hidden>Please add your name.</span></div>
+            <div class="field"><label for="qAgency">Agency</label><input class="in" id="qAgency" name="agency" autocomplete="organization" maxlength="120"></div>
+            <div class="field"><label for="qPhone">Phone</label><input class="in" id="qPhone" name="phone" type="tel" autocomplete="tel" maxlength="40"></div>
+            <div class="field"><label for="qEmail">Email</label><input class="in" id="qEmail" name="email" type="email" autocomplete="email" maxlength="120"><span class="field-error" hidden>Please add a phone number or an email address.</span></div>
+            <div class="field"><label for="qListings">Listings a month</label>
+              <select class="in" id="qListings" name="listings"><option value="">Choose one</option><option>1 to 2</option><option>3 to 5</option><option>6 to 10</option><option>More than 10</option></select></div>
+            <div class="field"><label for="qArea">Where you sell</label><input class="in" id="qArea" name="area" placeholder="Suburb, town or region" maxlength="120"></div>
+          </div>
+          <div class="field"><label for="qMsg">Anything else? (optional)</label><textarea class="in" id="qMsg" name="message" maxlength="2000" placeholder="Your next listing, how you market listings now, anything else."></textarea></div>
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div><button class="btn btn-gold" type="submit" id="qSubmit">Book my chat</button></div>
+          <p class="formnote">We only use your details to contact you about your enquiry. We never share or sell them.</p>
+          <div class="formmsg" id="qMsgBox" role="status" aria-live="polite" hidden></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fgrid">
+      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> HomeView</a><p class="mt1">3D tours, AI-finished photos and listing pages for New Zealand agents.</p></div>
+      <div><h4>Website</h4><ul><li><a href="#work">See the difference</a></li><li><a href="#how">How it works</a></li><li><a href="#included">What you get</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h4>Sample homes</h4><ul id="footHomes"></ul></div>
+      <div><h4>HomeView</h4><ul><li><a href="studio.html">Agent studio</a></li><li><a href="compare.html">Compare homes</a></li><li><a href="#quote">Book a free chat</a></li></ul></div>
+    </div>
+    <details class="credits" id="credits"><summary>Scan and image credits</summary><ul id="creditList"></ul></details>
+    <p class="fbig" aria-hidden="true">HomeView<span>.</span></p>
+    <div class="fbottom"><span>© 2026 HomeView (concept demo)</span><span>Sample homes for illustration only.</span></div>
+  </div>
+</footer>
+
+<div class="stickybar"><a class="btn btn-ghost" href="#work">See the difference</a><a class="btn btn-gold" href="#quote">Book a chat</a></div>
+
+<script src="assets/js/site.js?v=20261025a"></script>
+<script src="assets/js/data.js?v=20261025a"></script>
+<script src="assets/js/photo-tools.js?v=20261025a"></script>
+<script src="assets/js/floorplan.js?v=20261025a"></script>
+<script src="assets/js/home.js?v=20261025a"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Compare homes | HomeView</title>
+  <meta name="description" content="Compare shortlisted homes side by side. HomeView demo.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f7f2e8">
+  <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20261025a">
+  <link rel="stylesheet" href="pages.css?v=20261025a">
+</head>
+<body>
+
+<div class="demo-strip"><b>Demo</b>Apart from the sample listing, these homes are made up to show how comparing works.</div>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="index.html" aria-label="HomeView home"><img src="assets/brand-mark.svg" alt=""> HomeView</a>
+    <nav class="links" id="navlinks" aria-label="Main">
+      <a href="index.html#work">See the difference</a>
+      <div class="dd">
+        <button class="dd-btn" type="button" aria-expanded="false" aria-haspopup="true">Features <span class="caret" aria-hidden="true">▾</span></button>
+        <div class="dd-panel" data-menu="features"></div>
+      </div>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#included">What you get</a>
+      <a href="index.html#faq">FAQ</a>
+    </nav>
+    <div class="bar-right">
+      <a class="btn btn-gold" href="index.html#quote">Book a chat</a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="fsm"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="tight">
+    <div class="wrap-wide">
+      <div class="sec-head">
+        <span class="eyebrow">Compare homes</span>
+        <h1 style="font-size:clamp(2rem,4.4vw,3.2rem);font-weight:500">Your shortlist, side by side</h1>
+        <p class="lede">Pick up to four homes. The best in each row is marked in gold. On a phone, swipe across to see every home.</p>
+      </div>
+      <div class="row between" style="margin-bottom:1rem">
+        <div class="cmp-pick" id="cmpPick" role="group" aria-label="Homes to compare"></div>
+        <button class="btn btn-ghost btn-sm" type="button" id="cmpShare">Copy compare link</button>
+      </div>
+      <div class="cmp-scroll" id="cmpScroll"></div>
+      <p class="note">Sizes come from each home's 3D scan and are approximate. Sample homes have no price; a real listing shows price and price per m² here.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fgrid">
+      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> HomeView</a><p class="mt1">3D tours, AI-finished photos and listing pages for New Zealand agents.</p></div>
+      <div><h4>Website</h4><ul><li><a href="index.html#work">See the difference</a></li><li><a href="index.html#how">How it works</a></li><li><a href="index.html#included">What you get</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
+      <div><h4>Sample homes</h4><ul id="footHomes"></ul></div>
+      <div><h4>HomeView</h4><ul><li><a href="studio.html">Agent studio</a></li><li><a href="compare.html">Compare homes</a></li><li><a href="index.html#quote">Book a free chat</a></li></ul></div>
+    </div>
+    <details class="credits"><summary>Scan and image credits</summary><ul id="creditList"></ul></details>
+    <p class="fbig" aria-hidden="true">HomeView<span>.</span></p>
+    <div class="fbottom"><span>© 2026 HomeView (concept demo)</span><span>Sample homes for illustration only.</span></div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js?v=20261025a"></script>
+<script src="assets/js/data.js?v=20261025a"></script>
+<script src="assets/js/compare.js?v=20261025a"></script>
+</body>
+</html>
