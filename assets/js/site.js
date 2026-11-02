@@ -72,6 +72,7 @@
       { t: 'Privacy check', href: 'index.html?view=privacy#work', view: 'privacy' }
     ] },
     { t: 'Show what it could be', items: [
+      { t: 'Virtual staging', href: 'index.html?view=staging#work', view: 'staging' },
       { t: 'Virtual renovation', href: 'index.html#renovate' }
     ] },
     { t: 'Market it', items: [
@@ -93,7 +94,7 @@
   // Same menu on every page, built here so the pages only carry the button.
   const MENU_LINKS = [
     ['index.html#work', 'Our work'],
-    ['index.html#renovate', 'Virtual renovation'],
+    ['index.html#renovate', 'Virtual staging'],
     ['index.html#services', 'Services'],
     ['index.html#why', 'Why VYRA'],
     ['listing.html', 'Example listing page'],
@@ -192,6 +193,24 @@
     });
   }
 
+  // ---------- scroll progress (hairline under the header) ----------
+  function initProgress() {
+    const header = MZ.$('header.site');
+    if (!header) return;
+    const bar = document.createElement('i');
+    bar.className = 'progress';
+    bar.setAttribute('aria-hidden', 'true');
+    header.appendChild(bar);
+    let raf = 0;
+    const set = () => {
+      raf = 0;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.setProperty('--p', max > 0 ? Math.min(1, scrollY / max).toFixed(4) : 0);
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(set); }, { passive: true });
+    set();
+  }
+
   // ---------- scroll motion ----------
   // Headings slide up out of a mask; .reveal blocks slide in from the bottom and
   // .reveal-left ones from the left. Only hide-then-reveal when the page is
@@ -209,7 +228,7 @@
   }
   function initReveal() {
     const masks = MZ.$$(MASK_SEL);
-    const els = MZ.$$('.reveal, .reveal-left').concat(masks);
+    const els = MZ.$$('.reveal, .reveal-left, .sec-head, .intro').concat(masks);
     if (!els.length || !('IntersectionObserver' in window) || document.visibilityState !== 'visible') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     masks.forEach(wrapMask);
@@ -523,6 +542,7 @@
     initHeader();
     initTicker();
     initReveal();
+    initProgress();
     MZ.$$('[data-compare]').forEach((el) => MZ.initCompare(el));
     if (MZ.$('.stickybar')) document.body.classList.add('has-stickybar');
   });

@@ -596,7 +596,7 @@
 
         <!-- Application Script -->
         <script type="module">
-            import { main } from './index.js?v=4';
+            import { main } from './index.js?v=5';
 
             const { config, settings } = window.sse;
             const { poster } = config;
@@ -616,6 +616,9 @@
                 const canvas = document.getElementById('application-canvas');
                 const settingsJson = await settings;
                 const viewer = await main(canvas, settingsJson, config);
+                // VYRA: the stager (stage.js) and the room buttons reach the viewer through this
+                window.vyraViewer = viewer;
+                if (new URL(location.href).searchParams.has('stage')) import('./stage.js?v=2');
             });
         </script>
     </body>

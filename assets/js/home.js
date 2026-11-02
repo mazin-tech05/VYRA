@@ -6,22 +6,29 @@
   const { $, $$, esc } = MZ;
   const D = MZ.data;
 
-  // ---------- hero: crossfading Ken Burns stills ----------
+  // ---------- hero: drone clips, crossfaded one into the next ----------
   function initHero() {
-    const imgs = $$('#heroMedia img');
-    if (imgs.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const vids = $$('#heroMedia video');
+    if (!vids.length) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { vids[0].removeAttribute('autoplay'); vids[0].pause(); return; }
     let i = 0;
-    setInterval(() => {
-      if (document.hidden) return;
-      const next = imgs[(i + 1) % imgs.length];
-      if (next.dataset.src) { next.src = next.dataset.src; next.removeAttribute('data-src'); }
-      const show = () => {
-        imgs[i].classList.remove('on');
-        next.classList.remove('on'); void next.offsetWidth; next.classList.add('on');
-        i = (i + 1) % imgs.length;
-      };
-      if (next.complete && next.naturalWidth) show(); else next.addEventListener('load', show, { once: true });
-    }, 6500);
+    const load = (v) => { if (v.dataset.src) { v.preload = 'auto'; v.src = v.dataset.src; v.removeAttribute('data-src'); v.load(); } };
+    const play = (v) => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+    vids.forEach((v, k) => {
+      // start the next clip about 1.4s before this one ends, so they overlap in the fade
+      v.addEventListener('timeupdate', () => {
+        if (k !== i || !v.duration || v.currentTime < v.duration - 1.4 || vids.length < 2) return;
+        const next = vids[(i + 1) % vids.length];
+        load(next); next.currentTime = 0; play(next);
+        next.classList.add('on'); v.classList.remove('on');
+        i = (i + 1) % vids.length;
+      });
+      v.addEventListener('ended', () => { if (vids.length < 2) { v.currentTime = 0; play(v); } });
+    });
+    play(vids[0]);
+    // fetch the second clip once the first is playing
+    vids[0].addEventListener('playing', () => vids[1] && load(vids[1]), { once: true });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) vids[i].pause(); else play(vids[i]); });
   }
 
   // ---------- "See the difference" ----------
@@ -45,6 +52,11 @@
       title: 'A floor plan buyers can click',
       lede: 'Tap a room to see its size, then step straight into it in the 3D tour.',
       note: () => 'Plan traced from the 3D scan. Sizes are approximate.'
+    },
+    staging: {
+      title: 'Furnish it, right inside the 3D tour',
+      lede: 'Pick a room, then add real furniture from our licensed catalogue. Drag pieces across the floor, turn them, and flick back to the room as it is.',
+      note: () => 'Every piece is a public-domain (CC0) 3D model from Poly Haven, shown at its real size. Staged views are always labelled.'
     },
     privacy: {
       title: 'Personal things stay personal',
@@ -74,6 +86,7 @@
     $$('#homePick button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.home === id)));
     $('#openListing').href = 'listing.html?home=' + id;
     stopTour();
+    stopStaging();
     showView(view);
     if (launch.shown) renderLaunch();
   }
@@ -85,12 +98,13 @@
     $('#work-title').textContent = meta.title;
     $('#work-lede').textContent = meta.lede;
     $('#work-note').textContent = meta.note(home);
-    $('#tourRoomsHome').hidden = v !== 'tour';
+    $('#tourRoomsHome').hidden = v !== 'tour' && v !== 'staging';
     if (v === 'tour') renderTourPoster();
     if (v === 'photo') renderPhoto();
     if (v === 'dusk') renderDusk();
     if (v === 'plan') renderPlan();
     if (v === 'privacy') renderPrivacy();
+    if (v === 'staging') renderStaging();
   }
 
   function side(html) { $('#stageSide').innerHTML = html; }
@@ -159,6 +173,121 @@
     try { w.setCameraState({ position: r.cam.position.slice(), angles: r.cam.angles.slice(), distance: 1, fov: 75, mode: 'walk' }); } catch (e) { console.warn(e); }
     $$('#tourRoomsHome button, #stageSide [data-room]').forEach((b) => b.classList.toggle('on', b.dataset.room === id));
     try { tour.frame.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+  }
+
+  // ---- virtual staging: CC0 furniture placed inside the 3D scan ----
+  const stg = { frame: null, ready: false, poll: null, cat: null, catName: null, items: [], selected: null, shown: true, busy: {} };
+  const stageApi = () => { try { return stg.frame && stg.frame.contentWindow && stg.frame.contentWindow.vyraStage; } catch (e) { return null; } };
+  async function catalogue() {
+    if (!stg.cat) {
+      const res = await fetch('assets/staging/catalogue.json');
+      stg.cat = (await res.json()).items;
+      stg.catName = stg.cat[0].cat;
+    }
+    return stg.cat;
+  }
+  function stageRooms() {
+    const rooms = home.plan.rooms.filter((r) => r.cam);
+    $('#tourRoomsHome').innerHTML = rooms.map((r) => `<button type="button" data-room="${r.id}">${esc(r.short || r.name)}</button>`).join('');
+    $$('#tourRoomsHome button').forEach((b) => b.addEventListener('click', () => stageJump(b.dataset.room)));
+  }
+  async function renderStaging() {
+    $('#stagePosterImg').src = home.tour.poster;
+    stageRooms();
+    side('<p class="small muted">Loading the catalogue…</p>');
+    const cat = await catalogue();
+    if (view !== 'staging') return;
+    const cats = [...new Set(cat.map((i) => i.cat))];
+    const list = cat.filter((i) => i.cat === stg.catName);
+    side(`<h4>Licensed furniture</h4><p class="small muted">${cat.length} public-domain 3D models. ${stg.ready ? 'Tap one to place it in the room.' : 'Start staging, then tap a piece.'}</p>
+      <div class="stg-cats" role="tablist">${cats.map((c) => `<button type="button" role="tab" aria-selected="${c === stg.catName}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+      <div class="stg-grid">${list.map((i) => `<button type="button" data-add="${i.id}" ${stg.busy[i.id] ? 'aria-busy="true"' : ''}><img src="assets/staging/thumbs/${i.id}.png" alt="" loading="lazy"><span>${esc(i.name)}</span><small>${i.size[0]} m wide</small></button>`).join('')}</div>
+      <h5 class="mt1">In the room${stg.items.length ? ` (${stg.items.length})` : ''}</h5>
+      ${stg.items.length ? `<ul class="stg-placed">${stg.items.map((it) => `<li class="${it.uid === stg.selected ? 'on' : ''}"><button type="button" data-pick="${it.uid}">${esc(it.name)}</button><button type="button" class="x" data-del="${it.uid}" aria-label="Remove ${esc(it.name)}">×</button></li>`).join('')}</ul>
+      <button type="button" class="btn btn-ghost btn-xs mt1" id="stgClear">Clear the room</button>` : '<p class="small muted">Nothing yet.</p>'}`);
+    $$('#stageSide [data-cat]').forEach((b) => b.addEventListener('click', () => { stg.catName = b.dataset.cat; renderStaging(); }));
+    $$('#stageSide [data-add]').forEach((b) => b.addEventListener('click', () => stageAdd(b.dataset.add)));
+    $$('#stageSide [data-pick]').forEach((b) => b.addEventListener('click', () => { const a = stageApi(); if (a) a.select(b.dataset.pick); }));
+    $$('#stageSide [data-del]').forEach((b) => b.addEventListener('click', () => { const a = stageApi(); if (a) a.remove(b.dataset.del); }));
+    const clr = $('#stgClear'); if (clr) clr.addEventListener('click', () => { const a = stageApi(); if (a) a.clear(); });
+  }
+  function startStaging() {
+    const frame = $('#stageFrame');
+    stg.frame = frame;
+    if (!frame.src || frame.dataset.home !== home.id) {
+      stg.ready = false;
+      frame.dataset.home = home.id;
+      frame.src = home.tour.src + '&stage';
+    }
+    frame.hidden = false;
+    $('#stageStart').hidden = true;
+    $('#stagePosterImg').hidden = true;
+    if (!stg.ready) $('#stageLoading').hidden = false;
+    clearInterval(stg.poll);
+    let tries = 0;
+    stg.poll = setInterval(() => {
+      let w = null; try { w = frame.contentWindow; } catch (e) { /* ignore */ }
+      if (w && w.vyraStage && typeof w.setCameraState === 'function') {
+        clearInterval(stg.poll);
+        stg.ready = true;
+        $('#stageLoading').hidden = true;
+        $('#stageHud').hidden = false;
+        stageJump(home.tour.start || null);
+        renderStaging();
+      } else if (++tries > 600) clearInterval(stg.poll);
+    }, 200);
+  }
+  function stopStaging() {
+    clearInterval(stg.poll);
+    const frame = $('#stageFrame');
+    if (frame) { frame.hidden = true; frame.removeAttribute('src'); frame.dataset.home = ''; }
+    Object.assign(stg, { ready: false, items: [], selected: null, shown: true, busy: {} });
+    $('#stageStart').hidden = false;
+    $('#stagePosterImg').hidden = false;
+    $('#stageLoading').hidden = true;
+    $('#stageHud').hidden = true;
+  }
+  function stageJump(id) {
+    if (!id) return;
+    if (!stg.ready) { startStaging(); return; }
+    const r = home.plan.rooms.find((x) => x.id === id);
+    if (!r || !r.cam) return;
+    try { stg.frame.contentWindow.setCameraState({ position: r.cam.position.slice(), angles: r.cam.angles.slice(), distance: 1, fov: 75, mode: 'walk' }); } catch (e) { console.warn(e); }
+    $$('#tourRoomsHome button').forEach((b) => b.classList.toggle('on', b.dataset.room === id));
+  }
+  async function stageAdd(id) {
+    if (!stg.ready) { startStaging(); return; }
+    const item = (await catalogue()).find((i) => i.id === id);
+    const a = stageApi();
+    if (!item || !a) return;
+    if (!stg.shown) a.setShown(true);
+    a.add({ id: item.id, name: item.name, url: new URL(`assets/staging/models/${item.id}.glb`, location.href).href });
+  }
+  function initStaging() {
+    $('#stageStart').addEventListener('click', () => startStaging());
+    $$('#stageHud [data-act]').forEach((b) => b.addEventListener('click', () => {
+      const a = stageApi(); if (!a) return;
+      const act = b.dataset.act;
+      if (act === 'left') a.rotate(15);
+      else if (act === 'right') a.rotate(-15);
+      else if (act === 'del') a.remove();
+      else if (act === 'asis') a.setShown(false);
+      else if (act === 'staged') a.setShown(true);
+    }));
+    window.addEventListener('message', (e) => {
+      const m = e.data;
+      if (!m || m.source !== 'vyra-stage' || e.origin !== location.origin) return;
+      if (m.type === 'items') {
+        stg.items = m.items; stg.selected = m.selected; stg.shown = m.shown;
+        $$('#stageHud .stg-toggle button').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.act === 'staged') === stg.shown)));
+        $('#stageTools').hidden = !stg.selected;
+        $('#stageLabel').hidden = !(stg.shown && stg.items.length);
+        if (view === 'staging') renderStaging();
+      } else if (m.type === 'busy') {
+        stg.busy[m.id] = m.busy;
+        const b = $(`#stageSide [data-add="${m.id}"]`); if (b) b.toggleAttribute('aria-busy', m.busy);
+      } else if (m.type === 'error') MZ.toast(m.message);
+    });
   }
 
   // ---- photo finishing ----
@@ -411,6 +540,7 @@
   function initStage() {
     initHomePick();
     $('#tourStart').addEventListener('click', () => startTour());
+    initStaging();
     picker = MZ.initPicker($('#picker'), (v) => showView(v));
     showView('tour');
     initViewLinks();
@@ -430,7 +560,7 @@
     ['Floor plan', 'Clickable, with room sizes'],
     ['Privacy check', 'Personal items blurred'],
     ['Virtual renovation', 'Early access, coming soon'],
-    ['Virtual staging', 'Licensed furniture, coming soon'],
+    ['Virtual staging', 'Real 3D furniture in the tour'],
     ['Listing page', 'Your brand, with the tour'],
     ['Launch pack', 'Posts, video, brochure, QR, copy'],
     ['Viewing bookings', 'Buyers book a time online'],

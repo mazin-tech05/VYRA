@@ -1,0 +1,977 @@
+{
+ "source": "Poly Haven (polyhaven.com), CC0 public domain",
+ "items": [
+  {
+   "id": "Sofa_01",
+   "name": "Sofa",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.57,
+    0.66,
+    0.8
+   ],
+   "kb": 257
+  },
+  {
+   "id": "sofa_02",
+   "name": "Sofa 2",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.81,
+    0.82,
+    0.71
+   ],
+   "kb": 218
+  },
+  {
+   "id": "sofa_03",
+   "name": "Sofa 3",
+   "cat": "Sofas and armchairs",
+   "author": "Fran Calvente",
+   "size": [
+    2.73,
+    0.93,
+    1.12
+   ],
+   "kb": 452
+  },
+  {
+   "id": "painted_wooden_sofa",
+   "name": "Painted wooden sofa",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    2.45,
+    0.79,
+    1.28
+   ],
+   "kb": 383
+  },
+  {
+   "id": "chinese_sofa",
+   "name": "Chinese sofa",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    2.29,
+    0.97,
+    0.86
+   ],
+   "kb": 187
+  },
+  {
+   "id": "ArmChair_01",
+   "name": "Arm chair",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.85,
+    0.77,
+    1.07
+   ],
+   "kb": 349
+  },
+  {
+   "id": "GreenChair_01",
+   "name": "Green chair",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.67,
+    0.66,
+    1.06
+   ],
+   "kb": 304
+  },
+  {
+   "id": "mid_century_lounge_chair",
+   "name": "Mid century lounge chair",
+   "cat": "Sofas and armchairs",
+   "author": "Kuutti Siitonen",
+   "size": [
+    1.01,
+    1.19,
+    1.17
+   ],
+   "kb": 344
+  },
+  {
+   "id": "modern_arm_chair_01",
+   "name": "Modern arm chair",
+   "cat": "Sofas and armchairs",
+   "author": "Vibrant Nordic",
+   "size": [
+    0.82,
+    0.99,
+    1.02
+   ],
+   "kb": 484
+  },
+  {
+   "id": "chinese_armchair",
+   "name": "Chinese armchair",
+   "cat": "Sofas and armchairs",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.85,
+    0.79,
+    1.59
+   ],
+   "kb": 263
+  },
+  {
+   "id": "Rockingchair_01",
+   "name": "Rockingchair",
+   "cat": "Sofas and armchairs",
+   "author": "Jorge Camacho",
+   "size": [
+    0.71,
+    0.83,
+    0.99
+   ],
+   "kb": 543
+  },
+  {
+   "id": "Ottoman_01",
+   "name": "Ottoman",
+   "cat": "Sofas and armchairs",
+   "author": "Caspian Fortune",
+   "size": [
+    0.88,
+    0.62,
+    0.62
+   ],
+   "kb": 277
+  },
+  {
+   "id": "GothicBed_01",
+   "name": "Gothic bed",
+   "cat": "Beds and bedside",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.49,
+    2.04,
+    1.53
+   ],
+   "kb": 837
+  },
+  {
+   "id": "old_bed_frame",
+   "name": "Old bed frame",
+   "cat": "Beds and bedside",
+   "author": "Luca B",
+   "size": [
+    0.9,
+    2.0,
+    1.2
+   ],
+   "kb": 2028
+  },
+  {
+   "id": "vintage_day_bed",
+   "name": "Vintage day bed",
+   "cat": "Beds and bedside",
+   "author": "Aron \u0141yczek",
+   "size": [
+    1.97,
+    0.85,
+    1.13
+   ],
+   "kb": 318
+  },
+  {
+   "id": "ClassicNightstand_01",
+   "name": "Classic nightstand",
+   "cat": "Beds and bedside",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.57,
+    0.42,
+    0.7
+   ],
+   "kb": 205
+  },
+  {
+   "id": "painted_wooden_nightstand",
+   "name": "Painted wooden nightstand",
+   "cat": "Beds and bedside",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.5,
+    0.51,
+    0.62
+   ],
+   "kb": 213
+  },
+  {
+   "id": "GothicCommode_01",
+   "name": "Gothic commode",
+   "cat": "Beds and bedside",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.2,
+    0.58,
+    1.21
+   ],
+   "kb": 310
+  },
+  {
+   "id": "CoffeeTable_01",
+   "name": "Coffee table",
+   "cat": "Tables",
+   "author": "Fernando Quinn",
+   "size": [
+    1.54,
+    0.97,
+    0.52
+   ],
+   "kb": 598
+  },
+  {
+   "id": "coffee_table_round_01",
+   "name": "Coffee table round",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    1.3,
+    1.3,
+    0.49
+   ],
+   "kb": 262
+  },
+  {
+   "id": "modern_coffee_table_01",
+   "name": "Modern coffee table",
+   "cat": "Tables",
+   "author": "Amin",
+   "size": [
+    1.2,
+    0.6,
+    0.39
+   ],
+   "kb": 260
+  },
+  {
+   "id": "modern_coffee_table_02",
+   "name": "Modern coffee table 2",
+   "cat": "Tables",
+   "author": "Amin",
+   "size": [
+    1.2,
+    1.2,
+    0.37
+   ],
+   "kb": 1036
+  },
+  {
+   "id": "industrial_coffee_table",
+   "name": "Industrial coffee table",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.78,
+    0.76,
+    0.64
+   ],
+   "kb": 1493
+  },
+  {
+   "id": "gothic_coffee_table",
+   "name": "Gothic coffee table",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    1.44,
+    1.44,
+    0.56
+   ],
+   "kb": 1107
+  },
+  {
+   "id": "side_table_01",
+   "name": "Side table",
+   "cat": "Tables",
+   "author": "James Ray Cock",
+   "size": [
+    0.55,
+    0.45,
+    0.55
+   ],
+   "kb": 258
+  },
+  {
+   "id": "side_table_tall_01",
+   "name": "Side table tall",
+   "cat": "Tables",
+   "author": "James Ray Cock",
+   "size": [
+    0.38,
+    0.38,
+    0.76
+   ],
+   "kb": 317
+  },
+  {
+   "id": "dining_table",
+   "name": "Dining table",
+   "cat": "Tables",
+   "author": "Aron \u0141yczek",
+   "size": [
+    2.26,
+    1.39,
+    0.88
+   ],
+   "kb": 247
+  },
+  {
+   "id": "round_wooden_table_01",
+   "name": "Round wooden table",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    1.4,
+    1.4,
+    1.01
+   ],
+   "kb": 358
+  },
+  {
+   "id": "round_wooden_table_02",
+   "name": "Round wooden table 2",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.8,
+    0.8,
+    0.75
+   ],
+   "kb": 313
+  },
+  {
+   "id": "WoodenTable_03",
+   "name": "Wooden table 3",
+   "cat": "Tables",
+   "author": "Gabriel Radi\u0107",
+   "size": [
+    1.33,
+    0.56,
+    0.83
+   ],
+   "kb": 302
+  },
+  {
+   "id": "gallinera_table",
+   "name": "Gallinera table",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.83,
+    0.52,
+    0.49
+   ],
+   "kb": 363
+  },
+  {
+   "id": "chinese_tea_table",
+   "name": "Chinese tea table",
+   "cat": "Tables",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.84,
+    0.84,
+    0.5
+   ],
+   "kb": 215
+  },
+  {
+   "id": "ClassicConsole_01",
+   "name": "Classic console",
+   "cat": "Tables",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.54,
+    0.59,
+    0.95
+   ],
+   "kb": 413
+  },
+  {
+   "id": "chinese_console_table",
+   "name": "Chinese console table",
+   "cat": "Tables",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.72,
+    0.34,
+    0.66
+   ],
+   "kb": 762
+  },
+  {
+   "id": "small_wooden_table_01",
+   "name": "Small wooden table",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.92,
+    0.44,
+    0.53
+   ],
+   "kb": 203
+  },
+  {
+   "id": "metal_office_desk",
+   "name": "Metal office desk",
+   "cat": "Tables",
+   "author": "Ulan Cabanilla",
+   "size": [
+    2.0,
+    0.95,
+    0.79
+   ],
+   "kb": 375
+  },
+  {
+   "id": "dining_chair_02",
+   "name": "Dining chair 2",
+   "cat": "Chairs and stools",
+   "author": "James Ray Cock",
+   "size": [
+    0.43,
+    0.58,
+    0.97
+   ],
+   "kb": 679
+  },
+  {
+   "id": "WoodenChair_01",
+   "name": "Wooden chair",
+   "cat": "Chairs and stools",
+   "author": "Jake Mobley",
+   "size": [
+    0.69,
+    0.66,
+    2.27
+   ],
+   "kb": 732
+  },
+  {
+   "id": "gallinera_chair",
+   "name": "Gallinera chair",
+   "cat": "Chairs and stools",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.58,
+    0.6,
+    1.03
+   ],
+   "kb": 550
+  },
+  {
+   "id": "bar_chair_round_01",
+   "name": "Bar chair round",
+   "cat": "Chairs and stools",
+   "author": "Dairon Sanchez",
+   "size": [
+    0.48,
+    0.49,
+    0.75
+   ],
+   "kb": 1191
+  },
+  {
+   "id": "painted_wooden_chair_01",
+   "name": "Painted wooden chair",
+   "cat": "Chairs and stools",
+   "author": "Kuutti Siitonen",
+   "size": [
+    0.43,
+    0.54,
+    0.96
+   ],
+   "kb": 213
+  },
+  {
+   "id": "painted_wooden_chair_02",
+   "name": "Painted wooden chair 2",
+   "cat": "Chairs and stools",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.64,
+    0.66,
+    1.26
+   ],
+   "kb": 255
+  },
+  {
+   "id": "wooden_stool_01",
+   "name": "Wooden stool",
+   "cat": "Chairs and stools",
+   "author": "Kuutti Siitonen",
+   "size": [
+    0.43,
+    0.44,
+    0.44
+   ],
+   "kb": 511
+  },
+  {
+   "id": "wooden_stool_02",
+   "name": "Wooden stool 2",
+   "cat": "Chairs and stools",
+   "author": "Kuutti Siitonen",
+   "size": [
+    0.27,
+    0.18,
+    0.18
+   ],
+   "kb": 492
+  },
+  {
+   "id": "metal_stool_01",
+   "name": "Metal stool",
+   "cat": "Chairs and stools",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.35,
+    0.35,
+    0.88
+   ],
+   "kb": 408
+  },
+  {
+   "id": "folding_wooden_stool",
+   "name": "Folding wooden stool",
+   "cat": "Chairs and stools",
+   "author": "Ulan Cabanilla",
+   "size": [
+    0.53,
+    0.55,
+    0.44
+   ],
+   "kb": 394
+  },
+  {
+   "id": "chinese_stool",
+   "name": "Chinese stool",
+   "cat": "Chairs and stools",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.6,
+    0.51,
+    0.63
+   ],
+   "kb": 190
+  },
+  {
+   "id": "painted_wooden_bench",
+   "name": "Painted wooden bench",
+   "cat": "Chairs and stools",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.16,
+    0.5,
+    0.89
+   ],
+   "kb": 192
+  },
+  {
+   "id": "modern_wooden_cabinet",
+   "name": "Modern wooden cabinet",
+   "cat": "Storage",
+   "author": "Patrik Pangerl",
+   "size": [
+    2.44,
+    0.52,
+    0.68
+   ],
+   "kb": 1287
+  },
+  {
+   "id": "drawer_cabinet",
+   "name": "Drawer cabinet",
+   "cat": "Storage",
+   "author": "Ulan Cabanilla",
+   "size": [
+    1.14,
+    0.49,
+    1.88
+   ],
+   "kb": 909
+  },
+  {
+   "id": "vintage_cabinet_01",
+   "name": "Vintage cabinet",
+   "cat": "Storage",
+   "author": "Rico Cilliers",
+   "size": [
+    2.02,
+    0.67,
+    2.24
+   ],
+   "kb": 2292
+  },
+  {
+   "id": "wooden_bookshelf_worn",
+   "name": "Wooden bookshelf worn",
+   "cat": "Storage",
+   "author": "Ulan Cabanilla",
+   "size": [
+    1.37,
+    0.58,
+    2.06
+   ],
+   "kb": 512
+  },
+  {
+   "id": "wooden_display_shelves_01",
+   "name": "Wooden display shelves",
+   "cat": "Storage",
+   "author": "James Ray Cock",
+   "size": [
+    1.08,
+    0.37,
+    1.56
+   ],
+   "kb": 239
+  },
+  {
+   "id": "painted_wooden_cabinet",
+   "name": "Painted wooden cabinet",
+   "cat": "Storage",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.19,
+    0.62,
+    1.18
+   ],
+   "kb": 265
+  },
+  {
+   "id": "chinese_cabinet",
+   "name": "Chinese cabinet",
+   "cat": "Storage",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.26,
+    0.55,
+    2.87
+   ],
+   "kb": 686
+  },
+  {
+   "id": "chinese_commode",
+   "name": "Chinese commode",
+   "cat": "Storage",
+   "author": "Kirill Sannikov",
+   "size": [
+    4.49,
+    1.17,
+    2.02
+   ],
+   "kb": 403
+  },
+  {
+   "id": "vintage_wooden_drawer_01",
+   "name": "Vintage wooden drawer",
+   "cat": "Storage",
+   "author": "James Ray Cock",
+   "size": [
+    1.72,
+    1.01,
+    1.09
+   ],
+   "kb": 403
+  },
+  {
+   "id": "steel_frame_shelves_03",
+   "name": "Steel frame shelves 3",
+   "cat": "Storage",
+   "author": "Ulan Cabanilla",
+   "size": [
+    2.35,
+    0.72,
+    2.31
+   ],
+   "kb": 552
+  },
+  {
+   "id": "GothicCabinet_01",
+   "name": "Gothic cabinet",
+   "cat": "Storage",
+   "author": "Kirill Sannikov",
+   "size": [
+    1.72,
+    1.13,
+    2.36
+   ],
+   "kb": 680
+  },
+  {
+   "id": "Television_01",
+   "name": "Television",
+   "cat": "TV and electronics",
+   "author": "Gabriel Radi\u0107",
+   "size": [
+    0.6,
+    0.47,
+    0.46
+   ],
+   "kb": 255
+  },
+  {
+   "id": "television_02",
+   "name": "Television 2",
+   "cat": "TV and electronics",
+   "author": "Benny Weimer",
+   "size": [
+    0.4,
+    0.35,
+    0.41
+   ],
+   "kb": 225
+  },
+  {
+   "id": "gaming_console",
+   "name": "Gaming console",
+   "cat": "TV and electronics",
+   "author": "Sean Buckley",
+   "size": [
+    0.33,
+    0.32,
+    0.1
+   ],
+   "kb": 1546
+  },
+  {
+   "id": "boombox",
+   "name": "Boombox",
+   "cat": "TV and electronics",
+   "author": "Thomas Paul Mouilleron",
+   "size": [
+    0.72,
+    0.19,
+    0.47
+   ],
+   "kb": 660
+  },
+  {
+   "id": "modern_ceiling_lamp_01",
+   "name": "Modern ceiling lamp",
+   "cat": "Lighting",
+   "author": "James Ray Cock",
+   "size": [
+    0.43,
+    0.43,
+    0.95
+   ],
+   "kb": 253
+  },
+  {
+   "id": "Chandelier_01",
+   "name": "Chandelier",
+   "cat": "Lighting",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.75,
+    0.82,
+    0.8
+   ],
+   "kb": 1042
+  },
+  {
+   "id": "Chandelier_02",
+   "name": "Chandelier 2",
+   "cat": "Lighting",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.68,
+    0.62,
+    0.85
+   ],
+   "kb": 811
+  },
+  {
+   "id": "Chandelier_03",
+   "name": "Chandelier 3",
+   "cat": "Lighting",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.78,
+    0.79,
+    1.04
+   ],
+   "kb": 1014
+  },
+  {
+   "id": "desk_lamp_arm_01",
+   "name": "Desk lamp arm",
+   "cat": "Lighting",
+   "author": "Yann Kervran, Kuutti Siitonen",
+   "size": [
+    0.62,
+    0.41,
+    0.88
+   ],
+   "kb": 952
+  },
+  {
+   "id": "hanging_industrial_lamp",
+   "name": "Hanging industrial lamp",
+   "cat": "Lighting",
+   "author": "Kuutti Siitonen",
+   "size": [
+    0.55,
+    0.55,
+    1.36
+   ],
+   "kb": 603
+  },
+  {
+   "id": "lantern_chandelier_01",
+   "name": "Lantern chandelier",
+   "cat": "Lighting",
+   "author": "Kirill Sannikov",
+   "size": [
+    0.58,
+    0.57,
+    0.88
+   ],
+   "kb": 692
+  },
+  {
+   "id": "potted_plant_01",
+   "name": "Potted plant",
+   "cat": "Decor and plants",
+   "author": "Rico Cilliers",
+   "size": [
+    0.59,
+    0.64,
+    1.35
+   ],
+   "kb": 5591
+  },
+  {
+   "id": "potted_plant_02",
+   "name": "Potted plant 2",
+   "cat": "Decor and plants",
+   "author": "Rico Cilliers",
+   "size": [
+    0.7,
+    0.66,
+    0.84
+   ],
+   "kb": 2102
+  },
+  {
+   "id": "potted_plant_04",
+   "name": "Potted plant 4",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.17,
+    0.19,
+    0.27
+   ],
+   "kb": 453
+  },
+  {
+   "id": "planter_box_01",
+   "name": "Planter box",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.91,
+    0.41,
+    0.42
+   ],
+   "kb": 451
+  },
+  {
+   "id": "ceramic_vase_01",
+   "name": "Ceramic vase",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.2,
+    0.21,
+    0.4
+   ],
+   "kb": 329
+  },
+  {
+   "id": "ceramic_vase_03",
+   "name": "Ceramic vase 3",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.11,
+    0.11,
+    0.41
+   ],
+   "kb": 453
+  },
+  {
+   "id": "brass_vase_01",
+   "name": "Brass vase",
+   "cat": "Decor and plants",
+   "author": "Rico Cilliers",
+   "size": [
+    0.23,
+    0.23,
+    0.69
+   ],
+   "kb": 609
+  },
+  {
+   "id": "antique_ceramic_vase_01",
+   "name": "Antique ceramic vase",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.26,
+    0.26,
+    0.44
+   ],
+   "kb": 336
+  },
+  {
+   "id": "ornate_mirror_01",
+   "name": "Ornate mirror",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.49,
+    0.03,
+    0.74
+   ],
+   "kb": 483
+  },
+  {
+   "id": "fancy_picture_frame_01",
+   "name": "Fancy picture frame",
+   "cat": "Decor and plants",
+   "author": "Rob Tuytel, Rico Cilliers",
+   "size": [
+    0.6,
+    0.02,
+    0.46
+   ],
+   "kb": 284
+  },
+  {
+   "id": "hanging_picture_frame_02",
+   "name": "Hanging picture frame 2",
+   "cat": "Decor and plants",
+   "author": "James Ray Cock",
+   "size": [
+    0.75,
+    0.03,
+    0.5
+   ],
+   "kb": 339
+  }
+ ]
+}

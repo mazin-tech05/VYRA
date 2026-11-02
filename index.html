@@ -6,14 +6,14 @@
   <title>VYRA | 3D tours and virtual renovation for New Zealand property</title>
   <meta name="description" content="3D walkthroughs, honest AI photo finishing, floor plans and launch packs for New Zealand real estate agents and short-stay hosts. Virtual renovation with licensed 3D furniture is coming next.">
   <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#0a1a33">
+  <meta name="theme-color" content="#151618">
   <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
   <link rel="icon" href="favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20261102">
-  <link rel="stylesheet" href="pages.css?v=20261102">
+  <link rel="stylesheet" href="styles.css?v=20261102b">
+  <link rel="stylesheet" href="pages.css?v=20261102b">
 </head>
 <body>
 
@@ -24,7 +24,7 @@
     <a class="brand" href="index.html" aria-label="VYRA home"><img src="assets/brand-mark.svg" alt=""> VYRA</a>
     <nav class="links" id="navlinks" aria-label="Main">
       <a href="#work">Our work</a>
-      <a href="#renovate">Virtual renovation</a>
+      <a href="#renovate">Virtual staging</a>
       <a href="#services">Services</a>
       <a href="#why">Why VYRA</a>
       <a href="#faq">FAQ</a>
@@ -40,29 +40,22 @@
   <!-- HERO -->
   <section class="hero" id="top">
     <div class="hero-media" id="heroMedia" aria-hidden="true">
-      <img src="assets/img/homes/villa/living.jpg" alt="" class="on">
-      <img data-src="assets/img/homes/ranch/kitchen.jpg" alt="">
-      <img data-src="assets/img/homes/villa/terrace.jpg" alt="">
-      <img data-src="assets/img/homes/townhouse/overview.jpg" alt="">
-      <img data-src="assets/img/homes/ranch/master.jpg" alt="">
+      <video class="on" src="assets/video/drone-1.mp4" poster="assets/video/drone-1.jpg" muted playsinline autoplay preload="auto"></video>
+      <video data-src="assets/video/drone-2.mp4" poster="assets/video/drone-2.jpg" muted playsinline preload="none"></video>
+      <video data-src="assets/video/drone-3.mp4" poster="assets/video/drone-3.jpg" muted playsinline preload="none"></video>
     </div>
     <div class="wrap">
       <span class="eyebrow reveal">For New Zealand agents and short-stay hosts</span>
-      <h1>Walk through it.<br>Picture it<br><span class="ticker" data-words="renovated|restyled|yours">renovated</span>.</h1>
-      <p class="lede reveal d2">A 3D walkthrough of every room, honest AI-finished photos and a launch pack, all from one visit. Next: virtual renovation, where buyers see the home restyled with real, licensed furniture.</p>
+      <h1>Walk through it.<br>Picture it<br><span class="ticker" data-words="furnished|restyled|yours">furnished</span>.</h1>
+      <p class="lede reveal d2">A 3D walkthrough of every room, virtual staging with real furniture placed inside the tour, and photos and a launch pack from the same visit.</p>
       <div class="btn-row reveal d3">
         <a class="btn btn-cream" href="#quote">Book a free sample</a>
         <a class="btn btn-line" href="#work">See our work</a>
       </div>
     </div>
+    <span class="hero-credit">Drone footage: Herrick Spencer, CC BY 3.0</span>
     <a class="scroll-cue" href="#work">Scroll down<i></i></a>
   </section>
-
-  <!-- MARQUEE -->
-  <div class="marquee" aria-hidden="true"><div class="marquee-track">
-    <span>3D walkthroughs</span><span>Virtual renovation</span><span>Honest AI finishing</span><span>Twilight hero shots</span><span>Clickable floor plans</span><span>Launch packs</span>
-    <span>3D walkthroughs</span><span>Virtual renovation</span><span>Honest AI finishing</span><span>Twilight hero shots</span><span>Clickable floor plans</span><span>Launch packs</span>
-  </div></div>
 
   <!-- OUR WORK -->
   <section id="work">
@@ -75,6 +68,7 @@
       <div class="homepick" id="homePick" role="radiogroup" aria-label="Sample home"></div>
       <div class="picker" id="picker">
         <button type="button" data-view="tour" aria-selected="true">3D walkthrough</button>
+        <button type="button" data-view="staging" aria-selected="false">Virtual staging <em class="new">New</em></button>
         <button type="button" data-view="photo" aria-selected="false">Photo finishing</button>
         <button type="button" data-view="dusk" aria-selected="false">Day to dusk</button>
         <button type="button" data-view="plan" aria-selected="false">Floor plan</button>
@@ -92,6 +86,28 @@
               </button>
               <iframe id="tourFrameHome" title="3D tour of the sample home" allow="fullscreen; xr-spatial-tracking" hidden></iframe>
               <div class="tour-loading" id="tourLoadingHome" hidden><span class="spinner"></span><span>Loading the 3D tour…</span></div>
+            </div>
+          </div>
+          <div class="view" data-view="staging">
+            <div class="tourdemo" id="stageDemo">
+              <img id="stagePosterImg" src="assets/img/homes/villa/poster.jpg" alt="" class="zoomy">
+              <button class="tourdemo-ui" id="stageStart" type="button" aria-label="Start virtual staging">
+                <span class="badge">Virtual staging</span>
+                <span class="tour-play" aria-hidden="true"><span>+</span></span>
+                <span class="tourdemo-cta">Furnish this room</span>
+              </button>
+              <iframe id="stageFrame" title="Virtual staging inside the 3D tour" allow="fullscreen; xr-spatial-tracking" hidden></iframe>
+              <div class="tour-loading" id="stageLoading" hidden><span class="spinner"></span><span>Loading the room…</span></div>
+              <div class="stg-hud" id="stageHud" hidden>
+                <span class="badge" id="stageLabel" hidden>Virtually staged · concept</span>
+                <div class="stg-toggle" role="group" aria-label="Show the room"><button type="button" data-act="asis" aria-pressed="false">As it is</button><button type="button" data-act="staged" aria-pressed="true">Staged</button></div>
+                <div class="stg-tools" id="stageTools" hidden>
+                  <button type="button" data-act="left" aria-label="Turn left">⟲</button>
+                  <span>Drag to move</span>
+                  <button type="button" data-act="right" aria-label="Turn right">⟳</button>
+                  <button type="button" data-act="del" class="del">Remove</button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="view" data-view="photo">
@@ -129,17 +145,17 @@
   <section id="renovate" class="alt">
     <div class="wrap">
       <div class="split">
-        <div>
-          <span class="eyebrow">Coming next · Virtual renovation</span>
-          <h2>Not just staged. Renovated.</h2>
-          <p class="lede mt1">Staging fills an empty room with furniture. Renovation shows buyers what the home could become: a new layout, a new kitchen, new floors. We do it inside the 3D walkthrough, not on a single photo.</p>
+        <div class="intro">
+          <span class="eyebrow">Live now · Virtual staging</span>
+          <h2>Furnished in 3D, not on a flat photo.</h2>
+          <p class="lede mt1">Most staging paints furniture onto one photo. We place real 3D furniture inside the walkthrough, so buyers can walk around the sofa, see the bed from the door, and flick back to the room as it is. Renovation, with new floors, benchtops and layouts, comes next.</p>
           <ul class="ticks">
-            <li><b>Real, licensed furniture</b>Pieces come from licensed 3D catalogues, at true size, so a sofa that fits on screen fits in the room.</li>
-            <li><b>Move, remove, swap</b>Clear out the clutter, move the bed to the other wall, change the floors, the benchtop or the wall colour.</li>
-            <li><b>Buyers flick between the two</b>"As it is" and "Renovated idea" sit side by side in the same tour.</li>
-            <li><b>Always labelled</b>Every renovated view is marked as a concept, and the real room is one tap away.</li>
+            <li><b>Real furniture, free of copyright</b>Every piece is a public-domain (CC0) 3D model at its true size, so a sofa that fits on screen fits in the room.</li>
+            <li><b>Drag, turn, swap</b>Slide a piece across the floor, turn it to face the view, or swap it for another style in a tap.</li>
+            <li><b>Buyers flick between the two</b>"As it is" and "Staged" sit side by side in the same tour.</li>
+            <li><b>Always labelled</b>Every staged view is marked as a concept, and the real room is one tap away.</li>
           </ul>
-          <div class="btn-row"><a class="btn btn-gold" href="#quote" data-tick="Virtual renovation">Ask for early access</a></div>
+          <div class="btn-row"><a class="btn btn-gold" href="#work" data-show-view="staging">Try it on a sample home</a><a class="btn btn-ghost" href="#quote" data-tick="Virtual renovation">Renovation early access</a></div>
         </div>
         <div class="reno reveal-left" aria-label="Preview of the virtual renovation editor">
           <div class="reno-stage">
@@ -150,7 +166,7 @@
             <span class="reno-pin r" style="--x:84%;--y:26%;--d:1.2s"><i></i><em>Walls · repaint</em></span>
           </div>
           <div class="reno-panel">
-            <h5>Licensed 3D catalogue</h5>
+            <h5>Coming next · Renovation</h5>
             <ul class="reno-list">
               <li><b>Three-seat sofa</b><small>2.2 m · licensed model</small><span>Swap</span></li>
               <li><b>Oak floorboards</b><small>In place of the tiles</small><span>Apply</span></li>
@@ -158,7 +174,7 @@
               <li><b>Clutter</b><small>Remove from the scan</small><span>Remove</span></li>
             </ul>
           </div>
-          <p class="reno-note">A preview of the editor we are building. The photo shows the sample room as scanned.</p>
+          <p class="reno-note">Renovation tools are in development. The photo shows the sample room as scanned.</p>
         </div>
       </div>
     </div>
@@ -199,8 +215,8 @@
         <div class="svc reveal d1">
           <h3><span>02</span>Show what it could be</h3>
           <ul>
+            <li><a href="#work" data-show-view="staging"><b>Virtual staging</b><small>Real CC0 furniture placed in the 3D tour</small><i>See it</i></a></li>
             <li><a href="#renovate"><b>Virtual renovation</b><small>New layout, floors and finishes in 3D</small><i class="req">Coming soon</i></a></li>
-            <li><a href="#renovate"><b>Virtual staging</b><small>Empty rooms furnished with licensed pieces</small><i class="req">Coming soon</i></a></li>
             <li><a href="#renovate"><b>Declutter</b><small>Remove clutter from the tour, labelled</small><i class="req">Coming soon</i></a></li>
           </ul>
         </div>
@@ -239,6 +255,7 @@
         <div class="why-row"><span>Every AI edit labelled, original one tap away</span><span class="n">Rarely</span><span class="why-us y">Yes</span></div>
         <div class="why-row"><span>A listing page with the tour built in</span><span class="n">No</span><span class="why-us y">Yes</span></div>
         <div class="why-row"><span>Launch pack: posts, story, video, brochure, QR</span><span class="s">Extra cost</span><span class="why-us y">Yes</span></div>
+        <div class="why-row"><span>Virtual staging inside the 3D tour</span><span class="n">No</span><span class="why-us y">Yes</span></div>
         <div class="why-row"><span>Renovation ideas inside the 3D tour</span><span class="n">No</span><span class="why-us s">Coming soon</span></div>
       </div>
     </div>
@@ -263,8 +280,9 @@
   <section id="faq">
     <div class="wrap">
       <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Questions we get asked</h2></div>
-      <details class="faq reveal"><summary>What is virtual renovation, and how is it different from staging?</summary><p>Staging adds furniture to an empty room. Virtual renovation goes further: it can move or remove what is there, change floors, benchtops and wall colours, and show a new layout, all inside the 3D tour. The furniture comes from licensed 3D catalogues at true size. It is in development now, and you can ask for early access.</p></details>
+      <details class="faq reveal"><summary>What is virtual renovation, and how is it different from staging?</summary><p>Staging adds furniture to an empty room. Virtual renovation goes further: it can move or remove what is there, change floors, benchtops and wall colours, and show a new layout, all inside the 3D tour. The furniture comes from licensed 3D catalogues at true size. Staging, with real 3D furniture placed inside the tour, is live now; try it in the Our work section. Renovation is in development, and you can ask for early access.</p></details>
       <details class="faq reveal"><summary>Is it honest to show a renovated home?</summary><p>Only if it is clearly labelled, and ours always is. New Zealand's Fair Trading Act does not allow advertising that gives a misleading impression, so every renovated or staged view is marked as a concept and the real room is always one tap away. Photo finishing only corrects light and colour, and twilight shots are marked as simulated.</p></details>
+      <details class="faq reveal"><summary>Where does the furniture come from?</summary><p>Every piece in our staging catalogue is a public-domain (CC0) 3D model from Poly Haven, so there is no copyright to clear and nothing to credit. Models are shown at their real size.</p></details>
       <details class="faq reveal"><summary>Do we have to take the photos or do the scan ourselves?</summary><p>No. We visit once and capture everything: the 3D scan and the photos. You just tell us when the home is ready.</p></details>
       <details class="faq reveal"><summary>Does the 3D tour work on phones, Trade Me and Airbnb?</summary><p>The tour runs in any web browser with nothing to install. You get a link to share on Trade Me, realestate.co.nz, social posts or in your Airbnb messages, plus photos and a floor plan ready to upload.</p></details>
       <details class="faq reveal"><summary>What does it cost?</summary><p>We quote a fixed price per property after a short chat, so you know the full cost before anything starts. Your first sample is free.</p></details>
@@ -321,11 +339,11 @@
 
 <div class="stickybar"><a class="btn btn-ghost" href="#work">See our work</a><a class="btn btn-gold" href="#quote">Book a chat</a></div>
 
-<script src="assets/js/site.js?v=20261102"></script>
-<script src="assets/js/data.js?v=20261102"></script>
-<script src="assets/js/photo-tools.js?v=20261102"></script>
-<script src="assets/js/floorplan.js?v=20261102"></script>
-<script src="assets/js/marketing.js?v=20261102"></script>
-<script src="assets/js/home.js?v=20261102"></script>
+<script src="assets/js/site.js?v=20261102b"></script>
+<script src="assets/js/data.js?v=20261102b"></script>
+<script src="assets/js/photo-tools.js?v=20261102b"></script>
+<script src="assets/js/floorplan.js?v=20261102b"></script>
+<script src="assets/js/marketing.js?v=20261102b"></script>
+<script src="assets/js/home.js?v=20261102b"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 (function () {
   'use strict';
   const MZ = window.MZ = window.MZ || {};
-  const GOLD = '#e2c483', INK = '#0a1a33', DIM = '#e6dfd2', FONT = '"Satoshi", "Helvetica Neue", Arial, sans-serif';
+  const GOLD = '#e2c483', INK = '#151618', DIM = '#e6dfd2', FONT = '"Satoshi", "Helvetica Neue", Arial, sans-serif';
   const M = MZ.mk = {};
 
   M.fontsReady = async function () {
@@ -144,7 +144,7 @@
     // CTA card with QR
     const cy = 1600;
     MZ.photo.roundRect(ctx, 72, cy, 936, 250, 36);
-    ctx.fillStyle = '#0a1a33'; ctx.fill();
+    ctx.fillStyle = '#151618'; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(217,184,113,.6)'; ctx.stroke();
     ctx.font = `600 46px ${FONT}`; ctx.fillStyle = '#fff'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(MZ.data.isSample(L.id) ? 'Take the 3D tour' : 'See the listing', 120, cy + 100);
@@ -299,13 +299,13 @@
 <style>
 @page { size: A4; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: "Satoshi", "Helvetica Neue", Arial, sans-serif; color: #0a1a33; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: "Satoshi", "Helvetica Neue", Arial, sans-serif; color: #151618; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .page { width: 210mm; min-height: 297mm; padding: 14mm; position: relative; }
 .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8mm; }
 .brand { display: flex; align-items: center; gap: 3mm; font-weight: 600; font-size: 14pt; }
-.brand .ya { width: 9mm; height: 9mm; border-radius: 50%; background: #d9b871; color: #0a1a33; display: grid; place-items: center; font-size: 9pt; font-weight: 700; }
+.brand .ya { width: 9mm; height: 9mm; border-radius: 50%; background: #d9b871; color: #151618; display: grid; place-items: center; font-size: 9pt; font-weight: 700; }
 .brand small { color: #7d5f17; font-size: 7pt; letter-spacing: .18em; }
-.tag { background: #d9b871; color: #0a1a33; font-weight: 600; font-size: 8pt; letter-spacing: .16em; padding: 2mm 4mm; border-radius: 99px; }
+.tag { background: #d9b871; color: #151618; font-weight: 600; font-size: 8pt; letter-spacing: .16em; padding: 2mm 4mm; border-radius: 99px; }
 .hero { width: 100%; height: 95mm; object-fit: cover; border-radius: 4mm; display: block; }
 .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; margin-top: 3mm; }
 .thumbs img { width: 100%; height: 32mm; object-fit: cover; border-radius: 3mm; }
@@ -325,7 +325,7 @@ td:last-child { text-align: right; color: #555; }
 .qr small { color: #555; font-size: 8pt; }
 .foot { position: absolute; left: 14mm; right: 14mm; bottom: 10mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: #777; border-top: .2mm solid #ddd; padding-top: 3mm; }
 .noprint { position: fixed; right: 8mm; top: 8mm; }
-.noprint button { font: inherit; background: #0a1a33; color: #fff; border: 0; border-radius: 99px; padding: 3mm 6mm; cursor: pointer; }
+.noprint button { font: inherit; background: #151618; color: #fff; border: 0; border-radius: 99px; padding: 3mm 6mm; cursor: pointer; }
 @media print { .noprint { display: none; } }
 </style></head><body>
 <div class="noprint"><button onclick="window.print()">Print or save as PDF</button></div>
