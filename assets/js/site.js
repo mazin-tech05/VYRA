@@ -71,14 +71,13 @@
       { t: 'Day to dusk', href: 'index.html?view=dusk#work', view: 'dusk' },
       { t: 'Privacy check', href: 'index.html?view=privacy#work', view: 'privacy' }
     ] },
+    { t: 'Show what it could be', items: [
+      { t: 'Virtual renovation', href: 'index.html#renovate' }
+    ] },
     { t: 'Market it', items: [
       { t: 'Launch pack', href: 'index.html#launch' },
-      { t: 'Listing page', href: 'listing.html' }
-    ] },
-    { t: 'Bring buyers in', items: [
-      { t: 'Viewing bookings', href: 'listing.html#book' },
-      { t: 'AI assistant', href: 'index.html#ai' },
-      { t: 'Vendor report', href: 'index.html#report' }
+      { t: 'Listing page', href: 'listing.html' },
+      { t: 'Viewing bookings', href: 'listing.html#book' }
     ] }
   ];
   function initMenus() {
@@ -94,11 +93,11 @@
   // Same menu on every page, built here so the pages only carry the button.
   const MENU_LINKS = [
     ['index.html#work', 'Our work'],
-    ['index.html#launch', 'Launch pack'],
+    ['index.html#renovate', 'Virtual renovation'],
     ['index.html#services', 'Services'],
     ['index.html#why', 'Why VYRA'],
     ['listing.html', 'Example listing page'],
-    ['index.html#quote', 'Send us your next listing']
+    ['index.html#quote', 'Book a free sample']
   ];
   function initMenu() {
     const btn = MZ.$('#menuBtn');

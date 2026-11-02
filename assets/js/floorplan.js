@@ -45,7 +45,7 @@
       rooms.forEach((r) => {
         const poly = el('polygon', { points: pts(r.poly), class: 'fp-room' + (r.outdoor ? ' outdoor' : ''), tabindex: opts.interactive === false ? '-1' : '0', role: 'button', 'data-room': r.id, 'aria-label': `${r.name}, about ${r.w.toFixed(1)} by ${r.d.toFixed(1)} metres` }, gRooms);
         const title = el('title', {}, poly); title.textContent = r.name;
-        const heat = el('polygon', { points: pts(r.poly), class: 'fp-heat', fill: '#c29b45', 'fill-opacity': '0' }, gHeat);
+        const heat = el('polygon', { points: pts(r.poly), class: 'fp-heat', fill: '#d9b871', 'fill-opacity': '0' }, gHeat);
         const small = r.w < 2.6 || r.d < 1.6;
         const label = el('text', { x: r.cx, y: r.cz - (opts.compact ? 0 : 0.08), class: 'fp-label' }, gLabels);
         label.textContent = opts.compact || small ? (r.short || r.name) : r.name;

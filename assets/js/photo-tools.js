@@ -495,10 +495,10 @@
     ctx.fillStyle = 'rgba(0,0,0,0.72)';
     roundRect(ctx, x, y, bw, bh, bh / 2);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(194,155,69,0.85)';
+    ctx.strokeStyle = 'rgba(217,184,113,0.85)';
     ctx.lineWidth = Math.max(1, fs / 12);
     ctx.stroke();
-    ctx.fillStyle = '#c29b45';
+    ctx.fillStyle = '#d9b871';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, x + pad, y + bh / 2 + 1);
     ctx.restore();

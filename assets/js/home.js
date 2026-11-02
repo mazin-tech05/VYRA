@@ -429,13 +429,12 @@
     ['Day to dusk', 'Twilight hero shot'],
     ['Floor plan', 'Clickable, with room sizes'],
     ['Privacy check', 'Personal items blurred'],
-    ['Virtual staging', 'Empty rooms furnished'],
-    ['Drone photos', 'Aerial shots'],
+    ['Virtual renovation', 'Early access, coming soon'],
+    ['Virtual staging', 'Licensed furniture, coming soon'],
     ['Listing page', 'Your brand, with the tour'],
     ['Launch pack', 'Posts, video, brochure, QR, copy'],
     ['Viewing bookings', 'Buyers book a time online'],
-    ['AI assistant', 'After-hours replies'],
-    ['Vendor report', 'Views, rooms and bookings']
+    ['Short-stay host', 'Airbnb or holiday home']
   ];
   function initQuote() {
     const form = $('#quoteForm');
@@ -450,6 +449,11 @@
       return on;
     };
     ticks.forEach((t) => t.addEventListener('change', sync));
+    // "Ask for early access" style buttons tick their item on the way to the form
+    $$('[data-tick]').forEach((a) => a.addEventListener('click', () => {
+      const t = ticks.find((x) => x.value === a.dataset.tick);
+      if (t && !t.checked) { t.checked = true; sync(); }
+    }));
 
     const name = $('#qName'), email = $('#qEmail'), phone = $('#qPhone');
     const box = $('#qMsgBox'), btn = $('#qSubmit');

@@ -1,6 +1,6 @@
 # VYRA
 
-Listing media for New Zealand real estate agents: 3D walkthroughs, honest AI photo finishing, twilight shots, clickable floor plans, launch packs, viewing bookings and vendor reports.
+3D tours, honest AI photo finishing, floor plans and launch packs for New Zealand real estate agents and short-stay hosts, with virtual renovation (licensed 3D furniture, inside the tour) coming next. Deep navy and creme gold theme.
 
 This is the showcase site. It is plain HTML, CSS and JavaScript with no build step; open `index.html` through any static web server.
 
