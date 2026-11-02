@@ -559,3 +559,6 @@ details.credits a { color: var(--dim); text-decoration: underline; text-underlin
 .stg-placed li button.x:hover { color: var(--bad); }
 @media (max-width: 1080px) { .stg-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 560px) { .stg-grid { grid-template-columns: repeat(3, 1fr); } .stg-tools span { display: none; } }
+.stg-erase { display: flex; flex-wrap: wrap; gap: .4rem; margin: .7rem 0 .4rem; }
+.stg-erase .btn { white-space: normal; text-align: center; }
+.stg-hint { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); max-width: calc(100% - 2rem); text-align: center; font-size: .8rem; color: var(--on-gold); background: var(--gold); border-radius: 99px; padding: .45rem 1rem; animation: modalin .5s var(--out-quart); }

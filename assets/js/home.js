@@ -176,7 +176,7 @@
   }
 
   // ---- virtual staging: CC0 furniture placed inside the 3D scan ----
-  const stg = { frame: null, ready: false, poll: null, cat: null, catName: null, items: [], selected: null, shown: true, busy: {} };
+  const stg = { frame: null, ready: false, poll: null, cat: null, catName: null, items: [], selected: null, shown: true, busy: {}, room: null, erase: false, removed: 0, working: false };
   const stageApi = () => { try { return stg.frame && stg.frame.contentWindow && stg.frame.contentWindow.vyraStage; } catch (e) { return null; } };
   async function catalogue() {
     if (!stg.cat) {
@@ -199,7 +199,15 @@
     if (view !== 'staging') return;
     const cats = [...new Set(cat.map((i) => i.cat))];
     const list = cat.filter((i) => i.cat === stg.catName);
-    side(`<h4>Licensed furniture</h4><p class="small muted">${cat.length} public-domain 3D models. ${stg.ready ? 'Tap one to place it in the room.' : 'Start staging, then tap a piece.'}</p>
+    const roomName = (home.plan.rooms.find((r) => r.id === stg.room) || {}).name || 'this room';
+    side(`<h4>The room as scanned</h4>
+      <p class="small muted">Take out the furniture that was there, then stage it your way.</p>
+      <div class="stg-erase">
+        <button type="button" class="btn btn-pill btn-xs" id="stgEmpty" ${stg.working ? 'disabled' : ''}>${stg.working ? 'Clearing…' : `Empty the ${esc(roomName.toLowerCase())}`}</button>
+        <button type="button" class="btn btn-xs ${stg.erase ? 'btn-gold' : 'btn-ghost'}" id="stgErase" aria-pressed="${stg.erase}">${stg.erase ? 'Done removing' : 'Tap to remove'}</button>
+        ${stg.removed ? '<button type="button" class="btn btn-ghost btn-xs" id="stgRestore">Put it all back</button>' : ''}
+      </div>
+      <h4 class="mt1">Licensed furniture</h4><p class="small muted">${cat.length} public-domain 3D models. ${stg.ready ? 'Tap one to place it in the room.' : 'Start staging, then tap a piece.'}</p>
       <div class="stg-cats" role="tablist">${cats.map((c) => `<button type="button" role="tab" aria-selected="${c === stg.catName}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
       <div class="stg-grid">${list.map((i) => `<button type="button" data-add="${i.id}" ${stg.busy[i.id] ? 'aria-busy="true"' : ''}><img src="assets/staging/thumbs/${i.id}.png" alt="" loading="lazy"><span>${esc(i.name)}</span><small>${i.size[0]} m wide</small></button>`).join('')}</div>
       <h5 class="mt1">In the room${stg.items.length ? ` (${stg.items.length})` : ''}</h5>
@@ -210,6 +218,18 @@
     $$('#stageSide [data-pick]').forEach((b) => b.addEventListener('click', () => { const a = stageApi(); if (a) a.select(b.dataset.pick); }));
     $$('#stageSide [data-del]').forEach((b) => b.addEventListener('click', () => { const a = stageApi(); if (a) a.remove(b.dataset.del); }));
     const clr = $('#stgClear'); if (clr) clr.addEventListener('click', () => { const a = stageApi(); if (a) a.clear(); });
+    const roomsData = () => home.plan.rooms.map((r) => ({ id: r.id, poly: r.poly, cam: r.cam }));
+    $('#stgEmpty').addEventListener('click', async () => {
+      if (!stg.ready) { startStaging(); return; }
+      const a = stageApi(); if (!a) return;
+      stg.working = true; renderStaging();
+      try { await a.emptyRoom(roomsData(), stg.room); } finally { stg.working = false; renderStaging(); }
+    });
+    $('#stgErase').addEventListener('click', () => {
+      if (!stg.ready) { startStaging(); return; }
+      const a = stageApi(); if (a) a.setEraseMode(!stg.erase, roomsData());
+    });
+    const rs = $('#stgRestore'); if (rs) rs.addEventListener('click', () => { const a = stageApi(); if (a) a.restoreAll(); });
   }
   function startStaging() {
     const frame = $('#stageFrame');
@@ -241,7 +261,7 @@
     clearInterval(stg.poll);
     const frame = $('#stageFrame');
     if (frame) { frame.hidden = true; frame.removeAttribute('src'); frame.dataset.home = ''; }
-    Object.assign(stg, { ready: false, items: [], selected: null, shown: true, busy: {} });
+    Object.assign(stg, { ready: false, items: [], selected: null, shown: true, busy: {}, room: null, erase: false, removed: 0, working: false });
     $('#stageStart').hidden = false;
     $('#stagePosterImg').hidden = false;
     $('#stageLoading').hidden = true;
@@ -252,6 +272,8 @@
     if (!stg.ready) { startStaging(); return; }
     const r = home.plan.rooms.find((x) => x.id === id);
     if (!r || !r.cam) return;
+    stg.room = id;
+    if (view === 'staging') renderStaging();
     try { stg.frame.contentWindow.setCameraState({ position: r.cam.position.slice(), angles: r.cam.angles.slice(), distance: 1, fov: 75, mode: 'walk' }); } catch (e) { console.warn(e); }
     $$('#tourRoomsHome button').forEach((b) => b.classList.toggle('on', b.dataset.room === id));
   }
@@ -278,15 +300,16 @@
       const m = e.data;
       if (!m || m.source !== 'vyra-stage' || e.origin !== location.origin) return;
       if (m.type === 'items') {
-        stg.items = m.items; stg.selected = m.selected; stg.shown = m.shown;
+        stg.items = m.items; stg.selected = m.selected; stg.shown = m.shown; stg.erase = !!m.eraseMode; stg.removed = m.removed || 0;
+        $('#stageHint').hidden = !stg.erase;
         $$('#stageHud .stg-toggle button').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.act === 'staged') === stg.shown)));
         $('#stageTools').hidden = !stg.selected;
-        $('#stageLabel').hidden = !(stg.shown && stg.items.length);
+        $('#stageLabel').hidden = !(stg.shown && (stg.items.length || stg.removed));
         if (view === 'staging') renderStaging();
       } else if (m.type === 'busy') {
         stg.busy[m.id] = m.busy;
         const b = $(`#stageSide [data-add="${m.id}"]`); if (b) b.toggleAttribute('aria-busy', m.busy);
-      } else if (m.type === 'error') MZ.toast(m.message);
+      } else if (m.type === 'error' || m.type === 'hint') MZ.toast(m.message);
     });
   }
 
