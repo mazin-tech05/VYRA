@@ -90132,5 +90132,5 @@ const main = async (canvas, settingsJson, config) => {
 };
 console.log(`SuperSplat Viewer v${version} | Engine v${version$1} (${revision})`);
 
-export { main, Entity, Vec3, Quat, Color, BoundingBox, StandardMaterial, Texture, PlaneGeometry, Mesh, MeshInstance, BLEND_NORMAL };
+export { main, Entity, Vec2, Vec3, Quat, Color, BoundingBox, StandardMaterial, Texture, PlaneGeometry, Mesh, MeshInstance, BLEND_NORMAL };
 //# sourceMappingURL=index.js.map

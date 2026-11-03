@@ -203,10 +203,11 @@
     side(`<h4>The room as scanned</h4>
       <p class="small muted">Take out the furniture that was there, then stage it your way.</p>
       <div class="stg-erase">
-        <button type="button" class="btn btn-pill btn-xs" id="stgEmpty" ${stg.working ? 'disabled' : ''}>${stg.working ? 'Clearing…' : `Empty the ${esc(roomName.toLowerCase())}`}</button>
+        <button type="button" class="btn btn-gold btn-xs" id="stgEmpty" ${stg.working ? 'disabled' : ''}>${stg.working ? 'Clearing…' : `Remove all furniture from the ${esc(roomName.toLowerCase())}`}</button>
         <button type="button" class="btn btn-xs ${stg.erase ? 'btn-gold' : 'btn-ghost'}" id="stgErase" aria-pressed="${stg.erase}">${stg.erase ? 'Done removing' : 'Tap to remove'}</button>
         ${stg.removed ? '<button type="button" class="btn btn-ghost btn-xs" id="stgRestore">Put it all back</button>' : ''}
       </div>
+      <button type="button" class="btn btn-gold btn-sm stg-shoot" id="stgShoot" ${stg.shooting ? 'disabled' : ''}>${stg.shooting ? `Taking photo ${stg.shooting} of 4…` : '📷 Take 4 photos of this room'}</button>
       <h4 class="mt1">Licensed furniture</h4><p class="small muted">${cat.length} public-domain 3D models. ${stg.ready ? 'Tap one to place it in the room.' : 'Start staging, then tap a piece.'}</p>
       <div class="stg-cats" role="tablist">${cats.map((c) => `<button type="button" role="tab" aria-selected="${c === stg.catName}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
       <div class="stg-grid">${list.map((i) => `<button type="button" data-add="${i.id}" ${stg.busy[i.id] ? 'aria-busy="true"' : ''}><img src="assets/staging/thumbs/${i.id}.png" alt="" loading="lazy"><span>${esc(i.name)}</span><small>${i.size[0]} m wide</small></button>`).join('')}</div>
@@ -229,6 +230,7 @@
       if (!stg.ready) { startStaging(); return; }
       const a = stageApi(); if (a) a.setEraseMode(!stg.erase, roomsData());
     });
+    $('#stgShoot').addEventListener('click', () => takePhotos());
     const rs = $('#stgRestore'); if (rs) rs.addEventListener('click', () => { const a = stageApi(); if (a) a.restoreAll(); });
   }
   function startStaging() {
@@ -261,7 +263,7 @@
     clearInterval(stg.poll);
     const frame = $('#stageFrame');
     if (frame) { frame.hidden = true; frame.removeAttribute('src'); frame.dataset.home = ''; }
-    Object.assign(stg, { ready: false, items: [], selected: null, shown: true, busy: {}, room: null, erase: false, removed: 0, working: false });
+    Object.assign(stg, { ready: false, items: [], selected: null, shown: true, busy: {}, room: null, erase: false, removed: 0, working: false, shooting: 0 });
     $('#stageStart').hidden = false;
     $('#stagePosterImg').hidden = false;
     $('#stageLoading').hidden = true;
@@ -285,6 +287,48 @@
     if (!stg.shown) a.setShown(true);
     a.add({ id: item.id, name: item.name, url: new URL(`assets/staging/models/${item.id}.glb`, location.href).href });
   }
+  // ---- four stills of the staged room, labelled, ready to save ----
+  function labelShot(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+        const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+        const u = Math.max(1, c.width / 1200);
+        const pad = 14 * u, fs = 15 * u;
+        g.font = `700 ${fs}px Satoshi, "Helvetica Neue", Arial, sans-serif`;
+        const tag = 'VIRTUALLY STAGED · CONCEPT';
+        const w = g.measureText(tag).width + pad * 2, h = fs + pad * 1.2;
+        g.fillStyle = 'rgba(9, 9, 10, .72)';
+        g.beginPath(); g.roundRect(pad, c.height - pad - h, w, h, h / 2); g.fill();
+        g.fillStyle = '#e8d09a'; g.textBaseline = 'middle'; g.fillText(tag, pad * 2, c.height - pad - h / 2);
+        g.font = `700 ${fs * 1.1}px Satoshi, "Helvetica Neue", Arial, sans-serif`;
+        g.textAlign = 'right'; g.fillStyle = 'rgba(246, 239, 223, .9)';
+        g.fillText('VYRA', c.width - pad * 1.5, c.height - pad - h / 2);
+        resolve(c.toDataURL('image/jpeg', .92));
+      };
+      img.onerror = () => resolve(src);
+      img.src = src;
+    });
+  }
+  async function takePhotos() {
+    if (!stg.ready) { startStaging(); MZ.toast('Loading the room. Press the button again once it appears.'); return; }
+    const a = stageApi(); if (!a || stg.shooting) return;
+    const raw = await a.photos();
+    if (!raw.length) { MZ.toast('The photos could not be taken. Try again.'); return; }
+    const shots = await Promise.all(raw.map(labelShot));
+    const room = ((home.plan.rooms.find((r) => r.id === stg.room) || {}).name || 'room').toLowerCase().replace(/\s+/g, '-');
+    const names = shots.map((_, i) => `vyra-${home.id}-${room}-staged-${i + 1}.jpg`);
+    const m = MZ.openModal(`<h3>Your staged ${esc(room.replace(/-/g, ' '))}</h3>
+      <p class="small muted">Four angles, each labelled as a staged concept. Save the ones you like.</p>
+      <div class="shots">${shots.map((src, i) => `<figure><img src="${src}" alt="Staged view ${i + 1}"><figcaption><span>View ${i + 1}</span><a class="btn btn-ghost btn-xs" href="${src}" download="${names[i]}">Save</a></figcaption></figure>`).join('')}</div>
+      <div class="btn-row"><button type="button" class="btn btn-gold" id="shotsAll">Save all ${shots.length}</button></div>`, { className: 'shots-modal', label: 'Staged photos' });
+    $('#shotsAll', m.el).addEventListener('click', async () => {
+      for (let i = 0; i < shots.length; i++) { MZ.download(shots[i], names[i]); await new Promise((r) => setTimeout(r, 350)); }
+    });
+    MZ.analytics.track(home.id, 'staging-photos');
+  }
+
   function initStaging() {
     $('#stageStart').addEventListener('click', () => startStaging());
     $$('#stageHud [data-act]').forEach((b) => b.addEventListener('click', () => {
@@ -295,6 +339,8 @@
       else if (act === 'del') a.remove();
       else if (act === 'asis') a.setShown(false);
       else if (act === 'staged') a.setShown(true);
+      else if (act === 'shoot') takePhotos();
+      else if (act === 'empty') { const e = $('#stgEmpty'); if (e) e.click(); }
     }));
     window.addEventListener('message', (e) => {
       const m = e.data;
@@ -309,6 +355,14 @@
       } else if (m.type === 'busy') {
         stg.busy[m.id] = m.busy;
         const b = $(`#stageSide [data-add="${m.id}"]`); if (b) b.toggleAttribute('aria-busy', m.busy);
+      } else if (m.type === 'working') {
+        $('#stageShootingText').textContent = 'Clearing the room…';
+        $('#stageShooting').hidden = !m.on;
+      } else if (m.type === 'shoot') {
+        stg.shooting = m.done ? 0 : m.step;
+        const b = $('#stgShoot'); if (b) { b.disabled = !!stg.shooting; b.textContent = stg.shooting ? `Taking photo ${stg.shooting} of 4…` : '📷 Take 4 photos of this room'; }
+        $('#stageShootingText').textContent = stg.shooting ? `Taking photo ${stg.shooting} of 4…` : '';
+        $('#stageShooting').hidden = !stg.shooting;
       } else if (m.type === 'error' || m.type === 'hint') MZ.toast(m.message);
     });
   }

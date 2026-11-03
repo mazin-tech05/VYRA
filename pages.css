@@ -562,3 +562,14 @@ details.credits a { color: var(--dim); text-decoration: underline; text-underlin
 .stg-erase { display: flex; flex-wrap: wrap; gap: .4rem; margin: .7rem 0 .4rem; }
 .stg-erase .btn { white-space: normal; text-align: center; }
 .stg-hint { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); max-width: calc(100% - 2rem); text-align: center; font-size: .8rem; color: var(--on-gold); background: var(--gold); border-radius: 99px; padding: .45rem 1rem; animation: modalin .5s var(--out-quart); }
+.stg-shoot { width: 100%; margin-top: .9rem; }
+.stg-actions { position: absolute; right: 1rem; top: 1rem; display: flex; flex-direction: column; align-items: flex-end; gap: .4rem; }
+.stg-cam { background: rgba(9, 9, 10, .66); color: var(--cream); border: 1px solid var(--gold-line); border-radius: 99px; padding: .4rem .85rem; font: inherit; font-size: .8rem; cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: background .3s, color .3s; }
+.stg-cam:hover { background: var(--gold); color: var(--on-gold); }
+.stg-shooting { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: .7rem; background: rgba(9, 9, 10, .82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; font-size: .95rem; pointer-events: all; }
+.shots-modal .modal-card { width: min(980px, 100%); }
+.shots { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: 1rem; }
+.shots figure { margin: 0; border: 1px solid var(--line-soft); border-radius: 14px; overflow: hidden; background: var(--panel2); }
+.shots img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.shots figcaption { display: flex; justify-content: space-between; align-items: center; padding: .5rem .7rem; font-size: .85rem; color: var(--dim); }
+@media (max-width: 640px) { .shots { grid-template-columns: 1fr; } .stg-actions { top: 3.6rem; } .stg-hud > .badge { display: none; } }

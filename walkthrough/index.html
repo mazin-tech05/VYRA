@@ -596,7 +596,7 @@
 
         <!-- Application Script -->
         <script type="module">
-            import { main } from './index.js?v=5';
+            import { main } from './index.js?v=6';
 
             const { config, settings } = window.sse;
             const { poster } = config;
@@ -618,7 +618,7 @@
                 const viewer = await main(canvas, settingsJson, config);
                 // VYRA: the stager (stage.js) and the room buttons reach the viewer through this
                 window.vyraViewer = viewer;
-                if (new URL(location.href).searchParams.has('stage')) import('./stage.js?v=3');
+                if (new URL(location.href).searchParams.has('stage')) import('./stage.js?v=12');
             });
         </script>
     </body>

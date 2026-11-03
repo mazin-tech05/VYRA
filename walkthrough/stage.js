@@ -1,8 +1,9 @@
 // VYRA virtual staging: places CC0 furniture (glb) into the 3D scan.
 // Loaded only with ?stage. The page that embeds the tour drives it through
 // window.vyraStage (same origin), and hears back through 'vyra-stage' messages.
-import { Entity, Vec3, Color, BoundingBox, StandardMaterial, Texture, BLEND_NORMAL } from './index.js?v=5';
+import { Entity, Vec2, Vec3, Color, BoundingBox, StandardMaterial, Texture, BLEND_NORMAL } from './index.js?v=6';
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const items = [];          // { id, name, root, model, floorY, aabbLocal }
 let viewer = null, app = null, camEnt = null, collision = null;
 let selected = null, drag = null, shown = true, shadowMat = null;
@@ -192,6 +193,7 @@ function setShown(on) {
 // covers the gap the piece left (the floor under it was never captured).
 const found = [];          // { uid, room, min:[x,y,z], max:[x,y,z], floorY, removed, patch, color }
 let detected = false, eraseMode = false, patchTex = null;
+const roomInfo = {};      // id -> { poly, sample: { x, z, half, y }, tex }
 const SKIP_ROOMS = /kitchen|bath|ensuite|pool|hall|terrace/;
 
 function inPoly(x, z, poly) {
@@ -234,6 +236,20 @@ function detect(rooms) {
     }
     const h = new Float32Array(N);
     for (let c = 0; c < N; c++) { const d = top[c] - floor[c]; if (d > .1 && d < 1.35) h[c] = d; }
+    // A clean 1.2 m square of bare floor in this room (no furniture, no wall, no step):
+    // we copy it to fill the floor that furniture hid. Prefer one near the middle.
+    const W = 10, info = { poly: room.poly, squares: [] };
+    for (let i = 0; i + W <= nx; i += 2) for (let k = 0; k + W <= nz; k += 2) {
+      let ok = true, sum = 0, n = 0;
+      for (let a = i; a < i + W && ok; a++) for (let b = k; b < k + W; b++) {
+        const c = a * nz + b;
+        if (isNaN(top[c]) || tall[c] || h[c] || Math.abs(top[c] - floor[c]) > .09) { ok = false; break; }
+        sum += top[c]; n++;
+      }
+      if (!ok) continue;
+      info.squares.push({ x: x0 + (i + W / 2) * STEP, z: z0 + (k + W / 2) * STEP, half: W * STEP / 2, y: sum / n });
+    }
+    roomInfo[room.id] = info;
     const seen = new Uint8Array(N);
     for (let s0 = 0; s0 < N; s0++) {
       if (!h[s0] || seen[s0]) continue;
@@ -263,7 +279,7 @@ function detect(rooms) {
       const pad = (side) => near(side) ? -.05 : .2;
       found.push({
         uid: 'f' + found.length, room: room.id, floorY: lo, removed: false,
-        min: [x0 + i0 * STEP - pad('x0'), lo - .04, z0 + k0 * STEP - pad('z0')],
+        min: [x0 + i0 * STEP - pad('x0'), lo - .3, z0 + k0 * STEP - pad('z0')],
         max: [x0 + (i1 + 1) * STEP + pad('x1'), Math.min(hi + .55, lo + 1.8), z0 + (k1 + 1) * STEP + pad('z1')]
       });
     }
@@ -275,20 +291,25 @@ function boxCode(boxes) {
   const v = (a) => a.map((n) => n.toFixed(3)).join(', ');
   const glslIn = boxes.map((b) => `all(greaterThan(p, vec3(${v(b.min)}))) && all(lessThan(p, vec3(${v(b.max)})))`).join(' || ');
   const wgslIn = boxes.map((b) => `all(p > vec3f(${v(b.min)})) && all(p < vec3f(${v(b.max)}))`).join(' || ');
-  // Around each box, low to the floor: the soft dark shadow splats a piece leaves behind.
-  const ring = (b) => [[b.min[0] - .45, b.min[1] - .05, b.min[2] - .45], [b.max[0] + .45, b.min[1] + .28, b.max[2] + .45]];
-  const glslRing = boxes.map((b) => { const [lo, hi] = ring(b); return `all(greaterThan(p, vec3(${v(lo)}))) && all(lessThan(p, vec3(${v(hi)})))`; }).join(' || ');
-  const wgslRing = boxes.map((b) => { const [lo, hi] = ring(b); return `all(p > vec3f(${v(lo)})) && all(p < vec3f(${v(hi)}))`; }).join(' || ');
+  // Around each box: the soft dark blobs a piece leaves on the floor just outside its box. Only
+  // broad splats count (middle axis over 2.5 cm); grout lines and tile edges are thin, and stay.
+  const ring = (b) => [[b.min[0] - .7, b.floorY - .3, b.min[2] - .7], [b.max[0] + .7, b.floorY + .7, b.max[2] + .7]];
+  // ...but only splats clearly darker than that floor, so dark timber floors keep their boards
+  const dark = (b) => { const c = b.color || [200, 200, 200]; return ((c[0] * .3 + c[1] * .59 + c[2] * .11) / 255 * .8).toFixed(3); };
+  const glslRing = boxes.map((b) => { const [lo, hi] = ring(b); return `(l < ${dark(b)} && all(greaterThan(p, vec3(${v(lo)}))) && all(lessThan(p, vec3(${v(hi)}))))`; }).join(' || ');
+  const wgslRing = boxes.map((b) => { const [lo, hi] = ring(b); return `(l < ${dark(b)} && all(p > vec3f(${v(lo)})) && all(p < vec3f(${v(hi)})))`; }).join(' || ');
   return {
     glsl: `bool vyraGone(vec3 p) { return ${glslIn}; }
+float vyraBroad = 0.0;
 void modifySplatCenter(inout vec3 center) {}
-void modifySplatRotationScale(vec3 originalCenter, vec3 modifiedCenter, inout vec4 rotation, inout vec3 scale) { if (vyraGone(originalCenter)) scale = vec3(0.0); }
-bool vyraShade(vec3 p, vec4 c) { return dot(c.rgb, vec3(.3, .59, .11)) < .42 && (${glslRing}); }
-void modifySplatColor(vec3 center, inout vec4 color) { if (vyraGone(center) || vyraShade(center, color)) color.a = 0.0; }`,
+void modifySplatRotationScale(vec3 originalCenter, vec3 modifiedCenter, inout vec4 rotation, inout vec3 scale) { vyraBroad = scale.x + scale.y + scale.z - max(scale.x, max(scale.y, scale.z)) - min(scale.x, min(scale.y, scale.z)); ${window.__vyraDebug ? '' : 'if (vyraGone(originalCenter)) scale = vec3(0.0);'} }
+bool vyraShade(vec3 p, vec4 c) { float l = dot(c.rgb, vec3(.3, .59, .11)); return vyraBroad > .025 && (${glslRing}); }
+void modifySplatColor(vec3 center, inout vec4 color) { ${window.__vyraDebug ? 'if (vyraGone(center)) color = vec4(0.0, 1.0, 0.0, color.a); else if (vyraShade(center, color)) color = vec4(1.0, 0.0, 0.0, color.a);' : 'if (vyraGone(center) || vyraShade(center, color)) color.a = 0.0;'} }`,
     wgsl: `fn vyraGone(p: vec3f) -> bool { return ${wgslIn}; }
+var<private> vyraBroad: f32 = 0.0;
 fn modifySplatCenter(center: ptr<function, vec3f>) {}
-fn modifySplatRotationScale(originalCenter: vec3f, modifiedCenter: vec3f, rotation: ptr<function, vec4f>, scale: ptr<function, vec3f>) { if (vyraGone(originalCenter)) { *scale = vec3f(0.0); } }
-fn vyraShade(p: vec3f, c: vec4f) -> bool { return dot(c.rgb, vec3f(.3, .59, .11)) < .42 && (${wgslRing}); }
+fn modifySplatRotationScale(originalCenter: vec3f, modifiedCenter: vec3f, rotation: ptr<function, vec4f>, scale: ptr<function, vec3f>) { let q = *scale; vyraBroad = q.x + q.y + q.z - max(q.x, max(q.y, q.z)) - min(q.x, min(q.y, q.z)); if (vyraGone(originalCenter)) { *scale = vec3f(0.0); } }
+fn vyraShade(p: vec3f, c: vec4f) -> bool { let l = dot(c.rgb, vec3f(.3, .59, .11)); return vyraBroad > .025 && (${wgslRing}); }
 fn modifySplatColor(center: vec3f, color: ptr<function, vec4f>) { if (vyraGone(center) || vyraShade(center, *color)) { (*color).a = 0.0; } }`
   };
 }
@@ -351,8 +372,91 @@ function sampleNow(f) {
       const med = (k) => out.map((c) => c[k]).sort((a, b) => a - b)[out.length >> 1];
       return [med(0), med(1), med(2)];
 }
-function makePatch(f, rgb) {
+function roomOf(f) {
+  if (f.room && roomInfo[f.room]) return roomInfo[f.room];
+  const cx = (f.min[0] + f.max[0]) / 2, cz = (f.min[2] + f.max[2]) / 2;
+  return Object.values(roomInfo).find((r) => inPoly(cx, cz, r.poly)) || null;
+}
+// Copy real floor into a texture without moving the camera: pick a clean 1 m square of this
+// room's floor that is on screen (the closest one, for the most detail), and un-project it
+// texel by texel from the frame just drawn. Mirrored tiling hides the seams.
+function floorFromFrame(info) {
+  if (!info || !info.squares || !info.squares.length) return null;
+  const gl = app.graphicsDevice.gl, canvas = app.graphicsDevice.canvas;
+  if (!gl) return null;
+  const cw = canvas.clientWidth, ch = canvas.clientHeight, W = canvas.width, H = canvas.height;
+  const sx = W / cw, sy = H / ch, cam = camEnt.camera, v = new Vec3(), p = camPos();
+  const onScreen = (q) => [[-1, -1], [1, -1], [1, 1], [-1, 1]].every(([a, b]) => {
+    cam.worldToScreen(new Vec3(q.x + a * q.half, q.y, q.z + b * q.half), v);
+    return v.z > .3 && v.x > 2 && v.y > 2 && v.x < cw - 2 && v.y < ch - 2;
+  });
+  const near = info.squares.filter((q) => Math.hypot(q.x - p.x, q.z - p.z) > 1).filter(onScreen)
+    .sort((a, b) => Math.hypot(a.x - p.x, a.z - p.z) - Math.hypot(b.x - p.x, b.z - p.z)).slice(0, 12);
+  if (!near.length) return null;
+  const frame = new Uint8Array(W * H * 4);
+  const prev = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, frame);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, prev);
+  const at = (q, a, b, n) => {   // frame pixel for texel (a, b) of an n×n copy of square q
+    w.set(q.x - q.half + (a + .5) / n * 2 * q.half, q.y, q.z - q.half + (b + .5) / n * 2 * q.half);
+    cam.worldToScreen(w, v);
+    const px = Math.min(W - 1, Math.max(0, Math.floor(v.x * sx))), py = Math.min(H - 1, Math.max(0, H - 1 - Math.floor(v.y * sy)));
+    return (py * W + px) * 4;
+  };
+  const w = new Vec3();
+  // Of the nearby squares, take the most even one: a rug, a toy or a shadow in the square
+  // shows up as spread in brightness, and would repeat across every patch.
+  let sq = null, bestSpread = Infinity;
+  near.forEach((q) => {
+    const L = [];
+    for (let b = 0; b < 24; b++) for (let a = 0; a < 24; a++) { const o = at(q, a, b, 24); L.push(frame[o] * .3 + frame[o + 1] * .59 + frame[o + 2] * .11); }
+    L.sort((x, y) => x - y);
+    const spread = L[Math.floor(L.length * .9)] - L[Math.floor(L.length * .1)];
+    const d = Math.hypot(q.x - p.x, q.z - p.z);
+    const score = spread + d * 2;   // nearer gives more detail, but evenness matters more
+    if (score < bestSpread) { bestSpread = score; sq = q; }
+  });
+  const N = 256, c = document.createElement('canvas'); c.width = c.height = N;
+  const g = c.getContext('2d'), img = g.createImageData(N, N);
+  for (let b = 0; b < N; b++) for (let a = 0; a < N; a++) {
+    const o = at(sq, a, b, N), t = (b * N + a) * 4;
+    img.data[t] = frame[o]; img.data[t + 1] = frame[o + 1]; img.data[t + 2] = frame[o + 2]; img.data[t + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  const mean = [0, 1, 2].map((k) => { let t = 0; for (let i = k; i < img.data.length; i += 4) t += img.data[i]; return t / (N * N); });
+  const tex = new Texture(app.graphicsDevice, { width: N, height: N, mipmaps: true, addressU: 2, addressV: 2 });
+  tex.setSource(c);
+  info.canvas = c;
+  return { tex, size: sq.half * 2, mean };
+}
+// Plain colour, unlit, matching how the scan renders.
+function flatMat(rgb, map, tiling) {
+  const m = new StandardMaterial();
+  m.useLighting = false; m.diffuse = new Color(0, 0, 0);
+  m.emissive = new Color(rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
+  if (map) { m.emissiveMap = map; if (tiling) { m.emissiveMapTiling = tiling; } }
+  m.cull = 0;
+  srgbOut(m);
+  return m;
+}
+function makePatch(f, rgb, floorTex) {
   f.color = rgb;
+  const w0 = f.max[0] - f.min[0] + .06, d0 = f.max[2] - f.min[2] + .06;
+  if (floorTex) {
+    // real floor, copied from a clean square of this room and tiled at its true size
+    const sz = floorTex.size;
+    // match the floor right next to this piece: light falls differently across a room
+    const tint = floorTex.mean.map((mv, k) => Math.max(.8, Math.min(1.15, rgb[k] / Math.max(1, mv))) * 255);
+    const m = flatMat(tint.map((t) => Math.min(255, t)), floorTex.tex, new Vec2(w0 / sz, d0 / sz));
+    const e = new Entity('patch-' + f.uid);
+    e.addComponent('render', { type: 'plane', material: m, castShadows: false });
+    e.setLocalScale(w0, 1, d0);
+    e.setPosition((f.min[0] + f.max[0]) / 2, f.floorY + .006, (f.min[2] + f.max[2]) / 2);
+    app.root.addChild(e);
+    f.patch = e;
+    return;
+  }
   const m = new StandardMaterial();
   // The scan is unlit colour, so the patch is too.
   m.useLighting = false; m.diffuse = new Color(0, 0, 0);
@@ -372,9 +476,22 @@ function makePatch(f, rgb) {
 async function setRemoved(list, on) {
   const need = on ? list.filter((f) => !f.patch) : [];
   if (need.length) {
-    // sample while the pieces are still there, then build the patches
-    const cols = await sampleFloors(need);
-    need.forEach((f, i) => makePatch(f, cols[i]));
+    post('working', { on: true });
+    try {
+      // everything comes from the frame on screen, while the pieces are still there
+      const res = await new Promise((resolve) => {
+        redraw();
+        app.once('frameend', () => {
+          const byRoom = new Map();
+          resolve(need.map((f) => {
+            const info = roomOf(f);
+            if (info && !byRoom.has(info)) byRoom.set(info, info.floor || (info.floor = floorFromFrame(info)));
+            return { floor: sampleNow(f), tex: info ? byRoom.get(info) : null };
+          }));
+        });
+      });
+      need.forEach((f, i) => makePatch(f, res[i].floor, res[i].tex));
+    } finally { post('working', { on: false }); }
   }
   list.forEach((f) => { f.removed = on; });
   if (on && !shown) shown = true, items.forEach((it) => { it.root.enabled = true; });
@@ -413,6 +530,93 @@ function foundAt(clientX, clientY) {
   if (!hit) return null;
   const t = .12;
   return found.find((f) => hit.x > f.min[0] - t && hit.x < f.max[0] + t && hit.z > f.min[2] - t && hit.z < f.max[2] + t && hit.y < f.max[1] + t && hit.y > f.floorY + .04) || null;
+}
+
+// ---------- four still photos of the staged room ----------
+// Shot 1 is the view on screen. The other three walk around the staged pieces, picking
+// open directions (the scan's collision tells us where the walls are) spread as far apart
+// as the room allows, at eye height, looking slightly down at the furniture.
+function grab(type) {
+  return new Promise((resolve) => {
+    redraw();
+    app.once('frameend', () => {
+      // read in the same task as the draw, before the browser clears the buffer
+      try { resolve(app.graphicsDevice.canvas.toDataURL(type || 'image/jpeg', .92)); } catch (e) { resolve(null); }
+    });
+  });
+}
+function lookAngles(from, to) {
+  const dx = to[0] - from[0], dy = to[1] - from[1], dz = to[2] - from[2];
+  return [Math.atan2(dy, Math.hypot(dx, dz)) * 180 / Math.PI, Math.atan2(-dx, -dz) * 180 / Math.PI, 0];
+}
+function shotPlan() {
+  const p = camPos();
+  const live = items.filter((it) => it.root.enabled);
+  let tx, tz, floorY;
+  if (live.length) {
+    tx = live.reduce((a, it) => a + it.root.getPosition().x, 0) / live.length;
+    tz = live.reduce((a, it) => a + it.root.getPosition().z, 0) / live.length;
+    floorY = live.reduce((a, it) => a + it.floorY, 0) / live.length;
+  } else {
+    const f = forwardFlat();
+    tx = p.x + f.x * 2.5; tz = p.z + f.z * 2.5; floorY = floorBelow(tx, p.y, tz);
+  }
+  const target = [tx, floorY + .5, tz];
+  const eye = floorY + 1.45;
+  // how far we can back away from the target in each direction before meeting a wall
+  const cands = [];
+  for (let a = 0; a < 360; a += 15) {
+    const r = a * Math.PI / 180, dx = Math.sin(r), dz = Math.cos(r);
+    const hit = ray(tx, floorY + 1.2, tz, dx, 0, dz, 6);
+    const room = hit ? Math.hypot(hit.x - tx, hit.z - tz) - .75 : 4;
+    const dist = Math.min(room, 3.4);
+    if (dist < 1.5) continue;
+    const pos = [tx + dx * dist, eye, tz + dz * dist];
+    // keep clear of door frames and wall edges beside the lens...
+    const side = [[-dz, dx], [dz, -dx]].every(([sx, sz]) => !ray(pos[0], eye - .3, pos[2], sx, 0, sz, .45));
+    // ...and make sure nothing in the scan stands between the lens and the furniture
+    const lx = tx - pos[0], ly = target[1] - eye, lz = tz - pos[2], len = Math.hypot(lx, ly, lz);
+    const block = ray(pos[0], eye, pos[2], lx / len, ly / len, lz / len, len - .6);
+    if (side && !block) cands.push({ a, dist, pos });
+  }
+  const here = (Math.atan2(p.x - tx, p.z - tz) * 180 / Math.PI + 360) % 360;
+  const gap = (u, v) => { const d = Math.abs(u - v) % 360; return d > 180 ? 360 - d : d; };
+  const picked = [here];
+  const shots = [];
+  for (const minGap of [80, 55, 35, 15]) {
+    cands.slice().sort((u, v) => v.dist - u.dist).forEach((c) => {
+      if (shots.length < 3 && picked.every((a) => gap(a, c.a) >= minGap)) { picked.push(c.a); shots.push(c); }
+    });
+    if (shots.length >= 3) break;
+  }
+  return { target, shots };
+}
+let shooting = false;
+async function photos() {
+  await ready;
+  if (shooting) return [];
+  shooting = true;
+  const keep = window.getCameraState ? window.getCameraState() : null;
+  const wasSel = selected; selected = null; emit();
+  const out = [];
+  try {
+    post('shoot', { step: 1, of: 4 });
+    out.push(await grab());
+    const { target, shots } = shotPlan();
+    for (let i = 0; i < shots.length; i++) {
+      post('shoot', { step: i + 2, of: 4 });
+      window.setCameraState({ position: shots[i].pos, angles: lookAngles(shots[i].pos, target), distance: 1, fov: 70, mode: 'walk' });
+      redraw();
+      await sleep(1600);   // let the streamed detail for the new view arrive
+      out.push(await grab());
+    }
+  } finally {
+    if (keep) window.setCameraState(keep);
+    selected = wasSel; emit(); redraw();
+    shooting = false;
+    post('shoot', { done: true });
+  }
+  return out.filter(Boolean);
 }
 
 // ---------- pointer: grab a piece and slide it across the floor ----------
@@ -505,4 +709,4 @@ const ready = new Promise((r) => { readyResolve = r; });
   setTimeout(wait, 150);
 })();
 
-window.vyraStage = { _found: found, _ray: (...a) => ray(...a), _floor: (...a) => floorBelow(...a), add, rotate, remove, clear, setShown, emptyRoom, restoreAll, setEraseMode, select: (uid) => select(items.find((x) => x.uid === uid)), list: () => items.map((it) => it.uid) };
+window.vyraStage = { _rooms: roomInfo, photos, _found: found, _ray: (...a) => ray(...a), _floor: (...a) => floorBelow(...a), add, rotate, remove, clear, setShown, emptyRoom, restoreAll, setEraseMode, select: (uid) => select(items.find((x) => x.uid === uid)), list: () => items.map((it) => it.uid) };

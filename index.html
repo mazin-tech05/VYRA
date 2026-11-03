@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20261102c">
-  <link rel="stylesheet" href="pages.css?v=20261102c">
+  <link rel="stylesheet" href="styles.css?v=20261103">
+  <link rel="stylesheet" href="pages.css?v=20261103">
 </head>
 <body>
 
@@ -104,6 +104,11 @@
               <div class="stg-hud" id="stageHud" hidden>
                 <span class="badge" id="stageLabel" hidden>Virtually staged · concept</span>
                 <div class="stg-toggle" role="group" aria-label="Show the room"><button type="button" data-act="asis" aria-pressed="false">As it is</button><button type="button" data-act="staged" aria-pressed="true">Staged</button></div>
+                <div class="stg-actions">
+                  <button type="button" class="stg-cam" data-act="empty">Remove all furniture</button>
+                  <button type="button" class="stg-cam" data-act="shoot" aria-label="Take 4 photos">📷 4 photos</button>
+                </div>
+                <div class="stg-shooting" id="stageShooting" hidden><span class="spinner"></span><span id="stageShootingText">Taking photos…</span></div>
                 <span class="stg-hint" id="stageHint" hidden>Tap a piece in the scan to remove it. Tap the spot again to bring it back.</span>
                 <div class="stg-tools" id="stageTools" hidden>
                   <button type="button" data-act="left" aria-label="Turn left">⟲</button>
@@ -343,11 +348,11 @@
 
 <div class="stickybar"><a class="btn btn-ghost" href="#work">See our work</a><a class="btn btn-gold" href="#quote">Book a chat</a></div>
 
-<script src="assets/js/site.js?v=20261102c"></script>
-<script src="assets/js/data.js?v=20261102c"></script>
-<script src="assets/js/photo-tools.js?v=20261102c"></script>
-<script src="assets/js/floorplan.js?v=20261102c"></script>
-<script src="assets/js/marketing.js?v=20261102c"></script>
-<script src="assets/js/home.js?v=20261102c"></script>
+<script src="assets/js/site.js?v=20261103"></script>
+<script src="assets/js/data.js?v=20261103"></script>
+<script src="assets/js/photo-tools.js?v=20261103"></script>
+<script src="assets/js/floorplan.js?v=20261103"></script>
+<script src="assets/js/marketing.js?v=20261103"></script>
+<script src="assets/js/home.js?v=20261103"></script>
 </body>
 </html>
