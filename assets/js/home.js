@@ -1,5 +1,5 @@
 /* Landing page: hero slideshow, the "Our work" stage (three sample homes x
-   five live demos), the launch pack made live in the browser, and the chat form. */
+   four live demos), the launch pack made live in the browser, and the chat form. */
 (function () {
   'use strict';
   const MZ = window.MZ;
@@ -31,6 +31,13 @@
     document.addEventListener('visibilitychange', () => { if (document.hidden) vids[i].pause(); else play(vids[i]); });
   }
 
+  // Virtual staging is finished but shown as "Coming soon" for now. All of its code
+  // is still here. Add ?staging to the page address to use it, or set this to true
+  // (and restore the page wording) to launch it.
+  const STAGING_LIVE = new URLSearchParams(location.search).has('staging');
+  // The launch pack is also built but shown as "Coming soon". ?launch turns it on.
+  const LAUNCH_LIVE = new URLSearchParams(location.search).has('launch');
+
   // ---------- "See the difference" ----------
   const views = {
     tour: {
@@ -43,11 +50,6 @@
       lede: 'Light, colour and sharpness are corrected so every room looks its best, on a grey day or a sunny one.',
       note: () => 'Drag the handle. Only light and colour change, worked out live in your browser. Every edit is logged and labelled.'
     },
-    dusk: {
-      title: 'A twilight hero shot, without a second shoot',
-      lede: 'The day photo becomes an evening one: a sunset sky with the original clouds relit, a cooler evening grade, and warm light in the windows.',
-      note: () => 'Simulated twilight, made live in your browser. Exterior is a public-domain photo of a similar house. Every export is labelled "Simulated twilight".'
-    },
     plan: {
       title: 'A floor plan buyers can click',
       lede: 'Tap a room to see its size, then step straight into it in the 3D tour.',
@@ -55,18 +57,22 @@
     },
     staging: {
       title: 'Furnish it, right inside the 3D tour',
-      lede: 'Pick a room, then add real furniture from our licensed catalogue. Drag pieces across the floor, turn them, and flick back to the room as it is.',
+      lede: 'Pick a room, then add real furniture from our public-domain catalogue. Drag pieces across the floor, turn them, and flick back to the room as it is.',
       note: () => 'Every piece is a public-domain (CC0) 3D model from Poly Haven, shown at its real size. Staged views are always labelled.'
     },
     privacy: {
       title: 'Personal things stay personal',
       lede: 'Before anything goes public we blur family photos, faces, mail and number plates. Your vendors will notice.',
-      note: () => 'Example from the family room of Sample home 2. Drag across the photo to blur anything else.'
+      note: () => 'Example from the hall of Sample home 2. Drag across the photo to blur anything else.'
     }
   };
   let home = D.homes[0];
   let view = 'tour';
   const cache = {};               // per home + view: rendered canvases and change logs
+  if (!STAGING_LIVE) {
+    views.staging.lede = 'Real 3D furniture placed inside the walkthrough, so buyers can walk around the sofa and flick back to the room as it is.';
+    views.staging.note = () => 'Virtual staging is coming soon. Staged views will always be labelled.';
+  }
   let tour = { frame: null, ready: false, poll: null };
   let picker = null;
 
@@ -84,7 +90,6 @@
     if (home.id === id) return;
     home = D.home(id);
     $$('#homePick button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.home === id)));
-    $('#openListing').href = 'listing.html?home=' + id;
     stopTour();
     stopStaging();
     showView(view);
@@ -98,10 +103,9 @@
     $('#work-title').textContent = meta.title;
     $('#work-lede').textContent = meta.lede;
     $('#work-note').textContent = meta.note(home);
-    $('#tourRoomsHome').hidden = v !== 'tour' && v !== 'staging';
+    $('#tourRoomsHome').hidden = v !== 'tour' && !(v === 'staging' && STAGING_LIVE);
     if (v === 'tour') renderTourPoster();
     if (v === 'photo') renderPhoto();
-    if (v === 'dusk') renderDusk();
     if (v === 'plan') renderPlan();
     if (v === 'privacy') renderPrivacy();
     if (v === 'staging') renderStaging();
@@ -193,6 +197,10 @@
   }
   async function renderStaging() {
     $('#stagePosterImg').src = home.tour.poster;
+    if (!STAGING_LIVE) {
+      side('<h4>Coming soon</h4><p class="small muted">We are finishing virtual staging inside the 3D tour. Ask us about early access.</p><div class="btn-row mt1"><a class="btn btn-gold btn-sm" href="#quote">Ask about early access</a></div>');
+      return;
+    }
     stageRooms();
     side('<p class="small muted">Loading the catalogue…</p>');
     const cat = await catalogue();
@@ -208,7 +216,7 @@
         ${stg.removed ? '<button type="button" class="btn btn-ghost btn-xs" id="stgRestore">Put it all back</button>' : ''}
       </div>
       <button type="button" class="btn btn-gold btn-sm stg-shoot" id="stgShoot" ${stg.shooting ? 'disabled' : ''}>${stg.shooting ? `Taking photo ${stg.shooting} of 4…` : '📷 Take 4 photos of this room'}</button>
-      <h4 class="mt1">Licensed furniture</h4><p class="small muted">${cat.length} public-domain 3D models. ${stg.ready ? 'Tap one to place it in the room.' : 'Start staging, then tap a piece.'}</p>
+      <h4 class="mt1">Public-domain furniture</h4><p class="small muted">${cat.length} public-domain 3D models. ${stg.ready ? 'Tap one to place it in the room.' : 'Start staging, then tap a piece.'}</p>
       <div class="stg-cats" role="tablist">${cats.map((c) => `<button type="button" role="tab" aria-selected="${c === stg.catName}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
       <div class="stg-grid">${list.map((i) => `<button type="button" data-add="${i.id}" ${stg.busy[i.id] ? 'aria-busy="true"' : ''}><img src="assets/staging/thumbs/${i.id}.png" alt="" loading="lazy"><span>${esc(i.name)}</span><small>${i.size[0]} m wide</small></button>`).join('')}</div>
       <h5 class="mt1">In the room${stg.items.length ? ` (${stg.items.length})` : ''}</h5>
@@ -234,6 +242,7 @@
     const rs = $('#stgRestore'); if (rs) rs.addEventListener('click', () => { const a = stageApi(); if (a) a.restoreAll(); });
   }
   function startStaging() {
+    if (!STAGING_LIVE) return;
     const frame = $('#stageFrame');
     stg.frame = frame;
     if (!frame.src || frame.dataset.home !== home.id) {
@@ -330,6 +339,17 @@
   }
 
   function initStaging() {
+    if (!STAGING_LIVE) {
+      const start = $('#stageStart');
+      start.disabled = true;
+      start.style.cursor = 'default';
+      start.setAttribute('aria-label', 'Virtual staging is coming soon');
+      start.querySelector('.badge').textContent = 'Coming soon';
+      start.querySelector('.tour-play').hidden = true;
+      start.querySelector('.tourdemo-cta').textContent = 'Virtual staging is coming soon';
+      $('#picker [data-view="staging"]').hidden = true;
+      return;
+    }
     $('#stageStart').addEventListener('click', () => startStaging());
     $$('#stageHud [data-act]').forEach((b) => b.addEventListener('click', () => {
       const a = stageApi(); if (!a) return;
@@ -393,29 +413,6 @@
     } catch (e) { console.warn(e); }
   }
 
-  // ---- day to dusk ----
-  async function renderDusk() {
-    const key = home.id + ':dusk';
-    $('#duskBefore').src = home.exterior.src;
-    if (!cache[key]) {
-      cache[key] = (async () => {
-        const img = await MZ.photo.loadImage(home.exterior.src);
-        const c = MZ.photo.toCanvas(img, 1600);
-        return MZ.photo.dusk(c, home.dusk);
-      })();
-    }
-    try {
-      const res = await cache[key];
-      if (view !== 'dusk' || home.id + ':dusk' !== key) return;
-      const out = $('#duskAfter');
-      out.width = res.canvas.width; out.height = res.canvas.height;
-      out.getContext('2d').drawImage(res.canvas, 0, 0);
-      const cmp = MZ.initCompare($('#duskCompare'));
-      if (cmp && cmp.replay) cmp.replay();
-      changeList('What changed', res.changes.filter((c) => c.v !== 'none'), 'Nothing in the photo is moved, added or removed.');
-    } catch (e) { console.warn(e); }
-  }
-
   // ---- floor plan ----
   function renderPlan() {
     const fp = MZ.floorplan.mount($('#planDemo'), {
@@ -441,15 +438,12 @@
   }
 
   // ---- privacy check ----
-  // Personal items in the sample family room, as fractions of the photo.
+  // Family photos on the hall wall of sample home 2, as fractions of the photo. The faces
+  // are already blurred in the source image, so they can never be un-blurred on the page.
   const PRIVACY = {
-    src: 'assets/img/homes/ranch/family.jpg',
+    src: 'assets/img/homes/apartment/privacy.jpg',
     marks: [
-      { x: 0.316, y: 0.280, w: 0.032, h: 0.056, kind: 'Family photo' },
-      { x: 0.651, y: 0.262, w: 0.026, h: 0.110, kind: 'Family photos' },
-      { x: 0.703, y: 0.376, w: 0.033, h: 0.057, kind: 'Framed photo' },
-      { x: 0.762, y: 0.461, w: 0.029, h: 0.057, kind: 'Framed photo' },
-      { x: 0.779, y: 0.231, w: 0.034, h: 0.128, kind: 'Personal photos' }
+      { x: 0.33, y: 0.11, w: 0.375, h: 0.31, kind: 'Family photos' }
     ]
   };
   const pv = { src: null, boxes: PRIVACY.marks.slice(), blur: true, wired: false };
@@ -515,7 +509,7 @@
       $('button', el).addEventListener('click', (e) => { e.stopPropagation(); pv.boxes.splice(i, 1); paintPrivacy(); });
       $('#pvStage').appendChild(el);
     });
-    side(`<h4>Blurred before publishing</h4><p class="small muted">Family room, Sample home 2</p>
+    side(`<h4>Blurred before publishing</h4><p class="small muted">Hall, Sample home 2</p>
       <ul class="chg">${pv.boxes.length ? pv.boxes.map((b) => `<li><span>${esc(b.kind)}</span><b>blurred</b></li>`).join('') : '<li><span>Nothing marked</span><b>—</b></li>'}</ul>
       <label class="check mt1"><input type="checkbox" id="pvShow" ${pv.blur ? 'checked' : ''}> Show the blur</label>
       <button class="btn btn-ghost btn-sm mt1" type="button" id="pvReset">Reset the example</button>`);
@@ -526,6 +520,7 @@
   // ---------- launch pack: made live from the selected home ----------
   const launch = { shown: false, run: 0 };
   function initLaunch() {
+    if (!LAUNCH_LIVE) return;
     const sec = $('#launch');
     if (!sec) return;
     const go = () => { if (!launch.shown) { launch.shown = true; renderLaunch(); } };
@@ -540,7 +535,7 @@
     const photos = L.photos.map((p) => p.src);
     const copy = MZ.mk.copy(L);
     const url = MZ.mk.listingUrl(L);
-    $('#launchHome').textContent = L.short.toLowerCase();
+    const lh = $('#launchHome'); if (lh) lh.textContent = L.short.toLowerCase();
     $('#launchGrid').innerHTML = `
       <div class="mk-card reveal-in"><div class="mk-prev" id="lpSq"><span class="spinner"></span></div><div class="mk-body"><h3>Square post</h3><p>1080 × 1080 for Instagram and Facebook feeds.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpSqDl" disabled>Download</button></div></div></div>
       <div class="mk-card reveal-in"><div class="mk-prev" id="lpSt"><span class="spinner"></span></div><div class="mk-body"><h3>Story</h3><p>1080 × 1920 with a QR code to the listing.</p><div class="row"><button class="btn btn-gold btn-xs" type="button" id="lpStDl" disabled>Download</button></div></div></div>
@@ -630,17 +625,17 @@
 
   // ---------- chat form ----------
   const tickItems = [
-    ['Free sample', 'Try it on one of your listings'],
+    ['Get a quote', 'For your next listing'],
     ['3D walkthrough', 'Every room, on any phone'],
     ['Photo finishing', 'Light and colour, labelled'],
-    ['Day to dusk', 'Twilight hero shot'],
+    ['Day to dusk', 'Early access, coming soon'],
     ['Floor plan', 'Clickable, with room sizes'],
     ['Privacy check', 'Personal items blurred'],
     ['Virtual renovation', 'Early access, coming soon'],
-    ['Virtual staging', 'Real 3D furniture in the tour'],
-    ['Listing page', 'Your brand, with the tour'],
-    ['Launch pack', 'Posts, video, brochure, QR, copy'],
-    ['Viewing bookings', 'Buyers book a time online'],
+    ['Virtual staging', 'Early access, coming soon'],
+    ['Listing page', 'Early access, coming soon'],
+    ['Launch pack', 'Early access, coming soon'],
+    ['Viewing bookings', 'Early access, coming soon'],
     ['Short-stay host', 'Airbnb or holiday home']
   ];
   function initQuote() {

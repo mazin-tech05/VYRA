@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>VYRA | 3D tours and virtual renovation for New Zealand property</title>
-  <meta name="description" content="3D walkthroughs, honest AI photo finishing, floor plans and launch packs for New Zealand real estate agents and short-stay hosts. Virtual renovation with licensed 3D furniture is coming next.">
+  <title>VYRA | 3D tours, floor plans and photo finishing for New Zealand property</title>
+  <meta name="description" content="3D walkthroughs, floor plans and honest photo finishing for New Zealand real estate agents and short-stay hosts.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#151618">
   <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
@@ -12,18 +12,18 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20261103">
-  <link rel="stylesheet" href="pages.css?v=20261103">
+  <link rel="stylesheet" href="styles.css?v=20261110">
+  <link rel="stylesheet" href="pages.css?v=20261110">
 </head>
 <body>
 
-<div class="demo-strip"><b>Examples</b>Our work, shown on three licensed sample homes. None of them are for sale.</div>
+<div class="demo-strip"><b>Examples</b>Three sample homes, using licensed 3D scans captured by other creators and credited below. None of them are for sale.</div>
 
 <header class="site">
   <div class="wrap bar">
     <a class="brand" href="index.html" aria-label="VYRA home"><img src="assets/brand-mark.svg" alt=""> VYRA</a>
     <nav class="links" id="navlinks" aria-label="Main">
-      <a href="#work">Our work</a>
+      <a href="#work">Examples</a>
       <a href="#renovate">Virtual staging</a>
       <a href="#services">Services</a>
       <a href="#why">Why VYRA</a>
@@ -49,11 +49,11 @@
     </div>
     <div class="wrap">
       <span class="eyebrow reveal">For New Zealand agents and short-stay hosts</span>
-      <h1>Walk through it.<br>Picture it<br><span class="ticker" data-words="furnished|restyled|yours">furnished</span>.</h1>
-      <p class="lede reveal d2">A 3D walkthrough of every room, virtual staging with real furniture placed inside the tour, and photos and a launch pack from the same visit.</p>
+      <h1>Walk through it.<br>Picture it<br><span style="color:var(--gold-hi)">yours</span>.</h1>
+      <p class="lede reveal d2">A 3D walkthrough of every room, with a floor plan and finished photos from the same visit.</p>
       <div class="btn-row reveal d3">
-        <a class="btn btn-cream" href="#quote">Book a free sample</a>
-        <a class="btn btn-line" href="#work">See our work</a>
+        <a class="btn btn-cream" href="#quote">Get a quote</a>
+        <a class="btn btn-line" href="#work">See examples</a>
       </div>
     </div>
     <span class="hero-credit">Drone footage CC BY 3.0, credited at the foot of the page</span>
@@ -64,18 +64,17 @@
   <section id="work">
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">Our work</span>
+        <span class="eyebrow">Examples</span>
         <h2 id="work-title">Walk through it before the open home</h2>
         <p class="lede" id="work-lede">Pick a home, then try each service on it. Everything below runs live in your browser.</p>
       </div>
       <div class="homepick" id="homePick" role="radiogroup" aria-label="Sample home"></div>
       <div class="picker" id="picker">
         <button type="button" data-view="tour" aria-selected="true">3D walkthrough</button>
-        <button type="button" data-view="staging" aria-selected="false">Virtual staging <em class="new">New</em></button>
-        <button type="button" data-view="photo" aria-selected="false">Photo finishing</button>
-        <button type="button" data-view="dusk" aria-selected="false">Day to dusk</button>
         <button type="button" data-view="plan" aria-selected="false">Floor plan</button>
+        <button type="button" data-view="photo" aria-selected="false">Photo finishing</button>
         <button type="button" data-view="privacy" aria-selected="false">Privacy check</button>
+        <button type="button" data-view="staging" aria-selected="false">Virtual staging <em class="new">Soon</em></button>
       </div>
       <div class="stage-wrap">
         <div class="stage reveal" id="stage">
@@ -126,13 +125,6 @@
               <span class="c-tag l">Original</span><span class="c-tag r">Finished</span>
             </div>
           </div>
-          <div class="view" data-view="dusk">
-            <div class="compare" id="duskCompare" aria-label="Drag to compare the daytime photo and the simulated dusk">
-              <canvas id="duskAfter"></canvas>
-              <div class="c-before"><img id="duskBefore" src="" alt="Daytime photo"></div>
-              <span class="c-tag l">Day</span><span class="c-tag r">Twilight</span>
-            </div>
-          </div>
           <div class="view" data-view="plan">
             <div class="plandemo" id="planDemo"></div>
           </div>
@@ -146,7 +138,7 @@
       </div>
       <div class="tour-roombar" id="tourRoomsHome" role="group" aria-label="Jump to a room"></div>
       <p class="note" id="work-note"></p>
-      <div class="btn-row"><a class="btn btn-gold" href="#quote">Book a free sample</a><a class="btn btn-ghost" id="openListing" href="listing.html">Open the example listing page</a></div>
+      <div class="btn-row"><a class="btn btn-gold" href="#quote">Get a quote</a></div>
     </div>
   </section>
 
@@ -155,16 +147,16 @@
     <div class="wrap">
       <div class="split">
         <div class="intro">
-          <span class="eyebrow">Live now · Virtual staging</span>
+          <span class="eyebrow">Coming soon · Virtual staging</span>
           <h2>Furnished in 3D, not on a flat photo.</h2>
-          <p class="lede mt1">Most staging paints furniture onto one photo. We place real 3D furniture inside the walkthrough, so buyers can walk around the sofa, see the bed from the door, and flick back to the room as it is. Renovation, with new floors, benchtops and layouts, comes next.</p>
+          <p class="lede mt1">Most staging paints furniture onto one photo. We are building staging that places real 3D furniture inside the walkthrough, so buyers can walk around the sofa, see the bed from the door, and flick back to the room as it is. Renovation, with new floors, benchtops and layouts, comes after that.</p>
           <ul class="ticks">
             <li><b>Real furniture, free of copyright</b>Every piece is a public-domain (CC0) 3D model at its true size, so a sofa that fits on screen fits in the room.</li>
             <li><b>Drag, turn, swap</b>Slide a piece across the floor, turn it to face the view, or swap it for another style in a tap.</li>
             <li><b>Buyers flick between the two</b>"As it is" and "Staged" sit side by side in the same tour.</li>
             <li><b>Always labelled</b>Every staged view is marked as a concept, and the real room is one tap away.</li>
           </ul>
-          <div class="btn-row"><a class="btn btn-gold" href="#work" data-show-view="staging">Try it on a sample home</a><a class="btn btn-ghost" href="#quote" data-tick="Virtual renovation">Renovation early access</a></div>
+          <div class="btn-row"><a class="btn btn-gold" href="#quote" data-tick="Virtual staging">Staging early access</a><a class="btn btn-ghost" href="#quote" data-tick="Virtual renovation">Renovation early access</a></div>
         </div>
         <div class="reno reveal-left" aria-label="Preview of the virtual renovation editor">
           <div class="reno-stage">
@@ -177,7 +169,7 @@
           <div class="reno-panel">
             <h5>Coming next · Renovation</h5>
             <ul class="reno-list">
-              <li><b>Three-seat sofa</b><small>2.2 m · licensed model</small><span>Swap</span></li>
+              <li><b>Three-seat sofa</b><small>2.2 m · CC0 model</small><span>Swap</span></li>
               <li><b>Oak floorboards</b><small>In place of the tiles</small><span>Apply</span></li>
               <li><b>Stone benchtop</b><small>Kitchen island</small><span>Apply</span></li>
               <li><b>Clutter</b><small>Remove from the scan</small><span>Remove</span></li>
@@ -193,12 +185,11 @@
   <section id="launch">
     <div class="wrap">
       <div class="sec-head">
-        <span class="eyebrow">Launch pack</span>
+        <span class="eyebrow">Coming soon · Launch pack</span>
         <h2>Everything you need for launch day</h2>
-        <p class="lede">Posts, a story, a printable brochure, a QR code for the signboard, a short video and listing copy, all from the same visit. These were made just now in your browser for <b id="launchHome">the villa</b>.</p>
+        <p class="lede">Posts, a story, a printable brochure, a QR code for the signboard, a short video and listing copy, all from the same visit. We are still building this.</p>
       </div>
       <div class="mk-grid" id="launchGrid"></div>
-      <p class="note">Examples on a sample home. Yours go out under your agency's name, logo and colours.</p>
     </div>
   </section>
 
@@ -207,8 +198,8 @@
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">Services</span>
-        <h2>Everything for a listing, from one visit</h2>
-        <p class="lede">Take the full set or just what you need.</p>
+        <h2>What we do now, and what is coming</h2>
+        <p class="lede">Take the full set of what is available now, or just what you need.</p>
       </div>
       <div class="svc-grid">
         <div class="svc reveal">
@@ -217,14 +208,14 @@
             <li><a href="#work" data-show-view="tour"><b>3D walkthrough</b><small>Buyers walk every room on their phone</small><i>See it</i></a></li>
             <li><a href="#work" data-show-view="plan"><b>Floor plan</b><small>Clickable, with room sizes</small><i>See it</i></a></li>
             <li><a href="#work" data-show-view="photo"><b>Photo finishing</b><small>Light and colour only, labelled</small><i>See it</i></a></li>
-            <li><a href="#work" data-show-view="dusk"><b>Day to dusk</b><small>Twilight hero shot, marked as simulated</small><i>See it</i></a></li>
+            <li><span><b>Day to dusk</b><small>Twilight hero shot, marked as simulated</small><i class="req">Coming soon</i></span></li>
             <li><a href="#work" data-show-view="privacy"><b>Privacy check</b><small>Photos, faces and plates blurred</small><i>See it</i></a></li>
           </ul>
         </div>
         <div class="svc reveal d1">
           <h3><span>02</span>Show what it could be</h3>
           <ul>
-            <li><a href="#work" data-show-view="staging"><b>Virtual staging</b><small>Real CC0 furniture placed in the 3D tour</small><i>See it</i></a></li>
+            <li><a href="#renovate"><b>Virtual staging</b><small>Real CC0 furniture placed in the 3D tour</small><i class="req">Coming soon</i></a></li>
             <li><a href="#renovate"><b>Virtual renovation</b><small>New layout, floors and finishes in 3D</small><i class="req">Coming soon</i></a></li>
             <li><a href="#renovate"><b>Declutter</b><small>Remove clutter from the tour, labelled</small><i class="req">Coming soon</i></a></li>
           </ul>
@@ -232,10 +223,10 @@
         <div class="svc reveal d2">
           <h3><span>03</span>Market it</h3>
           <ul>
-            <li><a href="listing.html"><b>Listing page</b><small>Your brand, with the tour built in</small><i>See it</i></a></li>
-            <li><a href="#launch"><b>Launch pack</b><small>Posts, story, video, brochure, QR, copy</small><i>See it</i></a></li>
-            <li><a href="listing.html#book"><b>Viewing bookings</b><small>Buyers book a time online</small><i>See it</i></a></li>
-            <li><span><b>Vendor report</b><small>Tour views and enquiries per listing</small><i class="req">On request</i></span></li>
+            <li><span><b>Listing page</b><small>Your brand, with the tour built in</small><i class="req">Coming soon</i></span></li>
+            <li><a href="#launch"><b>Launch pack</b><small>Posts, story, video, brochure, QR, copy</small><i class="req">Coming soon</i></a></li>
+            <li><span><b>Viewing bookings</b><small>Buyers book a time online</small><i class="req">Coming soon</i></span></li>
+            <li><span><b>Vendor report</b><small>Tour views and enquiries per listing</small><i class="req">Coming soon</i></span></li>
           </ul>
         </div>
       </div>
@@ -243,7 +234,7 @@
         <div>
           <span class="pi">Also for short-stay hosts</span>
           <h3 class="mt1">Airbnb, Bookme and holiday homes</h3>
-          <p>Guests book faster when they can walk through first. Put a 3D tour and a clickable floor plan in your listing, so they know the bed sizes, the stairs and the view before they arrive.</p>
+          <p>Let guests walk through before they book. Put a 3D tour and a clickable floor plan in your listing, so they know the bed sizes, the stairs and the view before they arrive.</p>
         </div>
         <a class="btn btn-pill" href="#quote" data-tick="Short-stay host">Ask about hosting</a>
       </div>
@@ -255,17 +246,20 @@
     <div class="wrap">
       <div class="sec-head">
         <span class="eyebrow">Why VYRA</span>
-        <h2>Photos get them looking. VYRA gets them booking.</h2>
+        <h2>A 3D tour, and everything around it</h2>
       </div>
       <div class="why reveal">
-        <div class="why-row why-head"><span></span><span>Typical photo package</span><span class="why-us">VYRA</span></div>
-        <div class="why-row"><span>Professional photos and floor plan</span><span class="y">Yes</span><span class="why-us y">Yes</span></div>
-        <div class="why-row"><span>3D walkthrough</span><span class="s">Sometimes</span><span class="why-us y">Yes</span></div>
-        <div class="why-row"><span>Every AI edit labelled, original one tap away</span><span class="n">Rarely</span><span class="why-us y">Yes</span></div>
-        <div class="why-row"><span>A listing page with the tour built in</span><span class="n">No</span><span class="why-us y">Yes</span></div>
-        <div class="why-row"><span>Launch pack: posts, story, video, brochure, QR</span><span class="s">Extra cost</span><span class="why-us y">Yes</span></div>
-        <div class="why-row"><span>Virtual staging inside the 3D tour</span><span class="n">No</span><span class="why-us y">Yes</span></div>
-        <div class="why-row"><span>Renovation ideas inside the 3D tour</span><span class="n">No</span><span class="why-us s">Coming soon</span></div>
+        <div class="why-row why-head"><span>What we offer</span><span class="why-us">VYRA</span></div>
+        <div class="why-row"><span>Finished photos and floor plan</span><span class="why-us y">Yes</span></div>
+        <div class="why-row"><span>3D walkthrough</span><span class="why-us y">Yes</span></div>
+        <div class="why-row"><span>Privacy check: personal items blurred</span><span class="why-us y">Yes</span></div>
+        <div class="why-row"><span>Day to dusk twilight photo</span><span class="why-us s">Coming soon</span></div>
+        <div class="why-row"><span>Viewing bookings online</span><span class="why-us s">Coming soon</span></div>
+        <div class="why-row"><span>Every AI edit labelled, original one tap away</span><span class="why-us y">Yes</span></div>
+        <div class="why-row"><span>A listing page with the tour built in</span><span class="why-us s">Coming soon</span></div>
+        <div class="why-row"><span>Launch pack: posts, story, video, brochure, QR</span><span class="why-us s">Coming soon</span></div>
+        <div class="why-row"><span>Virtual staging inside the 3D tour</span><span class="why-us s">Coming soon</span></div>
+        <div class="why-row"><span>Renovation ideas inside the 3D tour</span><span class="why-us s">Coming soon</span></div>
       </div>
     </div>
   </section>
@@ -278,9 +272,9 @@
         <h2>Three steps, and you are out of it</h2>
       </div>
       <div class="grid3">
-        <div class="card reveal"><div class="imgbox"><img class="stepimg" src="assets/img/homes/ranch/plan-t.jpg" alt="Top-down view of a 3D scan" loading="lazy"></div><div class="step-n">1</div><h3>We visit the home</h3><p>One visit for the 3D scan and the photos. Nothing for you to set up or buy.</p></div>
-        <div class="card reveal d1"><div class="imgbox"><img class="stepimg" src="assets/img/homes/villa/kitchen-t.jpg" alt="Kitchen rendered from a 3D scan" loading="lazy"></div><div class="step-n">2</div><h3>We finish it</h3><p>The tour, photos, twilight shot, floor plan and launch pack, with every edit labelled.</p></div>
-        <div class="card reveal d2"><div class="imgbox"><img class="stepimg" src="assets/img/homes/townhouse/living-t.jpg" alt="Living room rendered from a 3D scan" loading="lazy"></div><div class="step-n">3</div><h3>It goes live</h3><p>Your listing page goes live with the tour built in, ready to share anywhere.</p></div>
+        <div class="card reveal"><div class="imgbox"><img class="stepimg" src="assets/img/homes/apartment/plan-t.jpg" alt="Top-down view of a 3D scan" loading="lazy"></div><div class="step-n">1</div><h3>We visit the home</h3><p>One visit for the 3D scan and the photos. Nothing for you to set up or buy.</p></div>
+        <div class="card reveal d1"><div class="imgbox"><img class="stepimg" src="assets/img/homes/villa/kitchen-t.jpg" alt="Kitchen rendered from a 3D scan" loading="lazy"></div><div class="step-n">2</div><h3>We finish it</h3><p>The tour, photos and floor plan, with every edit labelled and personal items blurred.</p></div>
+        <div class="card reveal d2"><div class="imgbox"><img class="stepimg" src="assets/img/homes/penthouse/living-t.jpg" alt="Living room rendered from a 3D scan" loading="lazy"></div><div class="step-n">3</div><h3>It goes live</h3><p>You get a link to the tour, plus the photos and floor plan, ready to share anywhere.</p></div>
       </div>
     </div>
   </section>
@@ -288,14 +282,14 @@
   <!-- FAQ -->
   <section id="faq">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Questions we get asked</h2></div>
-      <details class="faq reveal"><summary>What is virtual renovation, and how is it different from staging?</summary><p>Staging adds furniture to an empty room. Virtual renovation goes further: it can move or remove what is there, change floors, benchtops and wall colours, and show a new layout, all inside the 3D tour. The furniture comes from licensed 3D catalogues at true size. Staging, with real 3D furniture placed inside the tour, is live now; try it in the Our work section. Renovation is in development, and you can ask for early access.</p></details>
-      <details class="faq reveal"><summary>Is it honest to show a renovated home?</summary><p>Only if it is clearly labelled, and ours always is. New Zealand's Fair Trading Act does not allow advertising that gives a misleading impression, so every renovated or staged view is marked as a concept and the real room is always one tap away. Photo finishing only corrects light and colour, and twilight shots are marked as simulated.</p></details>
+      <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Common questions</h2></div>
+      <details class="faq reveal"><summary>What is virtual renovation, and how is it different from staging?</summary><p>Staging adds furniture to an empty room. Virtual renovation goes further: it can move or remove what is there, change floors, benchtops and wall colours, and show a new layout, all inside the 3D tour. The furniture comes from public-domain (CC0) 3D models at true size. Both staging and renovation are in development, and you can ask for early access.</p></details>
+      <details class="faq reveal"><summary>Is it honest to show a renovated home?</summary><p>Only if it is clearly labelled, and ours always is. New Zealand's Fair Trading Act does not allow advertising that gives a misleading impression, so every renovated or staged view is marked as a concept and the real room is always one tap away. Photo finishing only corrects light and colour.</p></details>
       <details class="faq reveal"><summary>Where does the furniture come from?</summary><p>Every piece in our staging catalogue is a public-domain (CC0) 3D model from Poly Haven, so there is no copyright to clear and nothing to credit. Models are shown at their real size.</p></details>
       <details class="faq reveal"><summary>Do we have to take the photos or do the scan ourselves?</summary><p>No. We visit once and capture everything: the 3D scan and the photos. You just tell us when the home is ready.</p></details>
-      <details class="faq reveal"><summary>Does the 3D tour work on phones, Trade Me and Airbnb?</summary><p>The tour runs in any web browser with nothing to install. You get a link to share on Trade Me, realestate.co.nz, social posts or in your Airbnb messages, plus photos and a floor plan ready to upload.</p></details>
-      <details class="faq reveal"><summary>What does it cost?</summary><p>We quote a fixed price per property after a short chat, so you know the full cost before anything starts. Your first sample is free.</p></details>
-      <details class="faq reveal"><summary>Are the homes on this page real listings?</summary><p>No. They are published 3D scans licensed for reuse (credited at the bottom of the page), used to show our work. For your property we scan the real thing.</p></details>
+      <details class="faq reveal"><summary>Does the 3D tour work on phones and in listings?</summary><p>The tour runs in any web browser with nothing to install. You get a link to share in your listing text, social posts or Airbnb messages, plus photos and a floor plan ready to upload. Whether a portal can show the tour on its own page depends on that portal.</p></details>
+      <details class="faq reveal"><summary>What does it cost?</summary><p>It depends on the size of the home and what you need. Tell us about the property and we will give you a quote before anything starts.</p></details>
+      <details class="faq reveal"><summary>Are the homes on this page real listings?</summary><p>No. They are published 3D scans licensed for reuse, captured by other creators and credited at the bottom of the page. VYRA is new, so they show what the service looks like until our first New Zealand homes are done. For your property we scan the real home, and the level of detail can differ from these samples.</p></details>
     </div>
   </section>
 
@@ -305,7 +299,7 @@
       <div class="quote reveal">
         <span class="eyebrow">Book a free chat</span>
         <h2>Send us your next property.</h2>
-        <p class="lede mt1">Tick what you are interested in, add your details, and we will be in touch to find a time. No lock-in, and your first sample is free.</p>
+        <p class="lede mt1">Tick what you are interested in, add your details, and we will be in touch to find a time. No lock-in, and you get a quote before anything starts.</p>
         <form class="mz" id="quoteForm" novalidate>
           <fieldset class="tickset">
             <legend>What are you interested in? <span>Tick as many as you like.</span></legend>
@@ -335,24 +329,23 @@
 <footer class="site">
   <div class="wrap">
     <div class="fgrid">
-      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> VYRA</a><p class="mt1">3D tours, honest AI finishing and virtual renovation for New Zealand property.</p></div>
-      <div><h4>Our work</h4><ul><li><a href="#work">Examples</a></li><li><a href="#renovate">Virtual renovation</a></li><li><a href="#launch">Launch pack</a></li><li><a href="listing.html">Example listing page</a></li></ul></div>
-      <div><h4>Sample homes</h4><ul id="footHomes"></ul></div>
+      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> VYRA</a><p class="mt1">3D tours, floor plans and honest photo finishing for New Zealand property.</p></div>
+      <div><h4>Examples</h4><ul><li><a href="#work">Sample tours</a></li><li><a href="#services">Coming soon</a></li></ul></div>
       <div><h4>VYRA</h4><ul><li><a href="#services">Services</a></li><li><a href="#why">Why VYRA</a></li><li><a href="#faq">FAQ</a></li><li><a href="#quote">Book a free chat</a></li></ul></div>
     </div>
     <details class="credits" id="credits"><summary>Scan and image credits</summary><ul id="creditList"></ul></details>
     <p class="fbig" aria-hidden="true">VYRA<span>.</span></p>
-    <div class="fbottom"><span>© 2026 VYRA</span><span>Sample homes are licensed scans, shown for illustration only.</span></div>
+    <div class="fbottom"><span>© 2026 VYRA</span><span>Sample homes are licensed scans by other creators, shown for illustration only.</span></div>
   </div>
 </footer>
 
-<div class="stickybar"><a class="btn btn-ghost" href="#work">See our work</a><a class="btn btn-gold" href="#quote">Book a chat</a></div>
+<div class="stickybar"><a class="btn btn-ghost" href="#work">See examples</a><a class="btn btn-gold" href="#quote">Book a chat</a></div>
 
-<script src="assets/js/site.js?v=20261103"></script>
-<script src="assets/js/data.js?v=20261103"></script>
-<script src="assets/js/photo-tools.js?v=20261103"></script>
-<script src="assets/js/floorplan.js?v=20261103"></script>
-<script src="assets/js/marketing.js?v=20261103"></script>
-<script src="assets/js/home.js?v=20261103"></script>
+<script src="assets/js/site.js?v=20261110"></script>
+<script src="assets/js/data.js?v=20261110"></script>
+<script src="assets/js/photo-tools.js?v=20261110"></script>
+<script src="assets/js/floorplan.js?v=20261110"></script>
+<script src="assets/js/marketing.js?v=20261110"></script>
+<script src="assets/js/home.js?v=20261110"></script>
 </body>
 </html>

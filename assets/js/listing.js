@@ -1,6 +1,6 @@
 /* Listing page: gallery + lightbox (with edit transparency), 3D tour with
    room jumps and a live mini-map, interactive floor plan + tape measure,
-   viewing scheduler, share, enquiries and on-device analytics. */
+   share, enquiries and on-device analytics. */
 (function () {
   'use strict';
   const MZ = window.MZ;
@@ -351,148 +351,6 @@
     renderRoomPanel(first);
   }
 
-  // ---------- viewing scheduler (feature 17) ----------
-  const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  let selDay = null, selSlot = null, weekOffset = 0;
-
-  function slotsFor(date) {
-    const v = L.viewings || D.current.viewings;
-    const dow = date.getDay();
-    const out = [];
-    v.openHomes.filter((o) => o.dow === dow).forEach((o) => out.push({ kind: 'Open home', start: o.start, end: o.end, note: 'Come any time in this window' }));
-    const weekend = dow === 0 || dow === 6;
-    (weekend ? v.privateTimes.weekend : v.privateTimes.weekday).forEach((t) => {
-      const [h, m] = t.split(':').map(Number);
-      const end = new Date(2000, 0, 1, h, m + 30);
-      out.push({ kind: 'Private viewing', start: t, end: `${String(end.getHours()).padStart(2, '0')}:${String(end.getMinutes()).padStart(2, '0')}`, note: '30 minutes with the agent' });
-    });
-    return out.sort((a, b) => a.start.localeCompare(b.start));
-  }
-  const fmtTime = (t) => { const [h, m] = t.split(':').map(Number); return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'am' : 'pm'}`; };
-  const fmtDate = (d) => `${DOW[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
-  // Local calendar date as YYYY-MM-DD (toISOString would shift it to UTC).
-  const dayKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-
-  function renderCal() {
-    const v = L.viewings || D.current.viewings;
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    const first = new Date(today); first.setDate(today.getDate() + 1);
-    const last = new Date(today); last.setDate(today.getDate() + v.days);
-    // three weeks starting Monday of the current week (+ offset)
-    const start = new Date(today);
-    start.setDate(today.getDate() - ((today.getDay() + 6) % 7) + weekOffset * 21);
-    let html = `<div class="cal-head"><button type="button" id="calPrev" aria-label="Earlier dates" ${weekOffset === 0 ? 'disabled' : ''}>‹</button><b>${MONTHS[start.getMonth()]} ${start.getFullYear()}</b><button type="button" id="calNext" aria-label="Later dates" ${weekOffset >= 1 ? 'disabled' : ''}>›</button></div><div class="cal-grid">`;
-    html += ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => `<span class="dow">${d}</span>`).join('');
-    for (let i = 0; i < 21; i++) {
-      const d = new Date(start); d.setDate(start.getDate() + i);
-      const inRange = d >= first && d <= last;
-      const slots = inRange ? slotsFor(d) : [];
-      const hasOpen = slots.some((s) => s.kind === 'Open home');
-      const key = dayKey(d);
-      const sel = selDay && dayKey(selDay) === key;
-      html += `<button type="button" class="${slots.length ? 'av' : ''} ${hasOpen ? 'oh' : ''}" ${slots.length ? '' : 'disabled'} data-day="${key}" aria-pressed="${sel}" aria-label="${fmtDate(d)}${slots.length ? `, ${slots.length} times available` : ', not available'}">${d.getDate()}</button>`;
-    }
-    html += `</div><div class="cal-legend"><span><i></i>Open home</span><span>Other days: private viewings</span></div>`;
-    $('#cal').innerHTML = html;
-    $('#calPrev').addEventListener('click', () => { weekOffset = Math.max(0, weekOffset - 1); renderCal(); });
-    $('#calNext').addEventListener('click', () => { weekOffset = Math.min(1, weekOffset + 1); renderCal(); });
-    $$('#cal [data-day]').forEach((b) => b.addEventListener('click', () => {
-      const [y, m, dd] = b.dataset.day.split('-').map(Number);
-      selDay = new Date(y, m - 1, dd);
-      selSlot = null;
-      renderCal(); renderSlots();
-    }));
-  }
-
-  function renderSlots() {
-    const pane = $('#slotPane');
-    if (!selDay) {
-      pane.innerHTML = `<h3 style="font-weight:500">Choose a day</h3><p class="dim mt1">Days with a gold dot have an open home. Every other highlighted day has private viewings with the agent.</p>`;
-      return;
-    }
-    const slots = slotsFor(selDay);
-    pane.innerHTML = `<h3 style="font-weight:500">${fmtDate(selDay)}</h3><p class="muted small">Times are New Zealand time.</p><div class="slots mt1">${slots.map((s, i) => `
-      <button type="button" data-slot="${i}" aria-pressed="${selSlot === i}"><span><b>${s.kind}</b><small>${s.note}</small></span><b>${fmtTime(s.start)}</b></button>`).join('')}</div>
-      <form class="mz" id="bookForm" novalidate ${selSlot == null ? 'hidden' : ''} style="margin-top:1.2rem">
-        <div class="f2">
-          <div class="field"><label for="bName">Name</label><input class="in" id="bName" autocomplete="name" required maxlength="100"><span class="field-error" hidden>Please add your name.</span></div>
-          <div class="field"><label for="bEmail">Email</label><input class="in" id="bEmail" type="email" autocomplete="email" required maxlength="120"><span class="field-error" hidden>We need an email to send the details.</span></div>
-        </div>
-        <div class="field"><label for="bPhone">Phone (optional)</label><input class="in" id="bPhone" type="tel" autocomplete="tel" maxlength="40"></div>
-        <label class="check"><input type="checkbox" id="bUpdates" checked> Email me if this time changes</label>
-        <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div><button class="btn btn-gold" type="submit" id="bSubmit">Confirm booking</button></div>
-        <p class="formnote">We only use your details for this viewing.</p>
-        <div class="formmsg" id="bMsg" role="status" aria-live="polite" hidden></div>
-      </form>`;
-    $$('[data-slot]', pane).forEach((b) => b.addEventListener('click', () => {
-      selSlot = Number(b.dataset.slot);
-      $$('[data-slot]', pane).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      $('#bookForm').hidden = false;
-      $('#bName').focus({ preventScroll: true });
-    }));
-    $('#bookForm').addEventListener('submit', submitBooking);
-  }
-
-  function icsFor(slot, day, who) {
-    const [h, m] = slot.start.split(':').map(Number);
-    const [eh, em] = slot.end.split(':').map(Number);
-    const pad = (n) => String(n).padStart(2, '0');
-    const stamp = (d, hh, mm) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hh)}${pad(mm)}00`;
-    const now = new Date();
-    const uid = 'mz-' + now.getTime() + '@vyra-example';
-    return [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//VYRA//Example//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-      'BEGIN:VEVENT', 'UID:' + uid,
-      'DTSTAMP:' + now.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z',
-      'DTSTART;TZID=Pacific/Auckland:' + stamp(day, h, m),
-      'DTEND;TZID=Pacific/Auckland:' + stamp(day, eh, em),
-      'SUMMARY:' + slot.kind + ': ' + L.title + ' (sample listing)',
-      'DESCRIPTION:Example booking by ' + who + ' on a VYRA example listing page. Nothing was sent to an agent.',
-      'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', 'DESCRIPTION:Viewing tomorrow', 'END:VALARM',
-      'BEGIN:VALARM', 'TRIGGER:-PT1H', 'ACTION:DISPLAY', 'DESCRIPTION:Viewing in one hour', 'END:VALARM',
-      'END:VEVENT', 'END:VCALENDAR'
-    ].join('\r\n');
-  }
-
-  async function submitBooking(e) {
-    e.preventDefault();
-    const name = $('#bName'), email = $('#bEmail');
-    const nm = name.value.trim(), em = email.value.trim();
-    const errName = !nm, errEmail = !MZ.EMAIL_RE.test(em);
-    name.setAttribute('aria-invalid', String(errName)); name.parentElement.querySelector('.field-error').hidden = !errName;
-    email.setAttribute('aria-invalid', String(errEmail)); email.parentElement.querySelector('.field-error').hidden = !errEmail;
-    if (errName) { name.focus(); return; }
-    if (errEmail) { email.focus(); return; }
-    const slot = slotsFor(selDay)[selSlot];
-    const when = `${fmtDate(selDay)}, ${fmtTime(slot.start)}–${fmtTime(slot.end)}`;
-    // Example page: nothing is sent. On a live listing this goes to the agent
-    // and the buyer gets a confirmation email.
-    if (document.querySelector('#bookForm [name=_honey]').value) return;
-    const bookings = MZ.store.get('mz-bookings', []);
-    bookings.unshift({ id: Date.now(), listing: LID, title: L.title, kind: slot.kind, when, name: nm, sent: false });
-    MZ.store.set('mz-bookings', bookings.slice(0, 50));
-    track('booking', { kind: slot.kind, when });
-    const ics = icsFor(slot, selDay, nm);
-    const gStart = new Date(selDay); const [h, m] = slot.start.split(':').map(Number); gStart.setHours(h, m);
-    const gEnd = new Date(gStart.getTime() + (slot.kind === 'Open home' ? 45 : 30) * 60000);
-    const gfmt = (d) => d.toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
-    const gcal = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(slot.kind + ': ' + L.title)}&dates=${gfmt(gStart)}/${gfmt(gEnd)}&details=${encodeURIComponent('Example booking on a VYRA example listing page.')}`;
-    $('#slotPane').innerHTML = `<div class="booked">
-      <div class="tickmark">✓</div>
-      <h3 style="font-weight:500">This is how booking works</h3>
-      <p class="dim mt1">${esc(slot.kind)} · ${esc(when)}</p>
-      <p class="muted small mt1">This is an example page, so nothing was sent. On a live listing the agent gets the booking straight away and ${esc(em)} gets a confirmation email.</p>
-      <div class="btn-row" style="justify-content:center"><button class="btn btn-gold btn-sm" type="button" id="icsBtn">Add to calendar (.ics)</button><a class="btn btn-ghost btn-sm" href="${gcal}" target="_blank" rel="noopener">Google Calendar</a></div>
-      <p class="muted small mt1">Reminders are set for the day before and one hour before.</p>
-      <button class="btn btn-ghost btn-xs mt2" type="button" id="bookAnother">Book another time</button>
-      <div class="formmsg" id="bMsg2" hidden></div>
-    </div>`;
-    $('#icsBtn').addEventListener('click', () => MZ.download(new Blob([ics], { type: 'text/calendar' }), 'viewing.ics'));
-    $('#bookAnother').addEventListener('click', () => { selSlot = null; renderSlots(); });
-  }
-
   // ---------- ask a question ----------
   function openAsk() {
     const m = MZ.openModal(`
@@ -546,7 +404,7 @@
         if (en.isIntersecting) links.forEach((a) => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id));
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    ['tour', 'plan', 'details', 'book'].forEach((id) => { const s = document.getElementById(id); if (s && !s.hidden) io.observe(s); });
+    ['tour', 'plan', 'details'].forEach((id) => { const s = document.getElementById(id); if (s && !s.hidden) io.observe(s); });
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -559,7 +417,6 @@
       const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1200));
       idle(prepareEnhanced);
     }
-    renderCal(); renderSlots();
     initShare(); initSubnav();
     $('#btnAsk').addEventListener('click', openAsk);
     $('#btnAsk2').addEventListener('click', openAsk);

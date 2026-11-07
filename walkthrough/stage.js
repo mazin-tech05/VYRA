@@ -1,7 +1,7 @@
 // VYRA virtual staging: places CC0 furniture (glb) into the 3D scan.
 // Loaded only with ?stage. The page that embeds the tour drives it through
 // window.vyraStage (same origin), and hears back through 'vyra-stage' messages.
-import { Entity, Vec2, Vec3, Color, BoundingBox, StandardMaterial, Texture, BLEND_NORMAL } from './index.js?v=6';
+import { Entity, Vec2, Vec3, Color, BoundingBox, StandardMaterial, Texture, BLEND_NORMAL } from './index.js?v=8';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const items = [];          // { id, name, root, model, floorY, aabbLocal }

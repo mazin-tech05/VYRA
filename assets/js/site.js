@@ -68,17 +68,16 @@
       { t: '3D walkthrough', href: 'index.html?view=tour#work', view: 'tour' },
       { t: 'Floor plans', href: 'index.html?view=plan#work', view: 'plan' },
       { t: 'Photo finishing', href: 'index.html?view=photo#work', view: 'photo' },
-      { t: 'Day to dusk', href: 'index.html?view=dusk#work', view: 'dusk' },
       { t: 'Privacy check', href: 'index.html?view=privacy#work', view: 'privacy' }
     ] },
     { t: 'Show what it could be', items: [
-      { t: 'Virtual staging', href: 'index.html?view=staging#work', view: 'staging' },
+      { t: 'Virtual staging', href: 'index.html#renovate' },
       { t: 'Virtual renovation', href: 'index.html#renovate' }
     ] },
     { t: 'Market it', items: [
       { t: 'Launch pack', href: 'index.html#launch' },
-      { t: 'Listing page', href: 'listing.html' },
-      { t: 'Viewing bookings', href: 'listing.html#book' }
+      { t: 'Listing page', href: 'index.html#services' },
+      { t: 'Viewing bookings', href: 'index.html#services' }
     ] }
   ];
   function initMenus() {
@@ -93,17 +92,15 @@
   // ---------- full-screen menu ----------
   // Same menu on every page, built here so the pages only carry the button.
   const MENU_LINKS = [
-    ['index.html#work', 'Our work'],
+    ['index.html#work', 'Examples'],
     ['index.html#renovate', 'Virtual staging'],
     ['index.html#services', 'Services'],
     ['index.html#why', 'Why VYRA'],
-    ['listing.html', 'Example listing page'],
-    ['index.html#quote', 'Book a free sample']
+    ['index.html#quote', 'Get a quote']
   ];
   function initMenu() {
     const btn = MZ.$('#menuBtn');
     if (!btn) return;
-    const homes = (MZ.data && MZ.data.homes) || [];
     const feats = MZ.featureGroups.flatMap((g) => g.items);
     const menu = document.createElement('div');
     menu.className = 'fsm';
@@ -114,10 +111,9 @@
     menu.innerHTML = `<div class="fsm-in">
       <ul class="fsm-links">${MENU_LINKS.map(([href, t], i) =>
         `<li><a href="${href}" style="--i:${i}"><small>${String(i + 1).padStart(2, '0')}</small>${MZ.esc(t)}</a></li>`).join('')}</ul>
-      <div class="fsm-media"><img src="assets/img/homes/villa/exterior.jpg" alt="" loading="lazy"><span class="badge">Sample home</span></div>
+      <div class="fsm-media"><img src="assets/img/homes/villa/living.jpg" alt="" loading="lazy"><span class="badge">Sample home</span></div>
       <div class="fsm-foot">
         <div><h6>Services</h6><ul>${feats.map((f) => `<li><a href="${f.href}"${f.view ? ` data-show-view="${f.view}"` : ''}>${MZ.esc(f.t)}</a></li>`).join('')}</ul></div>
-        ${homes.length ? `<div><h6>Sample homes</h6><ul>${homes.map((h) => `<li><a href="listing.html?home=${h.id}">${MZ.esc(h.short)}</a></li>`).join('')}</ul></div>` : ''}
       </div>
     </div>`;
     document.body.appendChild(menu);
@@ -504,7 +500,7 @@
     load() { return MZ.store.get(AKEY, { listings: {} }); },
     save(d) { MZ.store.set(AKEY, d); },
     listing(d, id) {
-      d.listings[id] = d.listings[id] || { views: 0, tourOpens: 0, tourSeconds: 0, rooms: {}, photos: {}, planClicks: {}, enquiries: 0, bookings: 0, shares: 0, compares: 0, firstSeen: Date.now(), events: [] };
+      d.listings[id] = d.listings[id] || { views: 0, tourOpens: 0, tourSeconds: 0, rooms: {}, photos: {}, planClicks: {}, enquiries: 0, shares: 0, compares: 0, firstSeen: Date.now(), events: [] };
       return d.listings[id];
     },
     track(id, type, detail) {
@@ -518,7 +514,6 @@
         case 'photo': L.photos[detail.photo] = (L.photos[detail.photo] || 0) + 1; break;
         case 'plan-click': L.planClicks[detail.room] = (L.planClicks[detail.room] || 0) + 1; break;
         case 'enquiry': L.enquiries++; break;
-        case 'booking': L.bookings++; break;
         case 'share': L.shares++; break;
         case 'compare': L.compares++; break;
       }

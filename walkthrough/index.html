@@ -78,6 +78,24 @@
                 debug: url.searchParams.has('debug') || roomNav,
             };
 
+            // VYRA: the walkable area of this home, from the floor plan.
+            if (settingsUrl) {
+                fetch(settingsUrl.replace(/settings\.json$/, 'walk.json')).then((r) => r.ok ? r.json() : null).then((area) => {
+                    if (!area) return;
+                    const near = (x, z, p, m) => {
+                        let inside = false, best = Infinity;
+                        for (let i = 0, j = p.length - 1; i < p.length; j = i++) {
+                            const [ax, az] = p[i], [bx, bz] = p[j];
+                            if ((az > z) !== (bz > z) && x < (bx - ax) * (z - az) / (bz - az) + ax) inside = !inside;
+                            const dx = bx - ax, dz = bz - az, t = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz)));
+                            best = Math.min(best, Math.hypot(x - ax - t * dx, z - az - t * dz));
+                        }
+                        return inside || best <= m;
+                    };
+                    window.vyraInWalkArea = (x, z) => area.polys.some((p) => near(x, z, p, area.margin));
+                }).catch(() => {});
+            }
+
             window.sse = {
                 config: sseConfig,
                 settings: fetch(settingsUrl).then(response => response.json())
@@ -596,7 +614,7 @@
 
         <!-- Application Script -->
         <script type="module">
-            import { main } from './index.js?v=6';
+            import { main } from './index.js?v=8';
 
             const { config, settings } = window.sse;
             const { poster } = config;
@@ -618,7 +636,7 @@
                 const viewer = await main(canvas, settingsJson, config);
                 // VYRA: the stager (stage.js) and the room buttons reach the viewer through this
                 window.vyraViewer = viewer;
-                if (new URL(location.href).searchParams.has('stage')) import('./stage.js?v=12');
+                if (new URL(location.href).searchParams.has('stage')) import('./stage.js?v=14');
             });
         </script>
     </body>

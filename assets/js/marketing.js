@@ -112,7 +112,7 @@
     let x = 64;
     M.facts(L).forEach((f) => { x += pill(ctx, f, x, 920, { size: 26, stroke: 'rgba(255,255,255,.3)', fill: 'rgba(0,0,0,.4)' }) + 12; });
     ctx.font = `600 30px ${FONT}`; ctx.fillStyle = GOLD; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(MZ.data.isSample(L.id) ? 'Walk through it in 3D →' : 'Book a viewing →', 64, 1040);
+    ctx.fillText(MZ.data.isSample(L.id) ? 'Walk through it in 3D →' : 'See the listing →', 64, 1040);
     if (L.sample) { ctx.font = `400 20px ${FONT}`; ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.textAlign = 'right'; ctx.fillText('Sample listing · demo', 1016, 1040); ctx.textAlign = 'left'; }
     return c;
   };
@@ -203,7 +203,7 @@
       { k: 'JUST LISTED', t: L.title },
       { k: 'THE HOME', t: facts.slice(0, 2).join(' · ') || L.suburb },
       { k: 'THE SPACE', t: facts.slice(2).join(' · ') || 'Room to grow' },
-      { k: MZ.data.isSample(L.id) ? 'WALK THROUGH IT' : 'SEE IT FOR YOURSELF', t: MZ.data.isSample(L.id) ? 'Take the 3D tour' : 'Book a viewing' },
+      { k: MZ.data.isSample(L.id) ? 'WALK THROUGH IT' : 'SEE IT FOR YOURSELF', t: MZ.data.isSample(L.id) ? 'Take the 3D tour' : 'See the listing' },
       { k: 'LOCATION', t: L.suburb || '' }
     ];
     const per = 2.6, fade = 0.45, endCard = 2.4;
@@ -249,7 +249,7 @@
         ctx.fillText(L.suburb || '', W / 2, H / 2 + 110);
         MZ.photo.roundRect(ctx, W / 2 - 170, H / 2 + 170, 340, 76, 38); ctx.fillStyle = GOLD; ctx.fill();
         ctx.font = `600 30px ${FONT}`; ctx.fillStyle = '#000'; ctx.textBaseline = 'middle';
-        ctx.fillText('Book a viewing', W / 2, H / 2 + 209);
+        ctx.fillText('See the listing', W / 2, H / 2 + 209);
         if (L.sample) { ctx.font = `400 20px ${FONT}`; ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.fillText('Sample listing · demo', W / 2, H - 60); }
         ctx.textAlign = 'left';
         ctx.globalAlpha = 1;
@@ -280,11 +280,11 @@
     const has3d = MZ.data.isSample(L.id);
     const first = (L.description || [])[0] || '';
     return {
-      instagram: `Just listed in ${L.suburb || 'your area'} 🏡\n${L.title}\n\n${facts}\n\n${has3d ? 'Walk through every room in 3D. Link in bio.' : 'Link in bio to book a viewing.'}\n\n#justlisted #nzrealestate${tag ? ' #' + tag.toLowerCase() : ''} #openhome${has3d ? ' #3dtour' : ''}`,
-      facebook: `JUST LISTED: ${L.title}, ${L.suburb || ''}\n\n${first}\n\n${facts}\n${L.priceLabel ? 'Price: ' + L.priceLabel + '\n' : ''}\n${has3d ? 'Take the 3D tour and book a viewing here: ' : 'See the photos and book a viewing here: '}${url}`,
+      instagram: `Just listed in ${L.suburb || 'your area'} 🏡\n${L.title}\n\n${facts}\n\n${has3d ? 'Walk through every room in 3D. Link in bio.' : 'Link in bio for the full listing.'}\n\n#justlisted #nzrealestate${tag ? ' #' + tag.toLowerCase() : ''} #openhome${has3d ? ' #3dtour' : ''}`,
+      facebook: `JUST LISTED: ${L.title}, ${L.suburb || ''}\n\n${first}\n\n${facts}\n${L.priceLabel ? 'Price: ' + L.priceLabel + '\n' : ''}\n${has3d ? 'Take the 3D tour here: ' : 'See the photos and book a viewing here: '}${url}`,
       portalTitle: (L.title.length > 60 ? L.title.slice(0, 57) + '…' : L.title),
       portalBody: (L.description || []).join('\n\n') + (L.features && L.features.length ? '\n\nFeatures: ' + L.features.join(', ') + '.' : '') + (has3d ? '\n\n3D tour: ' + url : ''),
-      sms: `New listing: ${L.title} in ${L.suburb || 'your area'} (${facts}). ${has3d ? '3D tour' : 'Photos'} and viewing times: ${url}`
+      sms: `New listing: ${L.title} in ${L.suburb || 'your area'} (${facts}). ${has3d ? '3D tour' : 'Photos'}: ${url}`
     };
   };
 

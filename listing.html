@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Example listing page | VYRA</title>
-  <meta name="description" content="An example of the listing page VYRA builds for agents: 3D walkthrough, clickable floor plan and online viewing bookings.">
+  <meta name="description" content="An example of the listing page VYRA builds for agents: 3D walkthrough, clickable floor plan and finished photos.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#151618">
   <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
@@ -12,18 +12,18 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
-  <link rel="stylesheet" href="styles.css?v=20261103">
-  <link rel="stylesheet" href="pages.css?v=20261103">
+  <link rel="stylesheet" href="styles.css?v=20261110">
+  <link rel="stylesheet" href="pages.css?v=20261110">
 </head>
 <body>
 
-<div class="demo-strip"><b>Example</b><span id="demoText">A listing page VYRA builds for agents, shown on a licensed sample home. Not for sale.</span></div>
+<div class="demo-strip"><b>Example</b><span id="demoText">An example listing page, shown on a licensed sample scan by another creator. Not for sale.</span></div>
 
 <header class="site">
   <div class="wrap bar">
     <a class="brand" href="index.html" aria-label="VYRA home"><img src="assets/brand-mark.svg" alt=""> VYRA</a>
     <nav class="links" id="navlinks" aria-label="Main">
-      <a href="index.html#work">Our work</a>
+      <a href="index.html#work">Examples</a>
       <a href="index.html#renovate">Virtual staging</a>
       <a href="index.html#services">Services</a>
       <a href="index.html#why">Why VYRA</a>
@@ -58,7 +58,6 @@
           <small>Price</small>
           <b id="lPrice">By negotiation</b>
           <div class="l-actions">
-            <a class="btn btn-gold btn-sm" href="#book">Book a viewing</a>
             <button class="btn btn-ghost btn-sm" type="button" id="btnShare">Share</button>
           </div>
         </div>
@@ -71,7 +70,6 @@
       <a href="#tour">3D tour</a>
       <a href="#plan">Floor plan</a>
       <a href="#details">Details</a>
-      <a href="#book">Book a viewing</a>
     </div>
   </nav>
 
@@ -152,25 +150,9 @@
           <div class="agent-card">
             <div class="who"><span class="av">YA</span><div><b>Your listing agent</b><small>Your agency (example)</small></div></div>
             <p class="dim small">Questions about the home, or want a callback? Leave a message and the agent will get back to you.</p>
-            <a class="btn btn-gold" href="#book">Book a viewing</a>
             <button class="btn btn-ghost" type="button" id="btnAsk">Ask a question</button>
           </div>
         </aside>
-      </div>
-    </div>
-  </section>
-
-  <!-- viewing scheduler -->
-  <section id="book" class="alt">
-    <div class="wrap-wide">
-      <div class="sec-head">
-        <span class="eyebrow">Book a viewing</span>
-        <h2>Pick a time that suits you</h2>
-        <p class="lede">Choose an open home or a private viewing. You'll get the details by email and can add a reminder to your calendar.</p>
-      </div>
-      <div class="sched">
-        <div class="cal" id="cal"></div>
-        <div class="cal" id="slotPane"></div>
       </div>
     </div>
   </section>
@@ -179,8 +161,8 @@
   <section class="tight">
     <div class="wrap-wide">
       <div class="card cta-band">
-        <div><span class="eyebrow">Made by VYRA</span><h3>Want a page like this for your next listing?</h3><p class="dim mt1">3D walkthrough, floor plan, finished photos and viewing bookings, under your agency's brand.</p></div>
-        <div class="row"><a class="btn btn-ghost" href="index.html#work">See more of our work</a><a class="btn btn-gold" href="index.html#quote">Send us your next listing</a></div>
+        <div><span class="eyebrow">Made by VYRA</span><h3>Want a page like this for your next listing?</h3><p class="dim mt1">3D walkthrough, floor plan and finished photos, under your agency's brand.</p></div>
+        <div class="row"><a class="btn btn-ghost" href="index.html#work">See more examples</a><a class="btn btn-gold" href="index.html#quote">Send us your next listing</a></div>
       </div>
     </div>
   </section>
@@ -189,23 +171,23 @@
 <footer class="site">
   <div class="wrap">
     <div class="fgrid">
-      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> VYRA</a><p class="mt1">Listing media for New Zealand real estate agents. More than photos: listings that bring buyers.</p></div>
-      <div><h4>Our work</h4><ul><li><a href="index.html#work">Examples</a></li><li><a href="index.html#launch">Launch pack</a></li><li><a href="index.html#renovate">Virtual renovation</a></li><li><a href="listing.html">Example listing page</a></li></ul></div>
+      <div><a class="brand" href="index.html"><img src="assets/brand-mark.svg" alt=""> VYRA</a><p class="mt1">Listing media for New Zealand real estate agents.</p></div>
+      <div><h4>Examples</h4><ul><li><a href="index.html#work">Sample tours</a></li><li><a href="index.html#launch">Launch pack</a></li><li><a href="index.html#renovate">Virtual renovation</a></li><li><a href="listing.html">Example listing page</a></li></ul></div>
       <div><h4>Sample homes</h4><ul id="footHomes"></ul></div>
       <div><h4>VYRA</h4><ul><li><a href="index.html#services">Services</a></li><li><a href="index.html#why">Why VYRA</a></li><li><a href="index.html#faq">FAQ</a></li><li><a href="index.html#quote">Book a free chat</a></li></ul></div>
     </div>
     <details class="credits"><summary>Scan and image credits</summary><ul id="creditList"></ul></details>
     <p class="fbig" aria-hidden="true">VYRA<span>.</span></p>
-    <div class="fbottom"><span>© 2026 VYRA</span><span>Sample homes are licensed scans, shown for illustration only.</span></div>
+    <div class="fbottom"><span>© 2026 VYRA</span><span>Sample homes are licensed scans by other creators, shown for illustration only.</span></div>
   </div>
 </footer>
 
-<div class="stickybar"><button class="btn btn-ghost" type="button" id="btnAsk2">Ask a question</button><a class="btn btn-gold" href="#book">Book a viewing</a></div>
+<div class="stickybar"><button class="btn btn-ghost" type="button" id="btnAsk2">Ask a question</button></div>
 
-<script src="assets/js/site.js?v=20261103"></script>
-<script src="assets/js/data.js?v=20261103"></script>
-<script src="assets/js/photo-tools.js?v=20261103"></script>
-<script src="assets/js/floorplan.js?v=20261103"></script>
-<script src="assets/js/listing.js?v=20261103"></script>
+<script src="assets/js/site.js?v=20261110"></script>
+<script src="assets/js/data.js?v=20261110"></script>
+<script src="assets/js/photo-tools.js?v=20261110"></script>
+<script src="assets/js/floorplan.js?v=20261110"></script>
+<script src="assets/js/listing.js?v=20261110"></script>
 </body>
 </html>

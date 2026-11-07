@@ -84436,6 +84436,14 @@ class WalkController {
      * Maximum downward raycast distance to search for ground below the capsule.
      */
     groundProbeRange = 1.0;
+    /**
+     * VYRA: how far down to look for a floor after a teleport (room buttons), in metres.
+     */
+    floorSearchRange = 10;
+    _lastSafe = new Vec3();
+    _hasSafe = false;
+    _lastInside = new Vec3();
+    _hasInside = false;
     _position = new Vec3();
     _prevPosition = new Vec3();
     _angles = new Vec3();
@@ -84518,8 +84526,24 @@ class WalkController {
             this._grounded = false;
         }
         this._jumpHeld = !!move[1];
+        // VYRA: never free fall. Scans have holes and end at their edges, so with no
+        // floor underfoot gravity would pull the visitor down forever.
+        if (!hasGround && !this._jumping) {
+            this._velocity.set(0, 0, 0);
+            this._grounded = true;
+            if (this._hasSafe) {
+                // walked off the floor: stay on the last spot that had one
+                this._position.copy(this._lastSafe);
+                return;
+            }
+            // just teleported: settle on the floor below, or hold still if there is none
+            const floorY = this._probeGround(this._position, this.floorSearchRange);
+            if (floorY !== null) {
+                this._position.y = floorY + this.hoverHeight + this.eyeHeight;
+            }
+        }
         // vertical force: spring-damper when ground is detected, gravity when airborne
-        if (hasGround && !this._jumping) {
+        else if (hasGround && !this._jumping) {
             const targetY = groundY + this.hoverHeight + this.eyeHeight;
             const displacement = this._position.y - targetY;
             if (displacement > 0.1) {
@@ -84534,6 +84558,8 @@ class WalkController {
             }
             else {
                 // at or near target (walking/slopes): spring tracks terrain
+                this._lastSafe.copy(this._position);
+                this._hasSafe = true;
                 const springForce = -this.springStiffness * displacement - this.springDamping * this._velocity.y;
                 this._velocity.y += springForce * dt;
                 this._grounded = true;
@@ -84554,6 +84580,20 @@ class WalkController {
         this._position.add(v.copy(this._velocity).mulScalar(dt));
         // capsule collision: walls, ceiling, and fallback floor contact
         this._checkCollision(this._position, d);
+        // VYRA: stay inside the home's floor plan (homes/<id>/walk.json). Scans carry
+        // stray floor beyond their walls; without this visitors can walk out into empty space.
+        if (window.vyraInWalkArea) {
+            if (window.vyraInWalkArea(this._position.x, this._position.z)) {
+                this._lastInside.copy(this._position);
+                this._hasInside = true;
+            }
+            else if (this._hasInside) {
+                this._position.x = this._lastInside.x;
+                this._position.z = this._lastInside.z;
+                this._velocity.x = 0;
+                this._velocity.z = 0;
+            }
+        }
     }
     onExit(_camera) {
         // nothing to clean up
@@ -84601,6 +84641,8 @@ class WalkController {
     }
     _resetMotion() {
         this._velocity.set(0, 0, 0);
+        this._hasSafe = false;
+        this._hasInside = false;
         this._grounded = false;
         this._jumping = false;
         this._jumpHeld = false;
@@ -84617,12 +84659,11 @@ class WalkController {
      * @param pos - Eye position in PlayCanvas world space.
      * @returns Average ground surface Y in PlayCanvas space, or null if no ground found.
      */
-    _probeGround(pos) {
+    _probeGround(pos, range = this.groundProbeRange) {
         if (!this.collision)
             return null;
         const oy = pos.y - this.eyeHeight;
         const r = this.capsuleRadius;
-        const range = this.groundProbeRange;
         let totalY = 0;
         let hitCount = 0;
         for (let i = 0; i < 5; i++) {
