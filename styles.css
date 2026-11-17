@@ -74,6 +74,9 @@ h3 { font-size: clamp(1.1rem, 1.8vw, 1.4rem); }
 .note { margin-top: 1rem; font-size: .9rem; color: var(--muted); }
 .sec-head { margin-bottom: 2.6rem; }
 .sec-head .lede { margin-top: 1rem; }
+.share-head { margin: 3.2rem 0 1.4rem; }
+.share-head h3 { font-size: clamp(1.3rem, 2.4vw, 1.7rem); font-weight: 500; margin: 0; }
+.share-head .lede { margin-top: .6rem; }
 .center { text-align: center; }
 .center .lede { margin-inline: auto; }
 
