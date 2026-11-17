@@ -496,6 +496,10 @@ input.in[type="file"] { padding: .6rem; font-size: .9rem; }
 .tbox small { grid-column: 2; color: var(--muted); font-size: .8rem; line-height: 1.35; }
 .tchk { grid-row: 1 / span 2; width: 1.15rem; height: 1.15rem; border-radius: 5px; border: 1px solid rgba(233, 213, 161, .35); margin-top: .12rem; display: flex; align-items: center; justify-content: center; transition: .2s; background: transparent; }
 .tile:hover .tbox { border-color: rgba(233, 213, 161, .3); }
+.tile.soon { cursor: not-allowed; }
+.tile.soon .tbox { opacity: .45; border-style: dashed; }
+.tile.soon:hover .tbox { border-color: var(--line); }
+.tile.soon .tchk { border-color: var(--line); }
 .tile input:checked + .tbox { border-color: var(--gold); background: rgba(217, 184, 113, .14); }
 .tile input:checked + .tbox .tchk { background: var(--gold); border-color: var(--gold); }
 .tile input:checked + .tbox .tchk::after { content: ""; width: .35rem; height: .62rem; border: solid var(--on-gold); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }

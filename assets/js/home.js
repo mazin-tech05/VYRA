@@ -623,27 +623,30 @@
     });
   }
 
-  // ---------- chat form ----------
+  // ---------- quote form ----------
   const tickItems = [
-    ['Get a quote', 'For your next listing'],
     ['3D walkthrough', 'Every room, on any phone'],
     ['Photo finishing', 'Light and colour, labelled'],
-    ['Day to dusk', 'Early access, coming soon'],
+    ['Day to dusk', 'Coming soon'],
     ['Floor plan', 'Clickable, with room sizes'],
     ['Privacy check', 'Personal items blurred'],
-    ['Virtual renovation', 'Early access, coming soon'],
-    ['Virtual staging', 'Early access, coming soon'],
-    ['Listing page', 'Early access, coming soon'],
-    ['Launch pack', 'Early access, coming soon'],
-    ['Viewing bookings', 'Early access, coming soon'],
+    ['Virtual renovation', 'Coming soon'],
+    ['Virtual staging', 'Coming soon'],
+    ['Listing page', 'Coming soon'],
+    ['Launch pack', 'Coming soon'],
+    ['Viewing bookings', 'Coming soon'],
     ['Short-stay host', 'Airbnb or holiday home']
   ];
   function initQuote() {
     const form = $('#quoteForm');
     if (!form) return;
-    $('#ticks').innerHTML = tickItems.map(([v, s], i) => `
-      <label class="tile"><input type="checkbox" class="tick" value="${v}" id="tk${i}"><span class="tbox"><span class="tchk"></span><b>${v}</b><small>${s}</small></span></label>`).join('');
-    const ticks = $$('.tick', form);
+    // Anything marked "Coming soon" is shown but can't be ticked yet.
+    $('#ticks').innerHTML = tickItems.map(([v, s], i) => {
+      const soon = /coming soon/i.test(s);
+      return `
+      <label class="tile${soon ? ' soon' : ''}"${soon ? ' aria-disabled="true" title="Coming soon"' : ''}><input type="checkbox" class="tick" value="${v}" id="tk${i}"${soon ? ' disabled' : ''}><span class="tbox"><span class="tchk"></span><b>${v}</b><small>${s}</small></span></label>`;
+    }).join('');
+    const ticks = $$('.tick', form).filter((t) => !t.disabled);
     const sum = $('#tsum');
     const sync = () => {
       const on = ticks.filter((t) => t.checked).map((t) => t.value);
@@ -676,12 +679,20 @@
       if (contactBad) { (em ? email : phone).focus(); return; }
       if (form.elements._honey.value) { box.hidden = false; box.className = 'formmsg ok'; box.textContent = 'Thanks, that has come through.'; return; }
 
+      const when = new Date().toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland', dateStyle: 'medium', timeStyle: 'short' });
+      const agency = $('#qAgency').value.trim();
+      // Keys become the row labels in the email, in this order.
       const fields = {
-        _subject: 'VYRA enquiry from ' + nm,
-        name: nm, agency: $('#qAgency').value.trim(), phone: ph, email: em,
-        listings_per_month: $('#qListings').value, area: $('#qArea').value.trim(),
-        interested_in: on.length ? on.join(', ') : 'Nothing ticked',
-        message: $('#qMsg').value.trim()
+        _subject: 'New VYRA quote request: ' + nm + (agency ? ' (' + agency + ')' : ''),
+        'Name': nm,
+        'Agency / business': agency || '-',
+        'Phone': ph || '-',
+        'Email': em || '-',
+        'Interested in': on.length ? on.join(', ') : 'Nothing ticked',
+        'Properties a month': $('#qListings').value || '-',
+        'Area': $('#qArea').value.trim() || '-',
+        'Message': $('#qMsg').value.trim() || '-',
+        'Sent': when + ' (NZ time)'
       };
       if (MZ.EMAIL_RE.test(em)) fields._replyto = em;
       const original = btn.textContent;
@@ -690,10 +701,10 @@
       btn.textContent = original; btn.disabled = false;
       if (res.ok) {
         box.hidden = false; box.className = 'formmsg ok';
-        box.textContent = 'Thanks ' + nm.split(' ')[0] + ', that has come through. We will be in touch to find a time for a chat.';
+        box.textContent = 'Thanks ' + nm.split(' ')[0] + ', your quote request has been sent. Mazin will be in touch within one working day.';
         form.reset(); sync();
       } else {
-        MZ.fallback(box, fields._subject, Object.entries(fields).filter(([k]) => !k.startsWith('_')).map(([k, v]) => k.replace(/_/g, ' ') + ': ' + v));
+        MZ.fallback(box);
       }
     });
   }

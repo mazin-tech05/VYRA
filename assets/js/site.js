@@ -449,10 +449,13 @@
   };
 
   // ---------- enquiry relay ----------
-  // Every form on the site posts to FormSubmit, which emails Mazin. The first
-  // submission sends a one-time activation email; until it's activated (or if
-  // the relay fails) the visitor's email app opens with the message filled in.
+  // Every form on the site posts to FormSubmit, which emails Mazin directly.
+  // FORM_KEY is FormSubmit's alias for his inbox, so the address isn't exposed
+  // in the request. If sending fails, the visitor sees a message with other
+  // ways to get in touch; their email app is never opened.
   const ENQUIRY_EMAIL = ['mazinabdelmonim04', 'gmail.com'].join('@');
+  const FORM_KEY = 'dcd63ceffe22d33af3238bee76267a31';
+  MZ.PHONE = '022 170 5286';
   MZ.ENQUIRY_EMAIL = ENQUIRY_EMAIL;
   MZ.EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   MZ.isPhone = (v) => /^[+()\d\s.-]+$/.test(v) && v.replace(/\D/g, '').length >= 7;
@@ -465,7 +468,7 @@
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 15000);
     try {
-      const res = await fetch('https://formsubmit.co/ajax/' + ENQUIRY_EMAIL, {
+      const res = await fetch('https://formsubmit.co/ajax/' + FORM_KEY, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(Object.assign({ _template: 'table', _captcha: 'false' }, fields)),
@@ -475,21 +478,20 @@
       if (!res.ok || String(data.success) !== 'true') throw new Error(data.message || ('HTTP ' + res.status));
       return { ok: true };
     } catch (err) {
-      console.warn('Enquiry relay failed, falling back to email:', err && err.message);
+      console.warn('Enquiry relay failed:', err && err.message);
       return { ok: false, error: err };
     } finally {
       clearTimeout(timer);
     }
   };
 
-  // Show the email fallback in a status element and open the email app.
-  MZ.fallback = function (statusEl, subject, lines) {
-    const href = MZ.mailto(subject, lines);
+  // Sending failed: explain, and offer other ways to get in touch. Never opens an email app.
+  MZ.fallback = function (statusEl) {
+    const tel = MZ.PHONE.replace(/\s/g, '');
     statusEl.hidden = false;
     statusEl.className = 'formmsg bad';
-    statusEl.innerHTML = "We couldn't send that automatically, so your email app should open with it ready to send. " +
-      'If it doesn\'t, <a href="' + href.replace(/"/g, '&quot;') + '">open it here</a> or email ' + MZ.esc(ENQUIRY_EMAIL) + '.';
-    window.location.href = href;
+    statusEl.innerHTML = "Sorry, that didn't send. Please try again in a moment, or call or text Mazin on " +
+      '<a href="tel:+64' + tel.slice(1) + '">' + MZ.esc(MZ.PHONE) + '</a> or email <a href="mailto:' + ENQUIRY_EMAIL + '">' + MZ.esc(ENQUIRY_EMAIL) + '</a>.';
   };
 
   // ---------- on-device analytics (feature 10) ----------
