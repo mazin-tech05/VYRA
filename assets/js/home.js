@@ -689,8 +689,8 @@
         'Phone': ph || '-',
         'Email': em || '-',
         'Interested in': on.length ? on.join(', ') : 'Nothing ticked',
-        'Properties a month': $('#qListings').value || '-',
-        'Area': $('#qArea').value.trim() || '-',
+        'Number of properties': $('#qListings').value || '-',
+        'Location of property': $('#qArea').value.trim() || '-',
         'Message': $('#qMsg').value.trim() || '-',
         'Sent': when + ' (NZ time)'
       };
