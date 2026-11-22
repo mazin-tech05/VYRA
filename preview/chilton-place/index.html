@@ -256,7 +256,7 @@ body.is-expired main > :not(.expired), body.is-expired .ribbon, body.is-expired 
   <div class="tour-bar">
     <div class="chips"><span class="chip">Walk room to room</span><span class="chip">Measure any wall</span><span class="chip">Works on any phone</span></div>
     <div class="acts">
-      <a class="btn" href="tour.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Open full screen</a>
+      <a class="btn" href="tour.html?v=1795341687" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Open full screen</a>
       <button class="btn" id="copy"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>Copy link</button>
     </div>
   </div>
@@ -346,7 +346,7 @@ if (Date.now() > PREVIEW_ENDS.getTime()) document.body.classList.add('is-expired
   var tour = document.getElementById('walkthrough');
   function start(hash) {
     var f = tour.querySelector('iframe');
-    var src = 'tour.html' + (hash || '');
+    var src = 'tour.html?v=1795341687' + (hash || '');
     if (!f) {
       f = document.createElement('iframe');
       f.title = '3D walkthrough of 3/2 Chilton Place';
