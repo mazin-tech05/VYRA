@@ -233,7 +233,7 @@ const loaderBar = $('#loader .bar i');
 const setLoad = (f) => { loaderBar.style.width = Math.round(f * 100) + '%'; };
 
 // ------------------------------------------------------------------ data
-const tour = await (await fetch('tour.json')).json();
+const tour = await (await fetch('tour.json?v=1795341687')).json();
 setLoad(.15);
 async function fetchB64(url) {
   const txt = await (await fetch(url)).text();
@@ -241,7 +241,7 @@ async function fetchB64(url) {
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out.buffer;
 }
-const depthBuf = new Uint16Array(await fetchB64('depth.txt'));
+const depthBuf = new Uint16Array(await fetchB64('depth.txt?v=1795341687'));
 setLoad(.3);
 const S = tour.sweeps;
 S.forEach((s) => { s.v = new THREE.Vector3(...s.p); s.fl = new THREE.Vector3(s.p[0], s.p[1] + s.f, s.p[2]); });
