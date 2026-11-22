@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:title" content="3/2 Chilton Place · 3D walkthrough">
+<meta property="og:description" content="Private preview of the VYRA 3D walkthrough for 3/2 Chilton Place, Mellons Bay.">
+<meta property="og:image" content="https://vyra.co.nz/preview/chilton-place/hero.jpg">
+<link rel="icon" href="brand-mark.svg" type="image/svg+xml">
+<title>Chilton Place Listing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: dark VYRA listing page — sticky brand bar, full-bleed 3D walkthrough as the hero, then gallery, story, plans, agent */
+:root {
+  color-scheme: dark;
+  --bg: #151618;
+  --sand: #1b1c1f;
+  --panel: #222327;
+  --panel2: #1c1d20;
+  --ink: #f4ecd9;
+  --dim: #cdc5b3;
+  --muted: #a9a59c;
+  --gold: #d9b871;
+  --gold-hi: #e8d09a;
+  --gold-ink: #e2c483;
+  --on-gold: #151618;
+  --line: rgba(233, 213, 161, .16);
+  --line-soft: rgba(233, 213, 161, .09);
+  --shadow: 0 18px 50px rgba(0, 0, 0, .38);
+  --font: "Satoshi", "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --wrap: 1160px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.55; -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+:focus-visible { outline: 2px solid var(--gold-ink); outline-offset: 3px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; }
+.eyebrow { font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-ink); font-weight: 700; }
+h1, h2, h3 { text-wrap: balance; letter-spacing: -.01em; margin: 0; }
+h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.15; }
+
+/* preview ribbon */
+.ribbon { margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))) ; padding: 9px 16px; background: var(--gold); color: var(--on-gold); font-size: .82rem; font-weight: 600; text-align: center; }
+.ribbon a { font-weight: 800; }
+
+/* top bar */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: rgba(21,22,24,.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding: 12px max(16px, env(safe-area-inset-left, 0px)); border-bottom: 1px solid var(--line-soft); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand svg { width: 34px; height: 34px; flex: none; }
+.brand b { font-weight: 800; letter-spacing: .16em; font-size: .95rem; }
+.brand span { display: block; font-size: .7rem; color: var(--muted); letter-spacing: .06em; }
+.top nav { display: flex; gap: 22px; font-size: .9rem; color: var(--dim); }
+.top nav a { text-decoration: none; }
+.top nav a:hover { color: var(--ink); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--ink);
+  font: 600 .92rem var(--font); cursor: pointer; text-decoration: none; transition: background .2s, transform .2s var(--ease); }
+.btn:hover { background: rgba(255,255,255,.05); }
+.btn.gold { background: var(--gold); border-color: transparent; color: var(--on-gold); }
+.btn.gold:hover { background: var(--gold-hi); transform: translateY(-1px); }
+.btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* heading */
+.head { padding: 42px 0 22px; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: end; }
+.head h1 { font-size: clamp(2rem, 4.6vw, 3.3rem); line-height: 1.04; margin-top: 10px; }
+.titlerow { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 12px; }
+.titlerow h1 { margin-top: 0; }
+.agency { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 12px; background: #fff; color: #0b2a4a; border: 1px solid rgba(255,255,255,.2); min-height: 52px; }
+.agency img { height: 34px; width: auto; max-width: 160px; object-fit: contain; }
+.agency img + .agency-txt b { display: none; }
+.agency img + .agency-txt { border-left: 1px solid #d6dde5; padding-left: 10px; }
+.agency-txt b { display: block; font-size: 1.02rem; letter-spacing: .02em; line-height: 1.1; }
+.agency-txt small { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: #3d5670; font-weight: 700; }
+.head .sub { color: var(--dim); margin-top: 8px; font-size: 1.05rem; }
+.price { text-align: right; }
+.price b { display: block; font-size: 1.35rem; }
+.price span { color: var(--muted); font-size: .85rem; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.stat { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); font-size: .9rem; color: var(--dim); font-variant-numeric: tabular-nums; }
+.stat b { color: var(--ink); }
+.stat svg { width: 17px; height: 17px; stroke: var(--gold-ink); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* walkthrough */
+.tour { position: relative; border-radius: 22px; overflow: hidden; background: #0e0f10; box-shadow: var(--shadow); border: 1px solid var(--line-soft); aspect-ratio: 16 / 9; max-width: 100%; }
+.tour iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.poster { position: absolute; inset: 0; cursor: pointer; border: 0; padding: 0; background: none; width: 100%; }
+.poster img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+.poster:hover img { transform: scale(1.03); }
+.poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(21,22,24,.05) 30%, rgba(21,22,24,.8) 100%); }
+.poster .cta { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 14px; color: var(--ink); }
+.play { width: 84px; height: 84px; border-radius: 50%; background: var(--gold); display: grid; place-items: center; box-shadow: 0 0 0 10px rgba(217,184,113,.22); transition: box-shadow .3s; }
+.poster:hover .play { box-shadow: 0 0 0 16px rgba(217,184,113,.18); }
+.play svg { width: 30px; height: 30px; fill: var(--on-gold); margin-left: 4px; }
+.poster .cta b { font-size: 1.15rem; text-shadow: 0 2px 12px rgba(0,0,0,.5); }
+.poster .meta { position: absolute; left: 22px; right: 22px; bottom: 18px; z-index: 1; display: flex; justify-content: space-between; gap: 12px; color: var(--dim); font-size: .85rem; flex-wrap: wrap; }
+.poster .meta span { display: inline-flex; gap: 8px; align-items: center; }
+.tour-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; color: var(--muted); font-size: .88rem; }
+.tour-bar .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { padding: 6px 12px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line-soft); font-size: .8rem; color: var(--dim); }
+
+section { padding: 64px 0 0; }
+.sec-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+.sec-head p { margin: 6px 0 0; color: var(--muted); max-width: 60ch; }
+
+/* highlights */
+.hl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.hl div { padding: 20px; border-radius: 16px; background: var(--panel2); border: 1px solid var(--line-soft); }
+.hl svg { width: 22px; height: 22px; stroke: var(--gold-ink); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hl b { display: block; margin: 12px 0 4px; }
+.hl span { color: var(--muted); font-size: .9rem; }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 190px; gap: 12px; }
+.shot { position: relative; border-radius: 14px; overflow: hidden; border: 0; padding: 0; cursor: pointer; background: var(--panel); }
+.shot img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.shot:hover img { transform: scale(1.05); }
+.shot .cap { position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; border-radius: 9px; background: rgba(21,22,24,.78); color: var(--ink); font: 600 .78rem var(--font); display: inline-flex; gap: 6px; align-items: center; }
+.shot .cap svg { width: 13px; height: 13px; stroke: var(--gold-ink); fill: none; stroke-width: 2; }
+.shot.big { grid-column: span 2; grid-row: span 2; }
+.shot.wide { grid-column: span 2; }
+
+/* story */
+.story { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 48px; }
+.story .text p { color: var(--dim); margin: 0 0 16px; max-width: 66ch; }
+.story .text p:first-of-type { color: var(--ink); font-size: 1.12rem; }
+.story .text .lead { font-size: 1.35rem; font-weight: 700; margin: 0 0 14px; color: var(--ink); }
+.facts { border-radius: 18px; background: var(--panel2); border: 1px solid var(--line-soft); padding: 22px; align-self: start; }
+.facts h3 { font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 12px; }
+.facts dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 9px 16px; font-size: .9rem; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; color: var(--ink); }
+.facts .chattels { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line-soft); color: var(--dim); font-size: .86rem; }
+
+/* plans + model */
+.plans { display: grid; grid-template-columns: 1.15fr .85fr 1fr; gap: 14px; }
+.card { border-radius: 18px; background: var(--panel2); border: 1px solid var(--line-soft); padding: 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.card .imgbox { flex: 1; border-radius: 12px; background: #121315; display: grid; place-items: center; padding: 14px; min-height: 250px; }
+.card .imgbox img { max-height: 320px; object-fit: contain; }
+.card.model .imgbox { padding: 0; overflow: hidden; }
+.card.model .imgbox img { width: 100%; height: 100%; max-height: none; object-fit: cover; }
+.card b { font-size: .95rem; }
+.card span { color: var(--muted); font-size: .85rem; }
+.card .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.linkish { background: none; border: 0; color: var(--gold-ink); font: 600 .85rem var(--font); cursor: pointer; padding: 0; }
+
+/* agent */
+.agent { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; padding: 26px; border-radius: 20px; background: linear-gradient(135deg, #24252a, #1b1c1f); border: 1px solid var(--line); }
+.avatar { position: relative; overflow: hidden; width: 96px; height: 96px; border-radius: 50%; background: linear-gradient(135deg, #3a3b41, #26272b); border: 2px solid var(--gold); display: grid; place-items: center; font-weight: 800; font-size: 1.6rem; color: var(--gold-hi); letter-spacing: .04em; }
+.avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.agent .who b { font-size: 1.3rem; display: block; }
+.agent .who span { color: var(--dim); }
+.agent .who small { display: block; color: var(--muted); margin-top: 6px; font-size: .82rem; }
+.agent .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.ph { color: var(--muted); border-style: dashed; }
+
+/* share options (agent preview) */
+.share { margin-top: 64px; padding: 34px; border-radius: 22px; border: 1px dashed var(--gold-line, rgba(217,184,113,.5)); background: rgba(217,184,113,.05); }
+.share .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+.share .grid div { padding: 20px; border-radius: 16px; background: var(--panel2); border: 1px solid var(--line-soft); }
+.share .grid i { font-style: normal; color: var(--gold-ink); font-weight: 800; letter-spacing: .1em; font-size: .8rem; }
+.share .grid b { display: block; margin: 8px 0 6px; }
+.share .grid p { margin: 0; color: var(--muted); font-size: .9rem; }
+.share .here { display: inline-block; margin-top: 10px; font-size: .78rem; color: var(--on-gold); background: var(--gold); padding: 3px 9px; border-radius: 999px; font-weight: 700; }
+
+footer { margin: 64px calc(-1 * max(16px, env(safe-area-inset-left, 0px))) 0; padding: 30px max(16px, env(safe-area-inset-left, 0px)) calc(30px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line-soft); color: var(--muted); font-size: .82rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer b { color: var(--gold-ink); letter-spacing: .14em; }
+
+.expired { display: none; text-align: center; padding: 90px 24px; border-radius: 22px; background: var(--panel2); border: 1px solid var(--line); margin: 40px 0; }
+.expired h2 { margin: 12px 0 10px; }
+.expired p { color: var(--dim); margin: 0 auto; max-width: 48ch; }
+body.is-expired .expired { display: block; }
+body.is-expired main > :not(.expired), body.is-expired .ribbon, body.is-expired .top nav, body.is-expired .top .btn { display: none !important; }
+.toast { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); padding: 10px 16px; border-radius: 12px; background: #2a2b30; border: 1px solid var(--line); font-size: .88rem; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 20; }
+
+@media (max-width: 900px) {
+  .top nav { display: none; }
+  .head { grid-template-columns: 1fr; }
+  .price { text-align: left; }
+  .hl { grid-template-columns: repeat(2, 1fr); }
+  .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; }
+  .story { grid-template-columns: 1fr; gap: 28px; }
+  .plans { grid-template-columns: 1fr; }
+  .agent { grid-template-columns: auto 1fr; }
+  .agent .acts { grid-column: 1 / -1; }
+  .share .grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .tour { aspect-ratio: 4 / 5; border-radius: 16px; }
+  .head { padding-top: 26px; }
+  .hl { grid-template-columns: 1fr; }
+  .share { padding: 22px; }
+  .top .btn span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+
+
+<div class="ribbon">Private preview for Karl Vermeulen · available until 29 November 2026 · <a href="#share">How this can be shared</a></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="VYRA">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="vb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b2c30"/><stop offset="1" stop-color="#111113"/></linearGradient><linearGradient id="va" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e2b3"/><stop offset="1" stop-color="#c9a256"/></linearGradient></defs><rect width="64" height="64" rx="14" fill="url(#vb)"/><path d="M32 9.5 51.5 20.75v22.5L32 54.5 12.5 43.25v-22.5Z M12.5 20.75 32 32 51.5 20.75" fill="none" stroke="#d9b871" stroke-opacity=".7" stroke-width="2.2" stroke-linejoin="round"/><path d="M20 22 32 46 44 22" fill="none" stroke="url(#va)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><b>VYRA</b><span>3D property showcase</span></div>
+    </a>
+    <nav aria-label="Sections"><a href="#walkthrough">3D walkthrough</a><a href="#about">The home</a><a href="#plans">Floor plans</a><a href="#agent">Agent</a></nav>
+    <a class="btn gold" href="#agent"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 6l8 6 8-6"/></svg><span>Contact agent</span></a>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="expired" role="status">
+    <span class="eyebrow">Preview ended</span>
+    <h2>This private preview has expired</h2>
+    <p>The 3D walkthrough for 3/2 Chilton Place was shared for a limited time. To view it again, contact VYRA at vyra.co.nz.</p>
+  </div>
+  <div class="head">
+    <div>
+      <span class="eyebrow">For sale · Mellons Bay, Auckland · Marketed by Harcourts Howick</span>
+      <div class="titlerow">
+        <div class="agency" title="Listing agency">
+          <img src="harcourts-logo.png" alt="Harcourts" onerror="this.remove()">
+          <span class="agency-txt"><b>Harcourts</b><small>Howick</small></span>
+        </div>
+        <h1>3/2 Chilton Place</h1>
+      </div>
+      <div class="sub">Home &amp; granny flat with sea views in Macleans zone</div>
+      <div class="stats">
+        <span class="stat"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 12h16M12 4v16"/></svg><b>120</b> m²</span>
+        <span class="stat"><svg viewBox="0 0 24 24"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 15h18M6 10V7h5v3"/></svg><b>3</b> bedrooms</span>
+        <span class="stat"><svg viewBox="0 0 24 24"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM6 12V6a2 2 0 0 1 4 0"/></svg><b>2</b> bathrooms</span>
+        <span class="stat"><svg viewBox="0 0 24 24"><path d="M5 16l1.5-5h11L19 16M4 16h16v3H4zM7 19v1M17 19v1"/></svg><b>2</b> car parks</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="walkthrough" class="tour">
+    <button class="poster" id="poster" aria-label="Start the 3D walkthrough">
+      <img src="hero.jpg" alt="Looking up the driveway from the street at 3/2 Chilton Place">
+      <span class="cta"><span class="play"><svg viewBox="0 0 24 24"><path d="M7 5v14l12-7z"/></svg></span><b>Step inside · 3D walkthrough</b></span>
+      <span class="meta"><span>60 viewpoints · ground &amp; lower ground floor</span><span>Floor plans · 3D model · guided tour</span></span>
+    </button>
+  </div>
+  <div class="tour-bar">
+    <div class="chips"><span class="chip">Walk room to room</span><span class="chip">Measure any wall</span><span class="chip">Works on any phone</span></div>
+    <div class="acts">
+      <a class="btn" href="tour.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Open full screen</a>
+      <button class="btn" id="copy"><svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg>Copy link</button>
+    </div>
+  </div>
+
+  <section>
+    <div class="hl">
+      <div><svg viewBox="0 0 24 24"><path d="M2 16c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M2 20c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M12 4v6M8 8l4-4 4 4"/></svg><b>Sea views to Waiheke</b><span>North-facing lounge, dining and deck</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6M3 14h18"/></svg><b>Separate downstairs living</b><span>Bedroom, kitchenette, bathroom and deck</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M12 22V12M12 12c0-4 3-7 7-7 0 4-3 7-7 7zM12 15c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg><b>Private sunny courtyard</b><span>Behind a high fence, lush planting</span></div>
+      <div><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5zM6 11v5c3 2 9 2 12 0v-5"/></svg><b>Macleans College zone</b><span>Close to Howick Village and beaches</span></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="story">
+      <div class="text">
+        <span class="eyebrow">The home</span>
+        <p class="lead">Home &amp; granny flat with sea views in Macleans</p>
+        <p>How often do you come across a home with separate accommodation below, panoramic sea views and private outdoor living in the exclusive Macleans zone at an affordable price range? Look no further, this home has it all, but only if you hurry.</p>
+        <p>Nestled behind a high fence with a sunny, private courtyard complete with gorgeous plantings, this home sits in a mature Mellons Bay cul-de-sac. Upstairs, the views from the open-plan lounge, dining and deck area are spectacular, right out to Waiheke Island. This living space is north-facing and sun-drenched with plenty of natural light. The ideal place to curl up and read a book or simply pour a glass of wine and soak up the views. With entertaining areas both to the front and rear of the home, there is always somewhere to relax, to entertain, to enjoy.</p>
+        <p>Two light-filled bedrooms offer a choice of accommodation and the character bathroom with original timber floorboards adds a quiet charm to the home. The kitchen also features the same rich timber floors, ample storage, lots of workable bench space and those stunning views. It will be hard not to become distracted while cooking the family meal! An enclosed carport with workshop space and off-street parking for two cars complete this level.</p>
+        <p>Downstairs there is the option of both internal and external access, offering flexibility as separate accommodation or part of the family home. The downstairs area includes a generous bedroom with walk-in robe, an open-plan lounge, dining and kitchenette, a bathroom and storage room with another sun-blessed deck embracing those views. All surrounded by easy-care, mature gardens. Whether you are accommodating extended family, welcoming homestay students or exploring additional rental income, the options are appealing.</p>
+        <p>In zone for Macleans College and conveniently located close to Howick Village, shops and public transport, this property is handy to everything. With beaches, parks and recreational facilities also nearby, this is an exceptional opportunity to secure a versatile home in a sought-after coastal location. This home will be popular. Call now!</p>
+      </div>
+      <aside class="facts" aria-label="Property features">
+        <h3>Property features</h3>
+        <dl>
+          <dt>Floor area</dt><dd>120 m²</dd>
+          <dt>Other rooms</dt><dd>Dining room, double bedrooms, granny flat, living rooms, sunroom</dd>
+          <dt>Lounge</dt><dd>Lounge / dining combined</dd>
+          <dt>Kitchen</dt><dd>Standard · electric stove</dd>
+          <dt>Bathrooms</dt><dd>Combined bath / WCs</dd>
+          <dt>Heating</dt><dd>Gas mains · gas hot water</dd>
+          <dt>Flooring</dt><dd>Carpet, tiles, timber</dd>
+          <dt>Interior</dt><dd>Excellent condition</dd>
+          <dt>Exterior</dt><dd>Weatherboard timber · very good</dd>
+          <dt>Roof</dt><dd>Stone chip</dd>
+          <dt>Outdoor</dt><dd>BBQ / entertainment, decking / patio</dd>
+          <dt>Parking</dt><dd>Carport, automatic doors</dd>
+          <dt>Aspect</dt><dd>Northerly</dd>
+          <dt>Views</dt><dd>Sea, local, urban</dd>
+          <dt>Services</dt><dd>Mains sewage, town water, gas in street</dd>
+          <dt>Nearby</dt><dd>Schools, shops, transport</dd>
+        </dl>
+        <div class="chattels"><b>Chattels:</b> bathroom extractor fan, blinds, drapes, fireplace, heated towel rail, light fittings, rangehood, stove, fridge downstairs, water filter upstairs, wind-out awning upstairs, electric door lock upstairs, shelves and assorted cabinetry in carport.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="plans">
+    <div class="sec-head"><div><span class="eyebrow">Layout</span><h2>Floor plans &amp; 3D model</h2><p>Room sizes from the listing floor plan. Open the walkthrough to switch floors, measure, or spin the 3D model.</p></div></div>
+    <div class="plans">
+      <div class="card"><div class="imgbox"><img src="plan_upper.png" alt="Ground floor plan" loading="lazy"></div><div class="row"><div><b>Ground floor</b><br><span>Lounge, kitchen, 2 bedrooms, bathroom, deck</span></div></div></div>
+      <div class="card"><div class="imgbox"><img src="plan_lower.png" alt="Lower ground floor plan" loading="lazy"></div><div class="row"><div><b>Lower ground floor</b><br><span>Bedroom, family, kitchen / dining, bathroom</span></div></div></div>
+      <div class="card model"><div class="imgbox"><img src="model3d.jpg" alt="3D model of the whole home" loading="lazy"></div><div class="row"><div><b>3D model</b><br><span>The whole home, both floors</span></div><button class="linkish" data-go="">Explore →</button></div></div>
+    </div>
+  </section>
+
+  <section id="agent">
+    <div class="agent">
+      <div class="avatar"><img src="karl.jpg" alt="Karl Vermeulen" onerror="this.remove()"><span aria-hidden="true">KV</span></div>
+      <div class="who"><b>Karl Vermeulen</b><span>Harcourts Howick · listing agent</span><small>Mobile and email appear here once Karl confirms them.</small></div>
+      <div class="acts">
+        <span class="btn ph" aria-disabled="true"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>Call Karl</span>
+        <span class="btn ph" aria-disabled="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 6l8 6 8-6"/></svg>Email Karl</span>
+        <button class="btn gold" data-go=""><svg viewBox="0 0 24 24"><path d="M7 5v14l12-7z"/></svg>Take the 3D tour</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="share" id="share">
+    <span class="eyebrow">For Karl · how this walkthrough can be shared</span>
+    <h2 style="margin-top:8px">Three ways to put it in front of buyers</h2>
+    <div class="grid">
+      <div><i>01</i><b>Embedded on your website</b><p>With your permission, the walkthrough sits on your own website, so buyers explore it without leaving your page. We send the embed code, or set it up with whoever manages your site.</p></div>
+      <div><i>02</i><b>A link in your listing</b><p>Add the link to your listing, social posts, or send it straight to buyers. It opens on any phone or computer, with nothing to install.</p></div>
+      <div><i>03</i><b>Your own page on VYRA</b><p>A page on vyra.co.nz just for this property, with your name, photo, agency branding and contact details, so every view also markets you.</p><span class="here">You're looking at it</span></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>3D walkthrough captured by <b>VYRA</b> · vyra.co.nz</span>
+    <span>Listing details from the Harcourts listing for 3/2 Chilton Place. Personal photos in the home are blurred for privacy.</span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// limited-time preview: hide everything after this date (NZ time)
+var PREVIEW_ENDS = new Date('2026-11-29T23:59:59+13:00');
+if (Date.now() > PREVIEW_ENDS.getTime()) document.body.classList.add('is-expired');
+(function () {
+  if (document.body.classList.contains('is-expired')) return;
+  var tour = document.getElementById('walkthrough');
+  function start(hash) {
+    var f = tour.querySelector('iframe');
+    var src = 'tour.html' + (hash || '');
+    if (!f) {
+      f = document.createElement('iframe');
+      f.title = '3D walkthrough of 3/2 Chilton Place';
+      f.allow = 'fullscreen; xr-spatial-tracking';
+      f.setAttribute('allowfullscreen', '');
+      tour.appendChild(f);
+      var p = document.getElementById('poster'); if (p) p.remove();
+    }
+    f.src = src;
+  }
+  document.getElementById('poster').addEventListener('click', function () { start('#p0-h469'); });
+  document.querySelectorAll('[data-go]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      start(el.getAttribute('data-go') || '');
+      tour.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+  var toast = document.getElementById('toast');
+  document.getElementById('copy').addEventListener('click', function () {
+    var url = location.href.split('#')[0];
+    var done = function (m) { toast.textContent = m; toast.style.opacity = 1; setTimeout(function () { toast.style.opacity = 0; }, 1800); };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(function () { done('Link copied'); }, function () { done('Copy the address bar to share'); });
+    else done('Copy the address bar to share');
+  });
+})();
+</script>
+
+</body>
+</html>
