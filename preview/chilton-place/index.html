@@ -70,13 +70,15 @@ h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.15; }
 
 /* heading */
 .head { padding: 42px 0 22px; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: end; }
-.head h1 { font-size: clamp(2rem, 4.6vw, 3.3rem); line-height: 1.04; margin-top: 10px; }
+.head h1 { font-size: clamp(2rem, 4.6vw, 3.3rem); line-height: 1.04; margin-top: 0; }
 .titlerow { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 12px; }
 .titlerow h1 { margin-top: 0; }
-.agency { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 12px; background: #fff; color: #0b2a4a; border: 1px solid rgba(255,255,255,.2); min-height: 52px; }
-.agency img { height: 34px; width: auto; max-width: 160px; object-fit: contain; }
+.agency { display: flex; width: fit-content; align-items: center; gap: 16px; padding: 14px 22px; margin: 16px 0 14px; border-radius: 16px; background: #fff; color: #0b2a4a; border: 1px solid rgba(255,255,255,.2); }
+.agency img { height: 56px; width: auto; max-width: 260px; object-fit: contain; }
 .agency img + .agency-txt b { display: none; }
-.agency img + .agency-txt { border-left: 1px solid #d6dde5; padding-left: 10px; }
+.agency img + .agency-txt { border-left: 1px solid #d6dde5; padding-left: 16px; }
+.agency-txt small { font-size: .82rem !important; }
+@media (max-width: 560px) { .agency img { height: 42px; } .agency { padding: 10px 16px; } }
 .agency-txt b { display: block; font-size: 1.02rem; letter-spacing: .02em; line-height: 1.1; }
 .agency-txt small { display: block; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: #3d5670; font-weight: 700; }
 .head .sub { color: var(--dim); margin-top: 8px; font-size: 1.05rem; }
@@ -207,7 +209,7 @@ body.is-expired main > :not(.expired), body.is-expired .ribbon, body.is-expired 
 <body>
 
 
-<div class="ribbon">Private preview for Karl Vermeulen · available until 29 November 2026 · <a href="#share">How this can be shared</a></div>
+<div class="ribbon">Private preview for Karl Vermeulen and the vendors · available until 29 November 2026</div>
 
 <header class="top">
   <div class="wrap">
@@ -229,13 +231,11 @@ body.is-expired main > :not(.expired), body.is-expired .ribbon, body.is-expired 
   <div class="head">
     <div>
       <span class="eyebrow">For sale · Mellons Bay, Auckland · Marketed by Harcourts Howick</span>
-      <div class="titlerow">
-        <div class="agency" title="Listing agency">
-          <img src="harcourts-logo.png" alt="Harcourts" onerror="this.remove()">
-          <span class="agency-txt"><b>Harcourts</b><small>Howick</small></span>
-        </div>
-        <h1>3/2 Chilton Place</h1>
+      <div class="agency" title="Listing agency">
+        <img src="harcourts-logo.png" alt="Harcourts" onerror="this.remove()">
+        <span class="agency-txt"><b>Harcourts</b><small>Howick</small></span>
       </div>
+      <h1>3/2 Chilton Place</h1>
       <div class="sub">Home &amp; granny flat with sea views in Macleans zone</div>
       <div class="stats">
         <span class="stat"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 12h16M12 4v16"/></svg><b>120</b> m²</span>
@@ -327,15 +327,6 @@ body.is-expired main > :not(.expired), body.is-expired .ribbon, body.is-expired 
     </div>
   </section>
 
-  <div class="share" id="share">
-    <span class="eyebrow">For Karl · how this walkthrough can be shared</span>
-    <h2 style="margin-top:8px">Three ways to put it in front of buyers</h2>
-    <div class="grid">
-      <div><i>01</i><b>Embedded on your website</b><p>With your permission, the walkthrough sits on your own website, so buyers explore it without leaving your page. We send the embed code, or set it up with whoever manages your site.</p></div>
-      <div><i>02</i><b>A link in your listing</b><p>Add the link to your listing, social posts, or send it straight to buyers. It opens on any phone or computer, with nothing to install.</p></div>
-      <div><i>03</i><b>Your own page on VYRA</b><p>A page on vyra.co.nz just for this property, with your name, photo, agency branding and contact details, so every view also markets you.</p><span class="here">You're looking at it</span></div>
-    </div>
-  </div>
 </main>
 
 <footer>
