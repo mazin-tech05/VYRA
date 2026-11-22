@@ -395,8 +395,8 @@ const shadowGeo = new THREE.PlaneGeometry(0.56, 0.56).rotateX(-Math.PI / 2);
 const discs = [];
 function makeMarker(opacity) {
   const g = new THREE.Group();
-  const ring = new THREE.MeshBasicMaterial({ map: ringTex, transparent: true, depthWrite: false, opacity });
-  const sh = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity });
+  const ring = new THREE.MeshBasicMaterial({ map: ringTex, transparent: true, depthWrite: false, depthTest: false, opacity });
+  const sh = new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, depthTest: false, opacity });
   const shadow = new THREE.Mesh(shadowGeo, sh); shadow.position.y = 0.002;
   const disc = new THREE.Mesh(ringGeo, ring); disc.position.y = 0.012;
   g.add(shadow, disc);
