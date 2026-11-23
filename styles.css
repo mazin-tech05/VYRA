@@ -621,3 +621,8 @@ footer.site .fbig span { color: var(--gold); }
 .rl-text p { color: var(--dim); margin: 0 0 .4rem; }
 .rl-or { color: var(--muted); font-size: .92rem; margin: 0 0 .9rem; }
 @media (max-width: 760px) { .real-listing { grid-template-columns: 1fr; } .rl-img { min-height: 220px; } }
+
+/* real-listing spot buttons in the player side panel */
+.side-spots { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .6rem; }
+.side-spots button { padding: .5rem .9rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-size: .88rem; cursor: pointer; }
+.side-spots button:hover, .side-spots button.on { background: var(--gold); color: var(--on-gold); border-color: var(--gold); }

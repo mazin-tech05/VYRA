@@ -67,6 +67,25 @@
     }
   };
   let home = D.homes[0];
+  // Real listing shown first in the player. Only the 3D tour view uses it; the other
+  // demos (plan, photo, privacy, staging) switch back to the sample homes.
+  const FEATURED = {
+    id: 'chilton',
+    short: '3/2 Chilton Place',
+    sub: 'Real listing · Mellons Bay',
+    title: '3/2 Chilton Place, Mellons Bay',
+    poster: 'preview/chilton-place/cover.jpg',
+    thumb: 'preview/chilton-place/cover-t.jpg',
+    tour: 'preview/chilton-place/tour.html',
+    page: 'preview/chilton-place/',
+    start: '#p0-h469',
+    facts: ['Real listing · Harcourts Howick', '3 bedrooms · 2 bathrooms', 'Home + separate downstairs living', '60 viewpoints, both floors'],
+    rooms: [
+      ['Street', '#p0-h469'], ['Courtyard', '#p29-h541'], ['Lounge', '#p56-h113'], ['Kitchen', '#p43-h375'],
+      ['Bedroom 1', '#p51-h590'], ['Downstairs', '#p13-h419'], ['Lower deck', '#p23-h367']
+    ]
+  };
+  let featured = true;
   let view = 'tour';
   const cache = {};               // per home + view: rendered canvases and change logs
   if (!STAGING_LIVE) {
@@ -78,8 +97,12 @@
 
   function initHomePick() {
     const host = $('#homePick');
-    host.innerHTML = D.homes.map((h, i) => `
-      <button type="button" role="radio" aria-checked="${i === 0}" data-home="${h.id}">
+    host.innerHTML = `
+      <button type="button" role="radio" aria-checked="true" data-home="${FEATURED.id}">
+        <span class="hp-th" style="background-image:url('${FEATURED.thumb}')"></span>
+        <span class="hp-tx"><b>${esc(FEATURED.short)}</b><small>${esc(FEATURED.sub)}</small></span>
+      </button>` + D.homes.map((h, i) => `
+      <button type="button" role="radio" aria-checked="false" data-home="${h.id}">
         <span class="hp-th" style="background-image:url('${h.photos[0].src.replace('.jpg', '-t.jpg')}')"></span>
         <span class="hp-tx"><b>${esc(h.short)}</b><small>${esc(h.suburb)} · ${h.plan.rooms.filter((r) => r.cam).length} rooms in 3D</small></span>
       </button>`).join('');
@@ -87,7 +110,16 @@
   }
 
   function setHome(id) {
-    if (home.id === id) return;
+    if (id === FEATURED.id) {
+      if (featured) return;
+      featured = true;
+      $$('#homePick button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.home === id)));
+      stopTour(); stopStaging();
+      if (view !== 'tour' && picker) picker.select('tour'); else showView('tour');
+      return;
+    }
+    if (home.id === id && !featured) return;
+    featured = false;
     home = D.home(id);
     $$('#homePick button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.home === id)));
     stopTour();
@@ -97,12 +129,19 @@
   }
 
   function showView(v) {
+    if (featured && v !== 'tour') {
+      // the other demos run on the sample homes
+      featured = false;
+      home = D.homes[0];
+      stopTour();
+      $$('#homePick button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.home === home.id)));
+    }
     view = v;
     $$('#stage > .view').forEach((el) => el.classList.toggle('on', el.dataset.view === v));
     const meta = views[v];
     $('#work-title').textContent = meta.title;
     $('#work-lede').textContent = meta.lede;
-    $('#work-note').textContent = meta.note(home);
+    $('#work-note').textContent = (featured && v === 'tour') ? 'A real listing we captured: 3/2 Chilton Place, Mellons Bay, shown with the agent’s and vendors’ permission. Personal photos are blurred.' : meta.note(home);
     $('#tourRoomsHome').hidden = v !== 'tour' && !(v === 'staging' && STAGING_LIVE);
     if (v === 'tour') renderTourPoster();
     if (v === 'photo') renderPhoto();
@@ -118,6 +157,18 @@
 
   // ---- 3D tour, embedded ----
   function renderTourPoster() {
+    if (featured) {
+      $('#tourPosterImg').src = FEATURED.poster;
+      $('#tourRoomsHome').innerHTML = FEATURED.rooms.map(([n, h]) => `<button type="button" data-spot="${h}">${esc(n)}</button>`).join('');
+      $$('#tourRoomsHome button').forEach((b) => b.addEventListener('click', () => jumpFeatured(b.dataset.spot)));
+      side(`<h4>${esc(FEATURED.title)}</h4><p class="small muted">Real listing · captured by VYRA</p>
+        <ul class="chg">${FEATURED.facts.map((f) => `<li><b>${esc(f)}</b></li>`).join('')}</ul>
+        <h5 class="mt1">Jump to a spot</h5>
+        <div class="side-spots">${FEATURED.rooms.map(([n, h]) => `<button type="button" data-spot="${h}"><span>${esc(n)}</span></button>`).join('')}</div>
+        <div class="btn-row mt1"><a class="btn btn-gold btn-sm" href="${FEATURED.page}">See the full listing page</a></div>`);
+      $$('#stageSide [data-spot]').forEach((b) => b.addEventListener('click', () => jumpFeatured(b.dataset.spot)));
+      return;
+    }
     $('#tourPosterImg').src = home.tour.poster;
     const rooms = home.plan.rooms.filter((r) => r.cam);
     $('#tourRoomsHome').innerHTML = rooms.map((r) => `<button type="button" data-room="${r.id}">${esc(r.short || r.name)}</button>`).join('');
@@ -133,7 +184,31 @@
   function viewer() {
     try { const w = tour.frame && tour.frame.contentWindow; return w && typeof w.setCameraState === 'function' ? w : null; } catch (e) { return null; }
   }
+  function jumpFeatured(hash) {
+    if (view !== 'tour') picker.select('tour');
+    const frame = $('#tourFrameHome');
+    const m = /^#p(\d+)-h(\d+)$/.exec(hash || '');
+    let w = null;
+    try { w = frame.dataset.home === FEATURED.id && frame.contentWindow && frame.contentWindow.__tour; } catch (e) { w = null; }
+    if (w && m) { try { w.setMode('walk', { n: +m[1], yaw: +m[2] / 100, fadeIn: true }); } catch (e) { console.warn(e); } }
+    else startFeatured(hash);
+    $$('#tourRoomsHome button, #stageSide [data-spot]').forEach((b) => b.classList.toggle('on', b.dataset.spot === hash));
+  }
+  function startFeatured(hash) {
+    const frame = $('#tourFrameHome');
+    tour.frame = frame;
+    clearInterval(tour.poll);
+    frame.dataset.home = FEATURED.id;
+    frame.onload = () => { $('#tourLoadingHome').hidden = true; tour.ready = true; };
+    frame.src = FEATURED.tour + '?v=20261124' + (hash || FEATURED.start);
+    frame.hidden = false;
+    $('#tourStart').hidden = true;
+    $('#tourPosterImg').hidden = true;
+    $('#tourLoadingHome').hidden = false;
+    try { MZ.analytics.track(FEATURED.id, 'tour-open'); } catch (e) { /* ignore */ }
+  }
   function startTour(roomId) {
+    if (featured) { startFeatured(); return; }
     const frame = $('#tourFrameHome');
     tour.frame = frame;
     if (!frame.src || frame.dataset.home !== home.id) {
@@ -161,7 +236,7 @@
   function stopTour() {
     clearInterval(tour.poll);
     const frame = $('#tourFrameHome');
-    if (frame) { frame.hidden = true; frame.removeAttribute('src'); frame.dataset.home = ''; }
+    if (frame) { frame.onload = null; frame.hidden = true; frame.removeAttribute('src'); frame.dataset.home = ''; }
     tour.ready = false;
     $('#tourStart').hidden = false;
     $('#tourPosterImg').hidden = false;
