@@ -197,12 +197,6 @@ canvas { display: block; }
 
 <div id="loader"><div class="in"><img src="brand-mark.svg" alt="VYRA"><div class="bar"><i></i></div></div></div>
 
-<script>
-if (Date.now() > new Date('2026-11-29T23:59:59+13:00').getTime()) {
-  document.documentElement.innerHTML = '<body style="margin:0;height:100vh;display:grid;place-items:center;background:#151618;color:#f4ecd9;font-family:Helvetica,Arial,sans-serif;text-align:center;padding:24px"><div><div style="color:#d9b871;letter-spacing:.22em;font-size:12px;font-weight:700">PREVIEW ENDED</div><h2>This private preview has expired</h2><p style="color:#cdc5b3">Contact VYRA at vyra.co.nz to view it again.</p></div></body>';
-  throw new Error('preview expired');
-}
-</script>
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
